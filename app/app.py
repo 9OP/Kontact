@@ -1,17 +1,22 @@
 from flask import Flask
-from flask_migrate import Migrate
-from app.api import *
-from app.models import *
+from werkzeug.exceptions import HTTPException
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object("app.config.Development")  # os.environ["APP_SETTINGS"]
 
-    app.register_blueprint(api)  # , url_prefix='/accounts')
+    with app.app_context():
+        from flask_migrate import Migrate
+        from app.api import api, generic_handler
+        from app.models import db, bcrypt
+        from app.models import User, UserToken
 
-    db.init_app(app)
-    bcrypt.init_app(app)
-    Migrate(app, db)
+        app.register_blueprint(api)
+        app.errorhandler(HTTPException)(generic_handler)
+
+        db.init_app(app)
+        bcrypt.init_app(app)
+        Migrate(app, db)
 
     return app

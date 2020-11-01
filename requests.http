@@ -1,0 +1,37 @@
+@hostname = 127.0.0.1
+@port = 5000
+@host = http://{{hostname}}:{{port}}
+@contentType = application/json
+
+
+
+### create user
+POST {{host}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+    "email": "test3@mail.com",
+    "password": "123"
+}
+
+
+### log user
+POST {{host}}/auth/signin
+Content-Type: {{contentType}}
+
+{
+    "email": "test@mail.com",
+    "password": "123"
+}
+
+
+### get user
+GET {{host}}/auth/whoami
+Content-Type: {{contentType}}
+
+{
+    "email": "test@mail.com",
+    "password": "123"
+}
+
+### logout user
