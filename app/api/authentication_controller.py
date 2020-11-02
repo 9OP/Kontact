@@ -1,12 +1,12 @@
 from flask import jsonify, request
 from sqlalchemy.exc import IntegrityError
 
-from app.api.helpers import validator as v
+from app.api.helpers import validator
 from app.models.user import User
 from app.models.user_token import UserToken
 from app.common.api_response import *
 
-# Need to add a strong password checker
+
 AUTH_SCHEMA = {
     "email": {
         "type": "string",
@@ -27,7 +27,7 @@ AUTH_SCHEMA = {
 
 
 def signup():
-    params = v.validator(request.json, AUTH_SCHEMA)
+    params = validator(request.json, AUTH_SCHEMA)
     new_user = User.create(email=params["email"], password=params["password"])
     return jsonify(new_user.serialize("id", "email"))
 

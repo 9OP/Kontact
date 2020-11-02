@@ -6,7 +6,6 @@ from app.api.authentication_controller import signup, signin, signout, whoami
 
 # Register custom errors
 api = Blueprint("api", __name__)
-api.app_errorhandler(ServerError)(api_handler)
 api.app_errorhandler(ApiError)(api_handler)
 api.app_errorhandler(AuthError)(api_handler)
 api.app_errorhandler(NoRouteMatch)(api_handler)

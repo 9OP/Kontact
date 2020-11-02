@@ -10,8 +10,8 @@ POST {{host}}/auth/signup
 Content-Type: {{contentType}}
 
 {
-    "email": "martin@mail.com",
-    "password": "Abc123*",
+    "email": "martin1@mail.com",
+    "password": "Abc123*"
 }
 
 

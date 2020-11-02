@@ -38,11 +38,6 @@ class GenericResponse(HTTPException):
         return self.__dict__[key] if key in self.__dict__ else default
 
 
-class ServerError(GenericResponse):
-    def __init__(self, app_code=500, description="Server error."):
-        super().__init__(500, app_code, description)
-
-
 class ApiError(GenericResponse):
     def __init__(self, app_code=400, description="Api error."):
         super().__init__(400, app_code, description)
