@@ -28,6 +28,16 @@ class GenericMixin(object):
             db.session.rollback()
             raise ApiError()
 
+    @classmethod
+    def find(cls, **kwargs):
+        try:
+            res = cls.query.filter_by(**kwargs).first()
+        except sql_exc.SQLAlchemyError as e:
+            print(e)  # no property => InvalidRequestError
+            raise ApiError()
+        else:
+            return res
+
 
 class TimestampMixin(object):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

@@ -59,6 +59,12 @@ class ResourceAlreadyExists(ApiError):
         super().__init__(409, description)
 
 
+class ResourceNotFound(ApiError):
+    def __init__(self, resource=None):
+        description = f"The {resource} was not found."
+        super().__init__(408, description)
+
+
 class MissingParameter(ApiError):
     def __init__(self, parameter=None):
         description = f"Missing parameter: {parameter}."

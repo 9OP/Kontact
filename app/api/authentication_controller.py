@@ -33,21 +33,17 @@ def signup():
 
 
 def signin():
-    return "signin"
-    # user = v.validator(request.json, AUTH_SCHEMA)
-    # # print(user)
-    # existing_user = User.query.filter_by(email=user.get("email")).first()
+    params = validator(request.json, AUTH_SCHEMA)
+    user = User.find(email=params["email"])
 
-    # if not existing_user or not existing_user.check_password(user.get("password")):
-    #     raise InvalidParameter("email or password wrong")
+    if not user or not user.check_password(params["password"]):
+        raise InvalidParameter("Email or password wrong.")
 
-    # token = UserToken(user_id=existing_user.id)
-    # db.session.add(token)
-    # db.session.commit()
-
-    # # print("Serialize: ", existing_user.serialize("id", "email", "created"))
-
-    # return token.token
+    token = UserToken.create(user_id=user.id).token
+    data = user.serialize("id", "email")
+    data.update({"token": str(token)})
+    print(token)
+    return jsonify(data)
 
 
 def signout():
