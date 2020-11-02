@@ -1,12 +1,12 @@
 import jwt
 from datetime import datetime, timedelta
-from app.models import db, bcrypt, CONFIG
+from app.models import db, CONFIG, GenericMixin
 from app.common.errors import *
 
 # Pb avec la config ....
 
 
-class UserToken(db.Model):
+class UserToken(db.Model, GenericMixin):
     __tablename__ = "user_token"
 
     id = db.Column(db.Integer, primary_key=True, unique=True)

@@ -7,6 +7,6 @@ class Config(object):
 
 
 class Development(Config):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///kontact_dev"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///../kontact_dev.sqlite3"
     DEVELOPMENT = True
     DEBUG = True

@@ -19,3 +19,11 @@ auth_api.route("/auth/signout", methods=["POST"])(signout)
 auth_api.route("/auth/whoami", methods=["GET"])(whoami)
 
 # User
+# user_api = Blueprint("user_api", __name__)
+# user_api.route("/user/change_password", methods=["POST"])(change_password)
+# user_api.route("/user/forgot_password", methods=["POST"])(forgot_password)
+
+# Channel
+# channel_api = Blueprint("channel_api", __name__)
+# user_api.route("/user/change_password", methods=["POST"])(change_password)
+# user_api.route("/user/forgot_password", methods=["POST"])(forgot_password)
