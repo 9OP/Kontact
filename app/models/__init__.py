@@ -7,8 +7,3 @@ from flask_bcrypt import Bcrypt
 CONFIG = current_app.config
 db = SQLAlchemy()
 bcrypt = Bcrypt()
-
-
-# Import all models
-from app.models.user import User
-from app.models.user_token import UserToken

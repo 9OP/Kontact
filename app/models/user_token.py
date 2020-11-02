@@ -1,6 +1,9 @@
 import jwt
 from datetime import datetime, timedelta
 from app.models import db, bcrypt, CONFIG
+from app.common.errors import *
+
+# Pb avec la config ....
 
 
 class UserToken(db.Model):
@@ -13,26 +16,25 @@ class UserToken(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __init__(self, user_id):
-        self.email = email
         self.created_at = datetime.now()
         self.user_id = user_id
         payload = {
-            "exp": datetime.utcnow() + timedelta(seconds=CONFIG.PAYLOAD_EXPIRATION),
+            "exp": datetime.utcnow()
+            + timedelta(seconds=3600),  # CONFIG.PAYLOAD_EXPIRATION
             "iat": datetime.utcnow(),
             "uid": user_id,
         }
-        self.token = jwt.encode(payload, CONFIG.SECRET_KEY, algorithm="HS256")
+        self.token = jwt.encode(payload, "123", algorithm="HS256")
 
     def __repr__(self):
         return "<user_token: {}>".format(self.id)
 
     def decode(self):
         try:
-            payload = jwt.decode(self.token, CONFIG.SECRET_KEY, algorithms="HS256")
+            payload = jwt.decode(self.token, "123", algorithms="HS256")
             uid = payload["uid"]
             return uid
-        # Raise custom http error
         except jwt.ExpiredSignatureError:
-            return "Signature expired. Please log in again."
+            raise SignatureExpired()
         except jwt.InvalidTokenError:
-            return "Invalid token. Please log in again."
+            raise TokenExpired()

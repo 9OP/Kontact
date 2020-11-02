@@ -4,18 +4,18 @@ from app.api.authentication_controller import signup, signin, signout, whoami
 
 # Create the API blueprint
 api = Blueprint("api", __name__)
-
-# Create different blueprint: auth_api, user_api, token_api etc...
-
-# Add specific error handler
-api.app_errorhandler(UserAlreadyExists)(generic_handler)
-# api.errorhandler(NotFoundError)
+api.app_errorhandler(ResourceAlreadyExists)(generic_handler)
+api.app_errorhandler(InvalidParameter)(generic_handler)
+api.app_errorhandler(MissingParameter)(generic_handler)
+api.app_errorhandler(Unauthorized)(generic_handler)
+api.app_errorhandler(TokenExpired)(generic_handler)
 
 
 # Authentication
-api.route("/auth/signup", methods=["POST"])(signup)
-api.route("/auth/signin", methods=["POST"])(signin)
-api.route("/auth/signout", methods=["POST"])(signout)
-api.route("/auth/whoami", methods=["GET"])(whoami)
+auth_api = Blueprint("auth_api", __name__)
+auth_api.route("/auth/signup", methods=["POST"])(signup)
+auth_api.route("/auth/signin", methods=["POST"])(signin)
+auth_api.route("/auth/signout", methods=["POST"])(signout)
+auth_api.route("/auth/whoami", methods=["GET"])(whoami)
 
 # User
