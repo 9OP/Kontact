@@ -1,8 +1,8 @@
 from datetime import datetime
-from app.models import db, bcrypt
+from app.models import db, bcrypt, Serializer
 
 
-class User(db.Model):
+class User(db.Model, Serializer):
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -18,6 +18,10 @@ class User(db.Model):
 
     def __repr__(self):
         return "<user: {}>".format(self.email)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
 
     def check_password(self, password):
         valid = bcrypt.check_password_hash(self.password, password)

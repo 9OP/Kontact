@@ -38,6 +38,8 @@ def signin():
     db.session.add(token)
     db.session.commit()
 
+    print(existing_user.serialize())
+
     return token.token
 
 
