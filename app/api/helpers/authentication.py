@@ -1,5 +1,5 @@
 import functools
-from app.common.errors import *  # better import Unauthorized
+from app.common.api_response import *  # better import Unauthorized
 
 
 def authentication_required(func):

@@ -1,42 +1,35 @@
-import cerberus
-from app.common.errors import *
+import re
+from cerberus import Validator
+from app.common.api_response import *
+
+
+class AppValidator(Validator):
+    # Simple email regex, might be limited
+    email_regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
+    password_regex = "[A-Za-z0-9@#$%^&+=*]{6,}"
+
+    def _validate_is_email(self, is_email, field, value):
+        """
+        {'type': 'boolean'}
+        """
+        if is_email and not re.search(self.email_regex, value):
+            self._error(field, "Must be an email")
+
+    def _validate_is_strong(self, is_strong, field, value):
+        """
+        {'type': 'boolean'}
+        """
+        if is_strong and not re.fullmatch(self.password_regex, value):
+            self._error(field, "At least 6 char with min, maj, num, special")
+
+    def _normalize_coerce_lowercase(self, value):
+        return value.lower()
 
 
 def validator(document, schema):
-    predicat = cerberus.Validator(schema)
-    predicat.allow_unknown = True
+    predicat = AppValidator(schema, purge_unknown=True)
 
     if not predicat.validate(document):
-        print(predicat._errors)
-        raise InvalidParameter()
+        raise InvalidParameter(predicat.errors)
 
-    # # Key filtering
-    # response = {}
-    # # print(schema)
-    # for key in schema:
-    #     response[key] = document.get(key, None)
-
-    # return doc / new doc
-    print(schema)
-    print(document)
-    mask = {}
-    return document
-
-    # create mask from schema
-
-    # for k, v in schema.items():
-    #     if v["type"] != "dict":
-    #         mask[key] = True
-    #     else:
-
-
-def prune_dict(dct, mask):
-    result = {}
-    for k, v in mask.items():
-        if isinstance(v, dict):
-            value = prune_dict(dct[k], v)
-            if value:  # check that dict is non-empty
-                result[k] = value
-        elif v:
-            result[k] = dct[k]
-    return result
+    return predicat.normalized(document)

@@ -1,9 +1,8 @@
 import jwt
 from datetime import datetime, timedelta
-from app.models import db, CONFIG, GenericMixin
-from app.common.errors import *
 
-# Pb avec la config ....
+from app.common.database import db, GenericMixin
+from app.common.api_response import *
 
 
 class UserToken(db.Model, GenericMixin):
@@ -11,12 +10,12 @@ class UserToken(db.Model, GenericMixin):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     token = db.Column(db.String, unique=True, nullable=False)
-    revoked_at = db.Column(db.DateTime)
-    created_at = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+    revoked_at = db.Column(db.DateTime)
 
     def __init__(self, user_id):
-        self.created_at = datetime.now()
+        self.created_at = datetime.utcnow()
         self.user_id = user_id
         payload = {
             "exp": datetime.utcnow()

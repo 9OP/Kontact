@@ -2,21 +2,26 @@ from flask import jsonify, request
 from sqlalchemy.exc import IntegrityError
 
 from app.api.helpers import validator as v
-from app.models import db
 from app.models.user import User
 from app.models.user_token import UserToken
-from app.common.errors import *
+from app.common.api_response import *
 
-
+# Need to add a strong password checker
 AUTH_SCHEMA = {
-    "email": {"type": "string", "required": True},
-    "password": {"type": "string", "required": True},
-    "test": {
-        "type": "dict",
-        "schema": {
-            "sub1": {"type": "integer"},
-            "sub2": {"type": "integer"},
-        },
+    "email": {
+        "type": "string",
+        "required": True,
+        "maxlength": 255,
+        "empty": False,
+        "is_email": True,
+        "coerce": "lowercase",
+    },
+    "password": {
+        "type": "string",
+        "required": True,
+        "minlength": 6,
+        "is_strong": True,
+        "empty": False,
     },
 }
 
@@ -28,20 +33,21 @@ def signup():
 
 
 def signin():
-    user = v.validator(request.json, AUTH_SCHEMA)
-    # print(user)
-    existing_user = User.query.filter_by(email=user.get("email")).first()
+    return "signin"
+    # user = v.validator(request.json, AUTH_SCHEMA)
+    # # print(user)
+    # existing_user = User.query.filter_by(email=user.get("email")).first()
 
-    if not existing_user or not existing_user.check_password(user.get("password")):
-        raise InvalidParameter("email or password wrong")
+    # if not existing_user or not existing_user.check_password(user.get("password")):
+    #     raise InvalidParameter("email or password wrong")
 
-    token = UserToken(user_id=existing_user.id)
-    db.session.add(token)
-    db.session.commit()
+    # token = UserToken(user_id=existing_user.id)
+    # db.session.add(token)
+    # db.session.commit()
 
-    # print("Serialize: ", existing_user.serialize("id", "email", "created"))
+    # # print("Serialize: ", existing_user.serialize("id", "email", "created"))
 
-    return token.token
+    # return token.token
 
 
 def signout():

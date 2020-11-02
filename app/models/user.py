@@ -1,5 +1,5 @@
 from datetime import datetime
-from app.models import db, bcrypt, GenericMixin, TimestampMixin
+from app.common.database import db, bcrypt, GenericMixin, TimestampMixin
 
 
 class User(db.Model, GenericMixin, TimestampMixin):
