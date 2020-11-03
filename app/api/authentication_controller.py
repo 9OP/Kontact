@@ -1,13 +1,12 @@
-from flask import jsonify, request
+from flask import jsonify, request, g
 from sqlalchemy.exc import IntegrityError
 
-from app.api.helpers import validator, authentication_required
-from app.models.user import User
-from app.models.user_token import UserToken
+from app.api.helpers import validator, authentication_required, api_render
+from app.models import User, UserToken
 from app.common.api_response import *
 
 
-AUTH_SCHEMA = {
+AUTH_SIGNIN_SCHEMA = {
     "email": {
         "type": "string",
         "required": True,
@@ -25,33 +24,43 @@ AUTH_SCHEMA = {
     },
 }
 
+AUTH_SIGNUP_SCHEMA = {
+    **AUTH_SIGNIN_SCHEMA,
+    **{"name": {"type": "string", "required": True, "empty": False}},
+}
+
 
 def signup():
-    params = validator(request.json, AUTH_SCHEMA)
-    new_user = User.create(email=params["email"], password=params["password"])
-    user_data = new_user.serialize("id", "email")
-    return jsonify(user_data)
+    params = validator(request.json, AUTH_SIGNUP_SCHEMA)
+    new_user = User.create(
+        email=params["email"],
+        name=params["name"],
+        password=params["password"],
+    )
+    user_data = new_user.serialize("id", "email", "name")
+    user_data["token"] = UserToken.create(user_id=new_user.id).token
+    return api_render(user_data)
 
 
 def signin():
-    params = validator(request.json, AUTH_SCHEMA)
+    params = validator(request.json, AUTH_SIGNIN_SCHEMA)
     user = User.find(email=params["email"])
 
     if not user or not user.check_password(params["password"]):
         raise InvalidParameter("Email or password wrong.")
 
-    # If token is provided invalidated it
-    token = UserToken.create(user_id=user.id).token
-    user_data = user.serialize("id", "email")
-    user_data["token"] = token
-    return jsonify(user_data)
+    user_data = user.serialize("id", "email", "name")
+    user_data["token"] = UserToken.create(user_id=user.id).token
+    return api_render(user_data)
 
 
+@authentication_required
 def signout():
-    # Invalidate current token
-    return "signout"
+    UserToken.find(token=g.auth_token).revoke()
+    return api_render("Signout successfully.")
 
 
 @authentication_required
 def whoami():
-    return "whoami"
+    user_data = g.current_user.serialize("id", "email", "name")
+    return api_render(user_data)

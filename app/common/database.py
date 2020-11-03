@@ -9,10 +9,13 @@ from .api_response import *
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-
+# improve serialize and allow jsonify of "tokens" in user serialize
 class GenericMixin(object):
-    def serialize(self, *keys):
-        return {c: getattr(self, c) for c in inspect(self).attrs.keys() if c in keys}
+    __protected__ = []  # By default
+
+    def serialize(self, *args):
+        clear = [a for a in args if a not in self.__protected__]
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys() if c in clear}
 
     @classmethod
     def create(cls, **kwargs):
@@ -28,12 +31,24 @@ class GenericMixin(object):
             db.session.rollback()
             raise ApiError()
 
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+        try:
+            db.session.commit()
+            return self
+        except sql_exc.IntegrityError:  # Unique constraint
+            db.session.rollback()
+            raise ResourceAlreadyExists(cls.__tablename__)
+        except sql_exc.SQLAlchemyError:  # Default error
+            db.session.rollback()
+            raise ApiError()
+
     @classmethod
     def find(cls, **kwargs):
         try:
             res = cls.query.filter_by(**kwargs).first()
         except sql_exc.SQLAlchemyError as e:
-            print(e)  # no property => InvalidRequestError
             raise ApiError()
         else:
             return res

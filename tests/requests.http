@@ -10,7 +10,8 @@ POST {{host}}/auth/signup
 Content-Type: {{contentType}}
 
 {
-    "email": "martin2@mail.com",
+    "email": "martin@mail.com",
+    "name": "Martin", 
     "password": "Abc123*"
 }
 
@@ -25,6 +26,7 @@ Content-Type: {{contentType}}
     "password": "Abc123*"
 }
 
+###
 @token = {{login.response.body.token}}
 
 
@@ -32,4 +34,7 @@ Content-Type: {{contentType}}
 GET {{host}}/auth/whoami
 kt_token: {{token}}
 
-### logout user
+### Signout user
+POST {{host}}/auth/signout
+Content-Type: {{contentType}}
+kt_token: {{token}}

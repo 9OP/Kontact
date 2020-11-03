@@ -1,6 +1,7 @@
 from flask import json
 from werkzeug.exceptions import HTTPException
 
+
 # Handler for generic errors
 def generic_handler(exc):
     response = exc.get_response()
@@ -75,6 +76,12 @@ class InvalidParameter(ApiError):
     def __init__(self, parameter=None):
         description = f"Invalid parameter: {parameter}."
         super().__init__(411, description)
+
+
+class InvalidContentType(ApiError):
+    def __init__(self, parameter=None):
+        description = f"Expected Content-Type: {parameter}."
+        super().__init__(415, description)
 
 
 class TokenExpired(ApiError):

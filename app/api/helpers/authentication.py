@@ -1,7 +1,6 @@
 import functools
-from flask import request
-from app.models.user import User
-from app.models.user_token import UserToken
+from flask import request, g
+from app.models import User, UserToken
 from app.common.api_response import *
 
 
@@ -16,8 +15,8 @@ def authentication_required(func):
             raise AuthError(description="Authentication token missing.")
 
         uid = UserToken.decode(kt_token)
-        current_user = User.find(id=uid)
-        # print(current_user)
+        g.current_user = User.find(id=uid)
+        g.auth_token = kt_token
         return func(*args, **kwargs)
 
     return secure_function

@@ -4,21 +4,16 @@ from app.common.api_response import *
 
 
 class AppValidator(Validator):
-    # Simple email regex, might be limited
     email_regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
     password_regex = "[A-Za-z0-9@#$%^&+=*]{6,}"
 
     def _validate_is_email(self, is_email, field, value):
-        """
-        {'type': 'boolean'}
-        """
+        """{'type': 'boolean'}"""
         if is_email and not re.search(self.email_regex, value):
             self._error(field, "Must be an email")
 
     def _validate_is_strong(self, is_strong, field, value):
-        """
-        {'type': 'boolean'}
-        """
+        """{'type': 'boolean'}"""
         if is_strong and not re.fullmatch(self.password_regex, value):
             self._error(field, "At least 6 char with min, maj, num, special")
 

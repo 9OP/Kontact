@@ -1,7 +1,14 @@
-from flask import Blueprint
+from flask import Blueprint, request
 
 from app.common.api_response import *
 from app.api.authentication_controller import signup, signin, signout, whoami
+
+
+def check_mimetype_json():
+    method = request.method
+    mimetype = request.headers.get("Content-Type")
+    if mimetype != "application/json" and method in ["POST", "PUT", "DELETE"]:
+        raise InvalidContentType("application/json")
 
 
 # Register custom errors
@@ -13,9 +20,11 @@ api.app_errorhandler(ResourceNotFound)(api_handler)
 api.app_errorhandler(ResourceAlreadyExists)(api_handler)
 api.app_errorhandler(MissingParameter)(api_handler)
 api.app_errorhandler(InvalidParameter)(api_handler)
+api.app_errorhandler(InvalidContentType)(api_handler)
 api.app_errorhandler(TokenExpired)(api_handler)
 api.app_errorhandler(SignatureExpired)(api_handler)
 
+api.before_app_request(check_mimetype_json)
 
 # Authentication
 auth_api = Blueprint("auth_api", __name__)
