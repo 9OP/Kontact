@@ -14,7 +14,7 @@ class ProdConfig(Config):
     # ENV = "production"
     # DEBUG = False
     TESTING = False
-    DATABASE_URI = environ.get("PROD_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = environ.get("PROD_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -22,7 +22,7 @@ class DevConfig(Config):
     # ENV = "development"
     # DEBUG = True
     TESTING = True
-    DATABASE_URI = environ.get("DEV_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = environ.get("DEV_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 

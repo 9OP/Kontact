@@ -9,13 +9,17 @@ from .api_response import *
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-# improve serialize and allow jsonify of "tokens" in user serialize
+
 class GenericMixin(object):
     __protected__ = []  # By default
 
     def serialize(self, *args):
         clear = [a for a in args if a not in self.__protected__]
         return {c: getattr(self, c) for c in inspect(self).attrs.keys() if c in clear}
+
+    # @staticmethod
+    # def serialize_list(l, *args):
+    #     return [m.serialize(args) for m in l]
 
     @classmethod
     def create(cls, **kwargs):
