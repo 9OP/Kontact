@@ -23,8 +23,7 @@ def create_app():
     app.errorhandler(HTTPException)(generic_handler)
 
     # Import all models
-    from app.models.user import User
-    from app.models.user_token import UserToken
+    import app.models
 
     db.init_app(app)
     bcrypt.init_app(app)
