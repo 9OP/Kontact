@@ -79,7 +79,7 @@ class InvalidParameter(ApiError):
 
 class TokenExpired(ApiError):
     def __init__(self):
-        super().__init__(418, "The given token is expired.")
+        super().__init__(418, "The token is invalid or expired.")
 
 
 class SignatureExpired(ApiError):

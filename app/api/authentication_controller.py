@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from sqlalchemy.exc import IntegrityError
 
-from app.api.helpers import validator
+from app.api.helpers import validator, authentication_required
 from app.models.user import User
 from app.models.user_token import UserToken
 from app.common.api_response import *
@@ -20,8 +20,8 @@ AUTH_SCHEMA = {
         "type": "string",
         "required": True,
         "minlength": 6,
-        "is_strong": True,
         "empty": False,
+        "is_strong": True,
     },
 }
 
@@ -29,7 +29,8 @@ AUTH_SCHEMA = {
 def signup():
     params = validator(request.json, AUTH_SCHEMA)
     new_user = User.create(email=params["email"], password=params["password"])
-    return jsonify(new_user.serialize("id", "email"))
+    user_data = new_user.serialize("id", "email")
+    return jsonify(user_data)
 
 
 def signin():
@@ -39,16 +40,18 @@ def signin():
     if not user or not user.check_password(params["password"]):
         raise InvalidParameter("Email or password wrong.")
 
+    # If token is provided invalidated it
     token = UserToken.create(user_id=user.id).token
-    data = user.serialize("id", "email")
-    data.update({"token": str(token)})
-    print(token)
-    return jsonify(data)
+    user_data = user.serialize("id", "email")
+    user_data["token"] = token
+    return jsonify(user_data)
 
 
 def signout():
+    # Invalidate current token
     return "signout"
 
 
+@authentication_required
 def whoami():
     return "whoami"

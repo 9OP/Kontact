@@ -23,14 +23,15 @@ class UserToken(db.Model, GenericMixin):
             "iat": datetime.utcnow(),
             "uid": user_id,
         }
-        self.token = jwt.encode(payload, "123", algorithm="HS256")
+        self.token = jwt.encode(payload, "123", algorithm="HS256").decode("utf-8")
 
     def __repr__(self):
         return "<user_token: {}>".format(self.id)
 
-    def decode(self):
+    @staticmethod
+    def decode(token):
         try:
-            payload = jwt.decode(self.token, "123", algorithms="HS256")
+            payload = jwt.decode(token, "123", algorithms="HS256")
             uid = payload["uid"]
             return uid
         except jwt.ExpiredSignatureError:

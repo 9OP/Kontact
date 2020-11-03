@@ -5,17 +5,18 @@
 
 
 
-### create user
+### Signup
 POST {{host}}/auth/signup
 Content-Type: {{contentType}}
 
 {
-    "email": "martin@mail.com",
+    "email": "martin2@mail.com",
     "password": "Abc123*"
 }
 
 
-### log user
+### Signin
+# @name login
 POST {{host}}/auth/signin
 Content-Type: {{contentType}}
 
@@ -24,14 +25,11 @@ Content-Type: {{contentType}}
     "password": "Abc123*"
 }
 
+@token = {{login.response.body.token}}
 
-### get user
+
+### Whoami
 GET {{host}}/auth/whoami
-Content-Type: {{contentType}}
-
-{
-    "email": "test@mail.com",
-    "password": "123"
-}
+kt_token: {{token}}
 
 ### logout user
