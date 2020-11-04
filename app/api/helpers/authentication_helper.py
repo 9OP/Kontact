@@ -16,7 +16,7 @@ def authentication(func):
 
         uid = UserToken.decode(kt_token)
         g.current_user = User.find(id=uid)
-        g.auth_token = kt_token
+        g.kt_token = kt_token
         return func(*args, **kwargs)
 
     return secure_function

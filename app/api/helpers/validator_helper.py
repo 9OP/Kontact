@@ -5,7 +5,7 @@ import app.common.api_response as api_res
 
 class AppValidator(Validator):
     email_regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
-    password_regex = "[A-Za-z0-9@#$%^&+=*]{6,}"
+    password_regex = "(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&*])"
 
     def _validate_is_email(self, is_email, field, value):
         """{'type': 'boolean'}"""
@@ -14,7 +14,7 @@ class AppValidator(Validator):
 
     def _validate_is_strong(self, is_strong, field, value):
         """{'type': 'boolean'}"""
-        if is_strong and not re.fullmatch(self.password_regex, value):
+        if is_strong and not re.search(self.password_regex, value):
             self._error(field, "At least 6 char with min, maj, num, special")
 
     def _normalize_coerce_lowercase(self, value):

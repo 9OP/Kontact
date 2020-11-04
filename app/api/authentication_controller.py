@@ -1,6 +1,4 @@
 from flask import jsonify, request, g
-from sqlalchemy.exc import IntegrityError
-
 from app.api.helpers import validator, authentication, api_render
 from app.models import User, UserToken
 import app.common.api_response as api_res
@@ -57,7 +55,7 @@ def signin():
 
 @authentication
 def signout():
-    UserToken.find(token=g.auth_token).revoke()
+    UserToken.find(token=g.kt_token).revoke()
     return api_render("Signout successfully.")
 
 
