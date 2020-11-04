@@ -1,7 +1,7 @@
 from flask import jsonify, request, g
 from sqlalchemy.exc import IntegrityError
 
-from app.api.helpers import validator, authentication_required, api_render
+from app.api.helpers import validator, authentication, api_render
 from app.models import User, UserToken
 from app.common.api_response import *
 
@@ -37,6 +37,7 @@ def signup():
         name=params["name"],
         password=params["password"],
     )
+    print("hello")
     user_data = new_user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=new_user.id).token
     return api_render(user_data)
@@ -54,13 +55,13 @@ def signin():
     return api_render(user_data)
 
 
-@authentication_required
+@authentication
 def signout():
     UserToken.find(token=g.auth_token).revoke()
     return api_render("Signout successfully.")
 
 
-@authentication_required
+@authentication
 def whoami():
     user_data = g.current_user.serialize("id", "email", "name")
     return api_render(user_data)

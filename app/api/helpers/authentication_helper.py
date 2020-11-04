@@ -4,7 +4,7 @@ from app.models import User, UserToken
 from app.common.api_response import *
 
 
-def authentication_required(func):
+def authentication(func):
 
     # Flask context available only inside secure_function
     @functools.wraps(func)
