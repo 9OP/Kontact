@@ -37,11 +37,10 @@ class Support(TimestampMixin):
             db.session.add(new)
             db.session.commit()
             return new
-        except sql_exc.IntegrityError as e:  # Unique constraint
+        except sql_exc.IntegrityError:
             db.session.rollback()
-            print(e)
             raise api_res.ResourceAlreadyExists(cls.__tablename__)
-        except sql_exc.SQLAlchemyError:  # Default error
+        except sql_exc.SQLAlchemyError:
             db.session.rollback()
             raise api_res.ApiError()
 
@@ -51,10 +50,10 @@ class Support(TimestampMixin):
         try:
             db.session.commit()
             return self
-        except sql_exc.IntegrityError:  # Unique constraint
+        except sql_exc.IntegrityError:
             db.session.rollback()
             raise api_res.ResourceAlreadyExists(self.__tablename__)
-        except sql_exc.SQLAlchemyError:  # Default error
+        except sql_exc.SQLAlchemyError:
             db.session.rollback()
             raise api_res.ApiError()
 
