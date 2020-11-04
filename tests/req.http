@@ -11,7 +11,7 @@ Content-Type: {{contentType}}
 
 {
     "email": "martin@mail.com",
-    "name": "Martin", 
+    "name": "Martin",
     "password": "Abc123*"
 }
 

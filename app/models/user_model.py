@@ -1,4 +1,3 @@
-from datetime import datetime
 from app.common.database import db, bcrypt, GenericMixin, TimestampMixin
 
 

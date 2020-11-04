@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.api.helpers import validator, authentication, api_render
 from app.models import User, UserToken
-from app.common.api_response import *
+import app.common.api_response as api_res
 
 
 AUTH_SIGNIN_SCHEMA = {
@@ -48,7 +48,7 @@ def signin():
     user = User.find(email=params["email"])
 
     if not user or not user.check_password(params["password"]):
-        raise InvalidParameter("Email or password wrong.")
+        raise api_res.InvalidParameter("Email or password wrong.")
 
     user_data = user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=user.id).token

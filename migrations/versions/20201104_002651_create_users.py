@@ -1,7 +1,7 @@
 """create_users
 
 Revision ID: 0999b35948ec
-Revises: 
+Revises:
 Create Date: 2020-11-04 00:26:51.975520
 
 """

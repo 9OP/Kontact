@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from app.common.database import db, GenericMixin
 from app.config import Config
-from app.common.api_response import *
+import app.common.api_response as api_res
 
 
 class UserToken(db.Model, GenericMixin):
@@ -37,14 +37,14 @@ class UserToken(db.Model, GenericMixin):
     @classmethod
     def decode(cls, token):
         if cls.find(token=token).revoked_at:
-            raise TokenExpired()
+            raise api_res.TokenExpired()
         try:
             payload = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
             return payload["uid"]
         except jwt.ExpiredSignatureError:
-            raise SignatureExpired()
+            raise api_res.SignatureExpired()
         except jwt.InvalidTokenError:
-            raise TokenExpired()
+            raise api_res.TokenExpired()
 
     def revoke(self):
         self.update(revoked_at=datetime.utcnow())

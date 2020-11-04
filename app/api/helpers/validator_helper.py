@@ -1,6 +1,6 @@
 import re
 from cerberus import Validator
-from app.common.api_response import *
+import app.common.api_response as api_res
 
 
 class AppValidator(Validator):
@@ -25,6 +25,6 @@ def validator(document, schema):
     predicat = AppValidator(schema, purge_unknown=True)
 
     if not predicat.validate(document):
-        raise InvalidParameter(predicat.errors)
+        raise api_res.InvalidParameter(predicat.errors)
 
     return predicat.normalized(document)
