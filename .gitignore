@@ -2,3 +2,7 @@ __pycache__/
 .vscode/
 venv/
 *.sqlite3
+.pytest_cache/
+.coverage/
+.coverage_file
+.DS_Store
