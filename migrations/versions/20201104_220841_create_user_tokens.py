@@ -1,8 +1,8 @@
-"""create_user_token
+"""create_user_tokens
 
-Revision ID: 573a1ce8aa89
-Revises: ea3ebdd502a0
-Create Date: 2020-11-04 21:43:06.059960
+Revision ID: 47485a1aad8e
+Revises: 8aadc2cbe825
+Create Date: 2020-11-04 22:08:41.888400
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "573a1ce8aa89"
-down_revision = "ea3ebdd502a0"
+revision = "47485a1aad8e"
+down_revision = "8aadc2cbe825"
 branch_labels = None
 depends_on = None
 
@@ -27,12 +27,11 @@ def upgrade():
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.Column("revoked_at", sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(
-            ["user_id"],
-            ["user.id"],
+            ["user_id"], ["user.id"], name=op.f("fk_user_token_user_id_user")
         ),
-        sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("id"),
-        sa.UniqueConstraint("token"),
+        sa.PrimaryKeyConstraint("id", name=op.f("pk_user_token")),
+        sa.UniqueConstraint("id", name=op.f("uq_user_token_id")),
+        sa.UniqueConstraint("token", name=op.f("uq_user_token_token")),
     )
     # ### end Alembic commands ###
 
