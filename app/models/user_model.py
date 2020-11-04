@@ -1,9 +1,8 @@
-from app.common.database import db, bcrypt, GenericMixin, TimestampMixin
+from app.common.database import db, bcrypt, Support
 
 
-class User(db.Model, GenericMixin, TimestampMixin):
+class User(db.Model, Support):
     __tablename__ = "user"
-    __protected__ = ["password", "tokens"]
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
@@ -11,10 +10,8 @@ class User(db.Model, GenericMixin, TimestampMixin):
     password = db.Column(db.String(255), nullable=False)
     tokens = db.relationship("UserToken", backref="user", lazy=True)
 
-    def __init__(self, email, name, password):
-        GenericMixin.__init__(self)
-        self.email = email
-        self.name = name
+    def __init__(self, password, **kwargs):
+        super().__init__(**kwargs)
         self.password = bcrypt.generate_password_hash(password, 10).decode("utf-8")
 
     def __repr__(self):

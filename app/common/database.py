@@ -9,16 +9,14 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 
 
-class GenericMixin(object):
-    __protected__ = []  # By default
+class TimestampMixin(object):
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
+
+class Support(TimestampMixin):
     def serialize(self, *args):
-        clear = [a for a in args if a not in self.__protected__]
-        return {c: getattr(self, c) for c in inspect(self).attrs.keys() if c in clear}
-
-    # @staticmethod
-    # def serialize_list(l, *args):
-    #     return [m.serialize(args) for m in l]
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys() if c in args}
 
     @classmethod
     def create(cls, **kwargs):
@@ -27,8 +25,9 @@ class GenericMixin(object):
             db.session.add(new)
             db.session.commit()
             return new
-        except sql_exc.IntegrityError:  # Unique constraint
+        except sql_exc.IntegrityError as e:  # Unique constraint
             db.session.rollback()
+            print(e)
             raise api_res.ResourceAlreadyExists(cls.__tablename__)
         except sql_exc.SQLAlchemyError:  # Default error
             db.session.rollback()
@@ -55,8 +54,3 @@ class GenericMixin(object):
             raise api_res.ApiError()
         else:
             return res
-
-
-class TimestampMixin(object):
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
