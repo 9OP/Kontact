@@ -26,7 +26,16 @@ class DevConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
+class TestConfig(Config):
+    # ENV = "development"
+    # DEBUG = True
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = environ.get("TEST_DATABASE_URI")
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+
 Cfg = {
     "development": DevConfig,
     "production": ProdConfig,
+    "testing": TestConfig,
 }
