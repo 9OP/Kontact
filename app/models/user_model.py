@@ -1,10 +1,11 @@
-from app.common.database import db, bcrypt, Support
+import uuid
+from app.common.database import db, bcrypt, Support, GUID
 
 
 class User(db.Model, Support):
     __tablename__ = "user"
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id = db.Column(GUID(), primary_key=True, unique=True, default=uuid.uuid4)
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)

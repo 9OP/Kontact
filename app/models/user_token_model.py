@@ -1,6 +1,7 @@
 import jwt
+import uuid
 from datetime import datetime, timedelta
-from app.common.database import db, Support
+from app.common.database import db, Support, GUID
 from app.config import Config
 import app.common.api_response as api_res
 
@@ -8,7 +9,7 @@ import app.common.api_response as api_res
 class UserToken(db.Model, Support):
     __tablename__ = "user_token"
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id = db.Column(GUID(), primary_key=True, unique=True, default=uuid.uuid4)
     token = db.Column(db.String, unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     revoked_at = db.Column(db.DateTime)

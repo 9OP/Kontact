@@ -20,15 +20,15 @@ class ProdConfig(Config):
 
 class DevConfig(Config):
     # ENV = "development"
-    # DEBUG = True
-    TESTING = True
+    # DEBUG = False
+    TESTING = False
     SQLALCHEMY_DATABASE_URI = environ.get("DEV_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class TestConfig(Config):
     # ENV = "testing"
-    DEBUG = False
+    DEBUG = False  # true cause pytest crashes
     TESTING = True
     SQLALCHEMY_DATABASE_URI = environ.get("TEST_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = True
