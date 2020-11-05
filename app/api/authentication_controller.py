@@ -35,7 +35,6 @@ def signup():
         name=params["name"],
         password=params["password"],
     )
-    print("hello")
     user_data = new_user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=new_user.id).token
     return api_render(user_data)

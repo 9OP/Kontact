@@ -27,8 +27,8 @@ class DevConfig(Config):
 
 
 class TestConfig(Config):
-    # ENV = "development"
-    # DEBUG = True
+    # ENV = "testing"
+    DEBUG = False
     TESTING = True
     SQLALCHEMY_DATABASE_URI = environ.get("TEST_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = True

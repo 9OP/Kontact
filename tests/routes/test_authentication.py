@@ -1,6 +1,8 @@
 import pytest
 import json
-from app.models import UserToken
+from tests.routes.requests_helper import RequestsHelper
+from tests.conftest import UserToken
+
 
 user_data = {
     "email": "user@mail.com",
@@ -8,47 +10,29 @@ user_data = {
     "password": "123abcABC#$%",
 }
 
-mimetype = "application/json"
-headers = {"Content-Type": mimetype, "Accept": mimetype}
 
-
-# creer une classe base, dont *Suite herite et utiliser self.response plutot
-def expect_success(response, expected={}):
-    # assert success
-    data = json.loads(response.data)
-    assert response.status_code == 200
-    assert expected.items() <= data.items()
-
-
-def expect_failure(response, expected={}):
-    # assert failure
-    assert response.status_code == 400
-    pass
-
-
-# Set auth token in self.token
-def login(token):
-    pass
-
-
-@pytest.mark.usefixtures("database", "app")
-class AuthenticationRequestsSuite:
+@pytest.mark.usefixtures("database")
+class AuthenticationRequestsSuite(RequestsHelper):
     @pytest.fixture(autouse=True)
-    def _base(self, client, database, make_token, make_user, monkeypatch):
-        monkeypatch.setattr(UserToken, "token", "mocked_token")
-
-        def post(route, data):
+    def _base(self, client, make_token, make_user, monkeypatch):
+        def post(route, data={}):
             payload = {
                 "data": json.dumps(data),
-                "headers": {**headers},
-            }  # **self.headers
+                "headers": {**self.headers},
+            }
             return client.post(route, **payload)
 
+        def get(route):
+            payload = {"headers": {**self.headers}}
+            return client.get(route, **payload)
+
         self.post = post
-        self.get = client.get
+        self.get = get
 
         self.make_user = make_user
         self.make_token = make_token
+
+        self.mock = monkeypatch.setattr
 
     def test_signup(self):
         """
@@ -56,27 +40,54 @@ class AuthenticationRequestsSuite:
         WHEN a POST /auth/signup
         THEN register user
         """
-        response = self.post("/auth/signup", user_data)
-        expect_success(
-            response,
+        self.mock(UserToken, "token", "mocked_token")
+        self.response = self.post("/auth/signup", user_data)
+        self.expect_success(
             {"name": "user", "email": "user@mail.com", "token": "mocked_token"},
         )
 
-    # def test_fail_signup(self):
-    #     """
-    #     GIVEN a user input registered
-    #     WHEN a POST /auth/signup
-    #     THEN fail registered
-    #     """
-    #     self.make_user(**user_data)
-    #     response = self.post("/auth/signup", user_data)
-    #     expect_failure(response)
+    def test_fail_signup(self):
+        """
+        GIVEN a user input registered
+        WHEN a POST /auth/signup
+        THEN fail registered
+        """
+        self.make_user(**user_data)
+        self.response = self.post("/auth/signup", user_data)
+        self.expect_failure()
 
-    # def test_signin(self):
-    #     pass
+    def test_signin(self):
+        """
+        GIVEN a user registered
+        WHEN a POST /auth/signin
+        THEN return authentication token
+        """
+        self.mock(UserToken, "token", "mocked_token")
+        self.make_user(**user_data)
+        self.response = self.post("/auth/signin", user_data)
+        self.expect_success(
+            {"name": "user", "email": "user@mail.com", "token": "mocked_token"},
+        )
 
-    # def test_signout(self):
-    #     pass
+    def test_signout(self):
+        """
+        GIVEN a user registered
+        WHEN a POST /auth/signout
+        THEN return success and invalidate token
+        """
+        user = self.make_user(**user_data)
+        token = self.login(user)
+        self.response = self.post("/auth/signout")
+        self.expect_success({"code": 200, "description": "Signout successfully."})
+        assert token.revoked_at is not None
 
-    # def test_whoami(self):
-    #     pass
+    def test_whoami(self):
+        """
+        GIVEN a user registered
+        WHEN a POST /auth/whoami
+        THEN return user info
+        """
+        user = self.make_user(**user_data)
+        self.login(user)
+        self.response = self.get("/auth/whoami")
+        self.expect_success({"name": "user", "email": "user@mail.com"})

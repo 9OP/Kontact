@@ -11,10 +11,10 @@ def test():
     """
     Run tests.
     """
-    os.environ["FLASK_ENV"] = "development"
-    pytest.main(["tests/"])
-    # os.system("echo $FLASK_ENV && pytest ./tests/")
-    # pytest.main(["./tests/"])
+    os.environ["FLASK_ENV"] = "testing"
+    os.system("pytest tests/")
+    # pytest main has a problem to build coverage
+    # pytest.main(["tests/"])
 
 
 if __name__ == "__main__":

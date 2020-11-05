@@ -19,7 +19,7 @@ def create_app(env=None):
     bcrypt.init_app(app)
     Migrate(app, db)
     CORS(app)
-    Talisman(app)
+    # Talisman(app) # this makes test crash, because it redirect to https, status=302
 
     with app.app_context():
         from app.api import api, auth_api
