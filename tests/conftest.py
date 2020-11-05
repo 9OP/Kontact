@@ -5,39 +5,49 @@ from app.models import User, UserToken
 
 
 @pytest.fixture(scope="module")
-def test_client():
-    kontact = create_app("development")
-    test_client = kontact.test_client()
-
-    ctx = kontact.app_context()
-    ctx.push()
-
-    yield test_client
-
-    ctx.pop()
+def app():
+    return create_app("development")
 
 
 @pytest.fixture(scope="module")
-def init_database(test_client):
-    db.drop_all()
-    db.create_all()
+def client(app):
+    return app.test_client()
+
+
+@pytest.fixture(scope="function")
+def database(app):
+    db.app = app
+
+    with app.app_context():
+        db.create_all()
 
     yield db
 
+    db.session.close()
+    db.drop_all()
 
-@pytest.fixture
-def make_user(init_database):
-    created_records = []
 
+@pytest.fixture(scope="function")
+def make_user(database):
+    # setup
     def _make_user(**kwargs):
         user = User(**kwargs)
         db.session.add(user)
         db.session.commit()
-        created_records.append(user)
         return user
 
     yield _make_user
+    # teardown
 
-    for record in created_records:
-        db.session.delete(record)
+
+@pytest.fixture(scope="function")
+def make_token(database):
+    # setup
+    def _make_token(**kwargs):
+        token = UserToken(**kwargs)
+        db.session.add(token)
         db.session.commit()
+        return token
+
+    yield _make_token
+    # teardown
