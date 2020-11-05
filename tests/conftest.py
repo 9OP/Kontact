@@ -6,7 +6,9 @@ from app.models import User, UserToken
 
 @pytest.fixture(scope="module")
 def app():
-    return create_app("development")
+    app = create_app("testing")
+    with app.app_context():
+        yield app
 
 
 @pytest.fixture(scope="module")
@@ -16,15 +18,13 @@ def client(app):
 
 @pytest.fixture(scope="function")
 def database(app):
-    db.app = app
-
-    with app.app_context():
-        db.create_all()
+    db.init_app(app)
+    db.drop_all()
+    db.create_all()
 
     yield db
 
     db.session.close()
-    db.drop_all()
 
 
 @pytest.fixture(scope="function")

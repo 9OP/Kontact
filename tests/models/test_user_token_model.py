@@ -10,6 +10,7 @@ user_data = {
 }
 
 
+@pytest.mark.usefixtures("database")
 class UserTokenModelSuite:
     @pytest.fixture(autouse=True)
     def _base(self, make_user, make_token):

@@ -31,6 +31,7 @@ def login(token):
     pass
 
 
+@pytest.mark.usefixtures("database", "app")
 class AuthenticationRequestsSuite:
     @pytest.fixture(autouse=True)
     def _base(self, client, database, make_token, make_user, monkeypatch):
@@ -61,21 +62,21 @@ class AuthenticationRequestsSuite:
             {"name": "user", "email": "user@mail.com", "token": "mocked_token"},
         )
 
-    def test_fail_signup(self):
-        """
-        GIVEN a user input registered
-        WHEN a POST /auth/signup
-        THEN fail registered
-        """
-        self.make_user(**user_data)
-        response = self.post("/auth/signup", user_data)
-        expect_failure(response)
+    # def test_fail_signup(self):
+    #     """
+    #     GIVEN a user input registered
+    #     WHEN a POST /auth/signup
+    #     THEN fail registered
+    #     """
+    #     self.make_user(**user_data)
+    #     response = self.post("/auth/signup", user_data)
+    #     expect_failure(response)
 
-    def test_signin(self):
-        pass
+    # def test_signin(self):
+    #     pass
 
-    def test_signout(self):
-        pass
+    # def test_signout(self):
+    #     pass
 
-    def test_whoami(self):
-        pass
+    # def test_whoami(self):
+    #     pass

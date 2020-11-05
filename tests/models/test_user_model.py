@@ -10,6 +10,7 @@ user_data = {
 }
 
 
+@pytest.mark.usefixtures("database")
 class UserModelSuite:
     @pytest.fixture(autouse=True)
     def _base(self, make_user):
