@@ -38,6 +38,9 @@ class UserTokenModelSuite:
     def test_create(self):
         pass
 
+    def test_find(self):
+        pass
+
     def test_decode(self):
         """
         GIVEN a UserToken model
