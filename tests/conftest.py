@@ -18,14 +18,11 @@ def test_client():
 
 
 @pytest.fixture(scope="module")
-def init_database():
+def init_database(test_client):
     db.drop_all()
     db.create_all()
 
     yield db
-
-
-# Fixture factories: User, UserToken
 
 
 @pytest.fixture
@@ -33,11 +30,14 @@ def make_user(init_database):
     created_records = []
 
     def _make_user(**kwargs):
-        user = User.create(**kwargs)
+        user = User(**kwargs)
+        db.session.add(user)
+        db.session.commit()
         created_records.append(user)
         return user
 
     yield _make_user
 
     for record in created_records:
-        record.destroy()
+        db.session.delete(record)
+        db.session.commit()

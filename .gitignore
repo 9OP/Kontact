@@ -3,6 +3,6 @@ __pycache__/
 venv/
 *.sqlite3
 .pytest_cache/
-.coverage/
-.coverage_file
+.coverage
+coverage_report/
 .DS_Store
