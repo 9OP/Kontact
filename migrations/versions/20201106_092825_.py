@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: b6613d546d87
+Revision ID: eeb2938594fe
 Revises:
-Create Date: 2020-11-06 00:46:46.721525
+Create Date: 2020-11-06 09:28:25.982268
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "b6613d546d87"
+revision = "eeb2938594fe"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade():
         "user",
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("id", sa.CHAR(32), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=False),
         sa.Column("password", sa.String(length=255), nullable=False),
@@ -34,7 +34,7 @@ def upgrade():
         "user_token",
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("id", sa.CHAR(32), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("token", sa.String(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.Column("revoked_at", sa.DateTime(), nullable=True),

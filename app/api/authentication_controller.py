@@ -45,7 +45,7 @@ def signin():
     user = User.find(email=params["email"])
 
     if not user or not user.check_password(params["password"]):
-        raise api_res.InvalidParameter("Email or password wrong.")
+        raise api_res.InvalidParameter("Email or password wrong")
 
     user_data = user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=user.id).token

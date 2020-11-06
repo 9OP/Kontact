@@ -56,6 +56,15 @@ class AuthenticationRequestsSuite(RequestsHelper):
         self.response = self.post("/auth/signup", user_data)
         self.expect_failure()
 
+    def test_fail_validation_signup(self):
+        """
+        GIVEN wrong email
+        WHEN a POST /auth/signup
+        THEN fail registered
+        """
+        self.response = self.post("/auth/signup", {**user_data, "email": "notamail"})
+        self.expect_failure({"code": 411})
+
     def test_signin(self):
         """
         GIVEN a user registered
@@ -68,6 +77,28 @@ class AuthenticationRequestsSuite(RequestsHelper):
         self.expect_success(
             {"name": "user", "email": "user@mail.com", "token": "mocked_token"},
         )
+
+    def test_fail_password_signin(self):
+        """
+        GIVEN a user registered
+        WHEN a POST /auth/signin with wrong password
+        THEN return an error
+        """
+        self.make_user(**user_data)
+        self.response = self.post("/auth/signin", {**user_data, "password": "blublu"})
+        self.expect_failure({"code": 411})
+
+    def test_fail_email_signin(self):
+        """
+        GIVEN a user registered
+        WHEN a POST /auth/signin with wrong email
+        THEN return an error
+        """
+        self.make_user(**user_data)
+        self.response = self.post(
+            "/auth/signin", {**user_data, "email": "wrong@mail.com"}
+        )
+        self.expect_failure({"code": 411})
 
     def test_signout(self):
         """
@@ -91,3 +122,13 @@ class AuthenticationRequestsSuite(RequestsHelper):
         self.login(user)
         self.response = self.get("/auth/whoami")
         self.expect_success({"name": "user", "email": "user@mail.com"})
+
+    def test_missing_auth_token(self):
+        """
+        GIVEN nothing / or a user
+        WHEN a POST /auth/whoami without auth token
+        THEN return an error
+        """
+        self.headers.pop("kt_token", None)
+        self.response = self.get("/auth/whoami")
+        self.expect_failure({"code": 401}, code=401)
