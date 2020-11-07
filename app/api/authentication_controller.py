@@ -54,7 +54,7 @@ def signin():
 
 @authentication
 def signout():
-    UserToken.find(token=g.kt_token).revoke()
+    g.auth_token.revoke()
     return api_render("Signout successfully.")
 
 

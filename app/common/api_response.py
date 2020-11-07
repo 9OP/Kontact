@@ -49,9 +49,9 @@ class AuthError(GenericResponse):
         super().__init__(401, app_code, description)
 
 
-class NoRouteMatch(GenericResponse):
-    def __init__(self, app_code=404, description="No route matches."):
-        super().__init__(404, app_code, description)
+# class NoRouteMatch(GenericResponse):
+#     def __init__(self, app_code=404, description="No route matches."):
+#         super().__init__(404, app_code, description)
 
 
 class ResourceAlreadyExists(ApiError):
@@ -60,16 +60,16 @@ class ResourceAlreadyExists(ApiError):
         super().__init__(409, description)
 
 
-class ResourceNotFound(ApiError):
-    def __init__(self, resource=None):
-        description = f"The {resource} was not found."
-        super().__init__(408, description)
+# class ResourceNotFound(ApiError):
+#     def __init__(self, resource=None):
+#         description = f"The {resource} was not found."
+#         super().__init__(408, description)
 
 
-class MissingParameter(ApiError):
-    def __init__(self, parameter=None):
-        description = f"Missing parameter: {parameter}."
-        super().__init__(410, description)
+# class MissingParameter(ApiError):
+#     def __init__(self, parameter=None):
+#         description = f"Missing parameter: {parameter}."
+#         super().__init__(410, description)
 
 
 class InvalidParameter(ApiError):
@@ -84,11 +84,13 @@ class InvalidContentType(ApiError):
         super().__init__(415, description)
 
 
+# TokenInvalid
 class TokenExpired(ApiError):
     def __init__(self):
-        super().__init__(418, "The token is invalid or expired.")
+        super().__init__(418, "The token is invalid.")
 
 
+# TokenExpired
 class SignatureExpired(ApiError):
     def __init__(self):
-        super().__init__(419, "The token signature is expired.")
+        super().__init__(419, "The token is expired.")

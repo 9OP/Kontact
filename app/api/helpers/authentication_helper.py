@@ -9,14 +9,16 @@ def authentication(func):
     # Flask context available only inside secure_function
     @functools.wraps(func)
     def secure_function(*args, **kwargs):
-        kt_token = request.headers.get("kt_token")
+        if not request.headers.get("kt_token"):
+            raise api_res.AuthError(description="Authentication token required.")
 
-        if not kt_token:
-            raise api_res.AuthError(description="Authentication token missing.")
+        token = UserToken.find(token=request.headers.get("kt_token"))
+        if not token:
+            raise api_res.AuthError(description="Authentication token not found.")
 
-        uid = UserToken.decode(kt_token)
+        uid = token.decode()
         g.current_user = User.find(id=uid)
-        g.kt_token = kt_token
+        g.auth_token = token
         return func(*args, **kwargs)
 
     return secure_function

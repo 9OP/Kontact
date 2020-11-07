@@ -10,9 +10,10 @@ class User(db.Model, Support):
     password = db.Column(db.String(255), nullable=False)
     tokens = db.relationship("UserToken", backref="user", lazy=True)
 
-    def __init__(self, password, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.password = bcrypt.generate_password_hash(password, 10).decode("utf-8")
+        pwd = kwargs["password"]
+        self.password = bcrypt.generate_password_hash(pwd, 10).decode("utf-8")
 
     def __repr__(self):
         return "<user: {}>".format(self.email)

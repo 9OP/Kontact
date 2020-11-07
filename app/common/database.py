@@ -43,9 +43,9 @@ class Support(TimestampMixin):
         except sql_exc.IntegrityError:
             db.session.rollback()
             raise api_res.ResourceAlreadyExists(cls.__tablename__)
-        except sql_exc.SQLAlchemyError:
-            db.session.rollback()
-            raise api_res.ApiError()
+        # except sql_exc.SQLAlchemyError:
+        #     db.session.rollback()
+        #     raise api_res.ApiError()
 
     def update(self, **kwargs):
         for k, v in kwargs.items():
@@ -56,9 +56,9 @@ class Support(TimestampMixin):
         except sql_exc.IntegrityError:
             db.session.rollback()
             raise api_res.ResourceAlreadyExists(self.__tablename__)
-        except sql_exc.SQLAlchemyError:
-            db.session.rollback()
-            raise api_res.ApiError()
+        # except sql_exc.SQLAlchemyError:
+        #     db.session.rollback()
+        #     raise api_res.ApiError()
 
     @classmethod
     def find(cls, **kwargs):

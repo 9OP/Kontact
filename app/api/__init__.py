@@ -3,10 +3,10 @@ from app.api.authentication_controller import signup, signin, signout, whoami
 from app.common.api_response import (
     ApiError,
     AuthError,
-    NoRouteMatch,
-    ResourceNotFound,
+    # NoRouteMatch,
+    # ResourceNotFound,
     ResourceAlreadyExists,
-    MissingParameter,
+    # MissingParameter,
     InvalidParameter,
     InvalidContentType,
     TokenExpired,
@@ -26,10 +26,10 @@ def check_mimetype_json():
 api = Blueprint("api", __name__)
 api.app_errorhandler(ApiError)(api_handler)
 api.app_errorhandler(AuthError)(api_handler)
-api.app_errorhandler(NoRouteMatch)(api_handler)
-api.app_errorhandler(ResourceNotFound)(api_handler)
+# api.app_errorhandler(NoRouteMatch)(api_handler)
+# api.app_errorhandler(ResourceNotFound)(api_handler)
 api.app_errorhandler(ResourceAlreadyExists)(api_handler)
-api.app_errorhandler(MissingParameter)(api_handler)
+# api.app_errorhandler(MissingParameter)(api_handler)
 api.app_errorhandler(InvalidParameter)(api_handler)
 api.app_errorhandler(InvalidContentType)(api_handler)
 api.app_errorhandler(TokenExpired)(api_handler)

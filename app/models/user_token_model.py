@@ -29,16 +29,20 @@ class UserToken(db.Model, Support):
     def __repr__(self):
         return "<user_token: {}>".format(self.id)
 
-    @classmethod
-    def decode(cls, token):
-        if cls.find(token=token).revoked_at:
+    def decode(self):
+        if self.revoked_at:
             raise api_res.TokenExpired()
         try:
-            payload = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
+            payload = jwt.decode(
+                self.token,
+                Config.SECRET_KEY,
+                options={"require": ["exp", "iat", "uid"]},
+                algorithms="HS256",
+            )
             return payload["uid"]
         except jwt.ExpiredSignatureError:
             raise api_res.SignatureExpired()
-        except jwt.InvalidTokenError:
+        except jwt.InvalidTokenError:  # default error jwt
             raise api_res.TokenExpired()
 
     def revoke(self):
