@@ -7,7 +7,7 @@
 
 ### Signup
 POST {{host}}/auth/signup
-Content-Type: {{contentType}}
+#Content-Type: {{contentType}}
 
 {
     "email": "martin@mail.com",

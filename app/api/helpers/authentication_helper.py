@@ -13,8 +13,8 @@ def authentication(func):
             raise apr.AuthError(description="Authentication token required.")
 
         token = UserToken.find(token=request.headers.get("kt_token"))
-        # if not token: # decode(none) shoudl fail... remove this part
-        #     raise api.AuthError(description="Authentication token not found.")
+        if not token:
+            raise apr.TokenInvalid()
 
         uid = token.decode()
         g.current_user = User.find(id=uid)

@@ -1,5 +1,5 @@
 import pytest
-import app.common.api_response as api_res
+import app.api_responses as api_res
 from tests.conftest import User, UserToken
 from tests.factories import user_factory
 from app.config import Config
@@ -69,7 +69,7 @@ class UserTokenModelSuite:
         THEN then raise error when decode
         """
         self.mock(Config, "SECRET_KEY", "new_secret_key")
-        with pytest.raises(api_res.TokenExpired):
+        with pytest.raises(api_res.TokenInvalid):
             self.token.decode()
 
     def test_fail_decode_expired(self):
@@ -80,5 +80,5 @@ class UserTokenModelSuite:
         """
         self.mock(Config, "PAYLOAD_EXPIRATION", -1)  # expire at now-1s
         new_token = self.make_token(user_id=self.user.id)
-        with pytest.raises(api_res.SignatureExpired):
+        with pytest.raises(api_res.TokenExpired):
             new_token.decode()

@@ -19,4 +19,4 @@ def render(res=None):
 
 def expect_mimetype(mimetype="application/json", methods=["POST", "PUT"]):
     if request.headers.get("Content-Type") != mimetype and request.method in methods:
-        raise apr.ApiError(f"Expect {mimetype} mimetype.")
+        raise apr.ApiError(description=f"Expect {mimetype} mimetype.")

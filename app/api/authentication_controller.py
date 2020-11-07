@@ -14,9 +14,6 @@ _EMAIL_SCHEMA = {
 _PWD_SCHEMA = {
     "type": "string",
     "required": True,
-    "minlength": 6,
-    "empty": False,
-    "is_strong": True,
 }
 _NAME_SCHEMA = {
     "type": "string",
@@ -30,7 +27,12 @@ AUTH_SIGNIN_SCHEMA = {
 }
 AUTH_SIGNUP_SCHEMA = {
     "email": _EMAIL_SCHEMA,
-    "password": _PWD_SCHEMA,
+    "password": {
+        **_PWD_SCHEMA,
+        "minlength": 6,
+        "empty": False,
+        "is_strong": True,
+    },
     "name": _NAME_SCHEMA,
 }
 
@@ -52,7 +54,7 @@ def signin():
     user = User.find(email=params["email"])
 
     if not user or not user.check_password(params["password"]):
-        raise apr.InvalidParameter("Email or password wrong")
+        raise apr.LoginFailed()
 
     user_data = user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=user.id).token

@@ -41,6 +41,12 @@ class InvalidParameter(ApiError):
 
 
 # [401] -
+class LoginFailed(AuthError):
+    def __init__(self):
+        super().__init__(419, "The password or email is wrong")
+
+
+# [401] -
 class TokenInvalid(AuthError):
     def __init__(self):
         super().__init__(420, "The token is invalid.")

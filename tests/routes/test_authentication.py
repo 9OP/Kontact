@@ -31,7 +31,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         THEN fail
         """
         response = self.get("/auth/signup")
-        RequestsHelper.expect_failure(response, {"code": 500}, code=405)
+        RequestsHelper.expect_failure(response, {"app_code": 1000}, code=405)
 
     def test_signup(self):
         """
@@ -53,14 +53,14 @@ class AuthenticationRequestsSuite(RequestsHelper):
 
     def test_fail_signup(self):
         """
-        GIVEN a user input registered
+        GIVEN a user already registered
         WHEN a POST /auth/signup
         THEN fail registered
         """
         response = self.post("/auth/signup", self.args)
-        RequestsHelper.expect_failure(response, {"code": 409})
+        RequestsHelper.expect_failure(response, {"app_code": 410})
 
-    def test_fail_validation_signup(self):
+    def test_fail_email_validation_signup(self):
         """
         GIVEN wrong email
         WHEN a POST /auth/signup
@@ -68,7 +68,17 @@ class AuthenticationRequestsSuite(RequestsHelper):
         """
         args = {**self.args, "email": "notamail"}
         response = self.post("/auth/signup", args)
-        RequestsHelper.expect_failure(response, {"code": 411})
+        RequestsHelper.expect_failure(response, {"app_code": 411})
+
+    def test_fail_password_validation_signup(self):
+        """
+        GIVEN weak password
+        WHEN a POST /auth/signup
+        THEN fail registered
+        """
+        args = {**self.args, "password": "weak"}
+        response = self.post("/auth/signup", args)
+        RequestsHelper.expect_failure(response, {"app_code": 411})
 
     def test_fail_mimetypes(self):
         """
@@ -78,7 +88,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         """
         self.base_headers = {}  # This removes Content-Type: application/json
         response = self.post("/auth/signin", self.args)
-        RequestsHelper.expect_failure(response, {"code": 415})
+        RequestsHelper.expect_failure(response, {"app_code": 400})
 
     def test_signin(self):
         """
@@ -92,24 +102,14 @@ class AuthenticationRequestsSuite(RequestsHelper):
             response, {**self.user_data, "token": "mocked_token"}
         )
 
-    def test_fail_password_signin(self):
+    def test_fail_signin(self):
         """
         GIVEN a user registered
         WHEN a POST /auth/signin with wrong password
         THEN return an error
         """
         response = self.post("/auth/signin", {**self.args, "password": "blublu"})
-        RequestsHelper.expect_failure(response, {"code": 411})
-
-    def test_fail_email_signin(self):
-        """
-        GIVEN a user registered
-        WHEN a POST /auth/signin with wrong email
-        THEN return an error
-        """
-        args = {**self.args, "email": "wrong@mail.com"}
-        response = self.post("/auth/signin", args)
-        RequestsHelper.expect_failure(response, {"code": 411})
+        RequestsHelper.expect_failure(response, {"app_code": 419}, code=401)
 
     def test_signout(self):
         """
@@ -119,7 +119,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         """
         token = self.login(self.user_data)
         response = self.post("/auth/signout")
-        RequestsHelper.expect_success(response, {"code": 200})
+        RequestsHelper.expect_success(response, {"app_code": 200})
         assert token.revoked_at is not None
 
     def test_whoami(self):
@@ -140,7 +140,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         """
         self.headers = {}
         response = self.get("/auth/whoami")
-        RequestsHelper.expect_failure(response, {"code": 401}, code=401)
+        RequestsHelper.expect_failure(response, {"app_code": 401}, code=401)
 
     def test_empty_auth_token(self):
         """
@@ -150,4 +150,4 @@ class AuthenticationRequestsSuite(RequestsHelper):
         """
         self.headers = {"kt_token": None}
         response = self.get("/auth/whoami")
-        RequestsHelper.expect_failure(response, {"code": 401}, code=401)
+        RequestsHelper.expect_failure(response, {"app_code": 420}, code=401)

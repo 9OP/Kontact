@@ -8,6 +8,7 @@ from app.api_responses import (
     AccessError,
     AlreadyExists,
     InvalidParameter,
+    LoginFailed,
     TokenInvalid,
     TokenExpired,
 )
@@ -19,6 +20,7 @@ api.app_errorhandler(AuthError)(handler)
 api.app_errorhandler(AccessError)(handler)
 api.app_errorhandler(AlreadyExists)(handler)
 api.app_errorhandler(InvalidParameter)(handler)
+api.app_errorhandler(LoginFailed)(handler)
 api.app_errorhandler(TokenInvalid)(handler)
 api.app_errorhandler(TokenExpired)(handler)
 

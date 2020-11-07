@@ -1,6 +1,6 @@
 import pytest
 from app import create_app
-from app.common.database import db
+from app.models.database import db
 from app.models import User, UserToken
 
 

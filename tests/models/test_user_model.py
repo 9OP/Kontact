@@ -1,5 +1,5 @@
 import pytest
-import app.common.api_response as api_res
+import app.api_responses as api_res
 from tests.conftest import User, db
 from tests.factories import user_factory
 
@@ -84,7 +84,7 @@ class UserModelSuite:
         WHEN a user is defined
         THEN fail when create an existing user
         """
-        with pytest.raises(api_res.ResourceAlreadyExists):
+        with pytest.raises(api_res.AlreadyExists):
             User.create(**self.user_data)
 
     def test_update(self):
@@ -104,5 +104,5 @@ class UserModelSuite:
         """
         other_user = user_factory()
         self.make_user(**other_user)
-        with pytest.raises(api_res.ResourceAlreadyExists):
+        with pytest.raises(api_res.AlreadyExists):
             self.user.update(email=other_user["email"])
