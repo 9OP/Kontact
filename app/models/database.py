@@ -3,11 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy import exc as sql_exc
 from sqlalchemy.inspection import inspect
-from sqlalchemy.types import TypeDecorator, CHAR
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
 from datetime import datetime
-import app.common.api_response as api_res
+import app.api_responses as apr
 
 
 bcrypt = Bcrypt()
@@ -42,7 +39,7 @@ class Support(TimestampMixin):
             return new
         except sql_exc.IntegrityError:
             db.session.rollback()
-            raise api_res.ResourceAlreadyExists(cls.__tablename__)
+            raise apr.AlreadyExists(cls.__tablename__)
         # except sql_exc.SQLAlchemyError:
         #     db.session.rollback()
         #     raise api_res.ApiError()
@@ -55,7 +52,7 @@ class Support(TimestampMixin):
             return self
         except sql_exc.IntegrityError:
             db.session.rollback()
-            raise api_res.ResourceAlreadyExists(self.__tablename__)
+            raise apr.AlreadyExists(self.__tablename__)
         # except sql_exc.SQLAlchemyError:
         #     db.session.rollback()
         #     raise api_res.ApiError()
@@ -65,6 +62,6 @@ class Support(TimestampMixin):
         try:
             res = cls.query.filter_by(**kwargs).first()
         except sql_exc.SQLAlchemyError:
-            raise api_res.ApiError()
+            raise apr.ApiError()
         else:
             return res

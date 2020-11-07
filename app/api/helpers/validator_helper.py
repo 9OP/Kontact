@@ -1,9 +1,9 @@
 import re
-from cerberus import Validator
-import app.common.api_response as api_res
+import cerberus
+import app.api_responses as apr
 
 
-class AppValidator(Validator):
+class AppValidator(cerberus.Validator):
     email_regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
     password_regex = "(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&*])"
 
@@ -25,6 +25,6 @@ def validator(document, schema):
     predicat = AppValidator(schema, purge_unknown=True)
 
     if not predicat.validate(document):
-        raise api_res.InvalidParameter(predicat.errors)
+        raise apr.InvalidParameter(predicat.errors)
 
     return predicat.normalized(document)

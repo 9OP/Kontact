@@ -1,8 +1,8 @@
 import jwt
 from datetime import datetime, timedelta
-from app.common.database import db, Support
+from app.models.database import db, Support
 from app.config import Config
-import app.common.api_response as api_res
+import app.api_responses as apr
 
 
 class UserToken(db.Model, Support):
@@ -31,7 +31,7 @@ class UserToken(db.Model, Support):
 
     def decode(self):
         if self.revoked_at:
-            raise api_res.TokenExpired()
+            raise apr.TokenExpired()
         try:
             payload = jwt.decode(
                 self.token,
@@ -41,9 +41,9 @@ class UserToken(db.Model, Support):
             )
             return payload["uid"]
         except jwt.ExpiredSignatureError:
-            raise api_res.SignatureExpired()
+            raise apr.TokenExpired()
         except jwt.InvalidTokenError:  # default error jwt
-            raise api_res.TokenExpired()
+            raise apr.TokenInvalid
 
     def revoke(self):
         self.update(revoked_at=datetime.utcnow())

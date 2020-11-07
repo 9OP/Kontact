@@ -1,4 +1,4 @@
-from app.common.database import db, bcrypt, Support
+from app.models.database import db, bcrypt, Support
 
 
 class User(db.Model, Support):

@@ -1,30 +1,37 @@
-from flask import jsonify, request, g
-from app.api.helpers import validator, authentication, api_render
+from flask import request, g
 from app.models import User, UserToken
-import app.common.api_response as api_res
+from app.api.helpers import validator, render, authentication
+import app.api_responses as apr
 
-
-AUTH_SIGNIN_SCHEMA = {
-    "email": {
-        "type": "string",
-        "required": True,
-        "maxlength": 255,
-        "empty": False,
-        "is_email": True,
-        "coerce": "lowercase",
-    },
-    "password": {
-        "type": "string",
-        "required": True,
-        "minlength": 6,
-        "empty": False,
-        "is_strong": True,
-    },
+_EMAIL_SCHEMA = {
+    "type": "string",
+    "required": True,
+    "maxlength": 255,
+    "empty": False,
+    "is_email": True,
+    "coerce": "lowercase",
+}
+_PWD_SCHEMA = {
+    "type": "string",
+    "required": True,
+    "minlength": 6,
+    "empty": False,
+    "is_strong": True,
+}
+_NAME_SCHEMA = {
+    "type": "string",
+    "required": True,
+    "empty": False,
 }
 
+AUTH_SIGNIN_SCHEMA = {
+    "email": _EMAIL_SCHEMA,
+    "password": _PWD_SCHEMA,
+}
 AUTH_SIGNUP_SCHEMA = {
-    **AUTH_SIGNIN_SCHEMA,
-    **{"name": {"type": "string", "required": True, "empty": False}},
+    "email": _EMAIL_SCHEMA,
+    "password": _PWD_SCHEMA,
+    "name": _NAME_SCHEMA,
 }
 
 
@@ -37,7 +44,7 @@ def signup():
     )
     user_data = new_user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=new_user.id).token
-    return api_render(user_data)
+    return render(user_data)
 
 
 def signin():
@@ -45,20 +52,20 @@ def signin():
     user = User.find(email=params["email"])
 
     if not user or not user.check_password(params["password"]):
-        raise api_res.InvalidParameter("Email or password wrong")
+        raise apr.InvalidParameter("Email or password wrong")
 
     user_data = user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=user.id).token
-    return api_render(user_data)
+    return render(user_data)
 
 
 @authentication
 def signout():
     g.auth_token.revoke()
-    return api_render("Signout successfully.")
+    return render("Signout successfully.")
 
 
 @authentication
 def whoami():
     user_data = g.current_user.serialize("id", "email", "name")
-    return api_render(user_data)
+    return render(user_data)

@@ -1,43 +1,32 @@
-from flask import Blueprint, request
+from flask import Blueprint
+from werkzeug.exceptions import HTTPException
 from app.api.authentication_controller import signup, signin, signout, whoami
-from app.common.api_response import (
+from app.api.helpers import handler, expect_mimetype
+from app.api_responses import (
     ApiError,
     AuthError,
-    # NoRouteMatch,
-    # ResourceNotFound,
-    ResourceAlreadyExists,
-    # MissingParameter,
+    AccessError,
+    AlreadyExists,
     InvalidParameter,
-    InvalidContentType,
+    TokenInvalid,
     TokenExpired,
-    SignatureExpired,
-    api_handler,
 )
-
-
-def check_mimetype_json():
-    method = request.method
-    mimetype = request.headers.get("Content-Type")
-    if mimetype != "application/json" and method in ["POST", "PUT", "DELETE"]:
-        raise InvalidContentType("application/json")
-
 
 # Register custom errors
 api = Blueprint("api", __name__)
-api.app_errorhandler(ApiError)(api_handler)
-api.app_errorhandler(AuthError)(api_handler)
-# api.app_errorhandler(NoRouteMatch)(api_handler)
-# api.app_errorhandler(ResourceNotFound)(api_handler)
-api.app_errorhandler(ResourceAlreadyExists)(api_handler)
-# api.app_errorhandler(MissingParameter)(api_handler)
-api.app_errorhandler(InvalidParameter)(api_handler)
-api.app_errorhandler(InvalidContentType)(api_handler)
-api.app_errorhandler(TokenExpired)(api_handler)
-api.app_errorhandler(SignatureExpired)(api_handler)
+api.app_errorhandler(ApiError)(handler)
+api.app_errorhandler(AuthError)(handler)
+api.app_errorhandler(AccessError)(handler)
+api.app_errorhandler(AlreadyExists)(handler)
+api.app_errorhandler(InvalidParameter)(handler)
+api.app_errorhandler(TokenInvalid)(handler)
+api.app_errorhandler(TokenExpired)(handler)
 
-api.before_app_request(check_mimetype_json)
+# Application wide
+api.app_errorhandler(HTTPException)(handler)
+api.before_app_request(expect_mimetype)
 
-# Authentication
+# [Authentication] blueprint
 auth_api = Blueprint("auth_api", __name__)
 auth_api.route("/auth/signup", methods=["POST"])(signup)
 auth_api.route("/auth/signin", methods=["POST"])(signin)
