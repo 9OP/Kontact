@@ -14,6 +14,10 @@ from alembic import context
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from flask import current_app
+from app.models import (
+    User,
+    UserToken,
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
