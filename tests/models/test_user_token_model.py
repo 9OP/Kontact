@@ -1,19 +1,16 @@
 import pytest
-from app.models import User, UserToken
 import app.common.api_response as api_res
-
-
-user_data = {
-    "email": "user@mail.com",
-    "name": "user",
-    "password": "123abcABC#$%",
-}
+from tests.conftest import User, UserToken
+from tests.factories import user_factory
+from app.config import Config
 
 
 @pytest.mark.usefixtures("database")
 class UserTokenModelSuite:
     @pytest.fixture(autouse=True)
-    def _base(self, make_user, make_token):
+    def _base(self, make_user, make_token, monkeypatch):
+        self.mock = monkeypatch.setattr
+        user_data = user_factory()
         self.user = make_user(**user_data)
         self.token = make_token(user_id=self.user.id)
         self.make_user = make_user
@@ -36,19 +33,13 @@ class UserTokenModelSuite:
         """
         assert self.token.__repr__() == f"<user_token: {self.token.id}>"
 
-    def test_create(self):
-        pass
-
-    def test_find(self):
-        pass
-
     def test_decode(self):
         """
         GIVEN a UserToken model
         WHEN a token is decoded
         THEN decoded value is user id
         """
-        assert UserToken.decode(self.token.token) == self.user.id
+        assert self.token.decode() == self.user.id
 
     def test_revoke(self):
         """
@@ -69,7 +60,25 @@ class UserTokenModelSuite:
         """
         self.token.revoke()
         with pytest.raises(api_res.TokenExpired):
-            UserToken.decode(self.token.token)
+            self.token.decode()
+
+    def test_fail_decode_invalid(self):
+        """
+        GIVEN a UserToken model
+        WHEN a token is invalid
+        THEN then raise error when decode
+        """
+        self.mock(Config, "SECRET_KEY", "new_secret_key")
+        with pytest.raises(api_res.TokenExpired):
+            self.token.decode()
 
     def test_fail_decode_expired(self):
-        pass
+        """
+        GIVEN a UserToken model
+        WHEN a token signature expired
+        THEN then raise error when decode
+        """
+        self.mock(Config, "PAYLOAD_EXPIRATION", -1)  # expire at now-1s
+        new_token = self.make_token(user_id=self.user.id)
+        with pytest.raises(api_res.SignatureExpired):
+            new_token.decode()

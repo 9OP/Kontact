@@ -1,44 +1,25 @@
 import pytest
-from app.models import User
 import app.common.api_response as api_res
-
-
-user_data = {
-    "email": "user@mail.com",
-    "name": "user",
-    "password": "123abcABC#$%",
-}
+from tests.conftest import User, db
+from tests.factories import user_factory
 
 
 @pytest.mark.usefixtures("database")
 class UserModelSuite:
     @pytest.fixture(autouse=True)
     def _base(self, make_user):
-        self.user = make_user(
-            email="kontact@mail.com",
-            name="kontact",
-            password="123abcABC#$%",
-        )
         self.make_user = make_user
+        self.user_data = user_factory()
+        self.user = make_user(**self.user_data)
 
     def test_define(self):
         """
         GIVEN a User model
         WHEN a user is already defined
-        THEN check the email and name are defined correctly
+        THEN check the user is defined correctly
         """
-        assert self.user.email == "kontact@mail.com"
-        assert self.user.name == "kontact"
-
-    def test_create(self):
-        """
-        GIVEN a User model
-        WHEN a create user
-        THEN check the email and name are defined correctly
-        """
-        user = User.create(**user_data)
-        assert user.email == user_data["email"]
-        assert user.name == user_data["name"]
+        assert self.user.name == self.user_data["name"]
+        assert self.user.email == self.user_data["email"]
 
     def test_repr(self):
         """
@@ -46,7 +27,7 @@ class UserModelSuite:
         WHEN a user is defined
         THEN check repr
         """
-        assert self.user.__repr__() == f"<user: {self.user.email}>"
+        assert self.user.__repr__() == f"<user: {self.user_data['email']}>"
 
     def test_check_password(self):
         """
@@ -54,8 +35,8 @@ class UserModelSuite:
         WHEN a user is defined
         THEN check password
         """
-        assert self.user.check_password("123abcABC#$%") is True
-        assert self.user.check_password("123abcABC#$") is False
+        assert self.user.check_password(self.user_data["password"]) is True
+        assert self.user.check_password("notmypassword") is False
 
     def test_serialize(self):
         """
@@ -74,8 +55,37 @@ class UserModelSuite:
         WHEN a user is defined
         THEN find user by name and email
         """
-        found = User.find(name="kontact")
+        found = User.find(name=self.user_data["name"])
         assert found.id == self.user.id
+
+    def test_fail_find(self):
+        """
+        GIVEN a User model
+        WHEN a user is defined
+        THEN find user by unkown keys
+        """
+        with pytest.raises(api_res.ApiError):
+            User.find(blublu=123)
+
+    def test_create(self):
+        """
+        GIVEN a User model
+        WHEN a create user
+        THEN check the email and name are defined correctly
+        """
+        other_user = user_factory()
+        user = User.create(**other_user)
+        assert user.email == other_user["email"]
+        assert user.name == other_user["name"]
+
+    def test_fail_create_duplicate(self):
+        """
+        GIVEN a User model
+        WHEN a user is defined
+        THEN fail when create an existing user
+        """
+        with pytest.raises(api_res.ResourceAlreadyExists):
+            User.create(**self.user_data)
 
     def test_update(self):
         """
@@ -86,25 +96,13 @@ class UserModelSuite:
         self.user.update(name="anon")
         assert self.user.name == "anon"
 
-    def test_fail_create(self):
-        """
-        GIVEN a User model
-        WHEN a user is defined
-        THEN fail when create an existing user
-        """
-        with pytest.raises(api_res.ResourceAlreadyExists):
-            User.create(
-                email="kontact@mail.com",
-                name="kontact",
-                password="123abcABC#$%",
-            )
-
     def test_fail_update(self):
         """
         GIVEN a User model
         WHEN a user is defined
         THEN fail when update with existing email
         """
-        self.make_user(**user_data)
+        other_user = user_factory()
+        self.make_user(**other_user)
         with pytest.raises(api_res.ResourceAlreadyExists):
-            self.user.update(email="user@mail.com")
+            self.user.update(email=other_user["email"])

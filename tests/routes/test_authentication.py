@@ -2,37 +2,36 @@ import pytest
 import json
 from tests.routes.requests_helper import RequestsHelper
 from tests.conftest import UserToken
-
-
-user_data = {
-    "email": "user@mail.com",
-    "name": "user",
-    "password": "123abcABC#$%",
-}
+from tests.factories import user_factory
 
 
 @pytest.mark.usefixtures("database")
 class AuthenticationRequestsSuite(RequestsHelper):
     @pytest.fixture(autouse=True)
-    def _base(self, client, make_token, make_user, monkeypatch):
-        def post(route, data={}):
-            payload = {
-                "data": json.dumps(data),
-                "headers": {**self.headers},
-            }
-            return client.post(route, **payload)
-
-        def get(route):
-            payload = {"headers": {**self.headers}}
-            return client.get(route, **payload)
-
-        self.post = post
-        self.get = get
-
+    def _base(self, make_token, make_user):
+        data = user_factory()
+        user = make_user(**data)
+        self.user_data = {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+        }
+        self.args = {
+            "email": data["email"],
+            "password": data["password"],
+            "name": data["name"],
+        }
         self.make_user = make_user
         self.make_token = make_token
 
-        self.mock = monkeypatch.setattr
+    def test_fail_route(self):
+        """
+        GIVEN
+        WHEN call undefined route
+        THEN fail
+        """
+        response = self.get("/auth/signup")
+        RequestsHelper.expect_failure(response, {"code": 500}, code=405)
 
     def test_signup(self):
         """
@@ -40,10 +39,16 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/signup
         THEN register user
         """
+        user = user_factory()
         self.mock(UserToken, "token", "mocked_token")
-        self.response = self.post("/auth/signup", user_data)
-        self.expect_success(
-            {"name": "user", "email": "user@mail.com", "token": "mocked_token"},
+        response = self.post("/auth/signup", user)
+        RequestsHelper.expect_success(
+            response,
+            {
+                "name": user["name"],
+                "email": user["email"],
+                "token": "mocked_token",
+            },
         )
 
     def test_fail_signup(self):
@@ -52,9 +57,8 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/signup
         THEN fail registered
         """
-        self.make_user(**user_data)
-        self.response = self.post("/auth/signup", user_data)
-        self.expect_failure()
+        response = self.post("/auth/signup", self.args)
+        RequestsHelper.expect_failure(response, {"code": 409})
 
     def test_fail_validation_signup(self):
         """
@@ -62,8 +66,19 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/signup
         THEN fail registered
         """
-        self.response = self.post("/auth/signup", {**user_data, "email": "notamail"})
-        self.expect_failure({"code": 411})
+        args = {**self.args, "email": "notamail"}
+        response = self.post("/auth/signup", args)
+        RequestsHelper.expect_failure(response, {"code": 411})
+
+    def test_fail_mimetypes(self):
+        """
+        GIVEN wrong mimetypes
+        WHEN a POST request
+        THEN fail
+        """
+        self.base_headers = {}  # This removes Content-Type: application/json
+        response = self.post("/auth/signin", self.args)
+        RequestsHelper.expect_failure(response, {"code": 415})
 
     def test_signin(self):
         """
@@ -72,10 +87,9 @@ class AuthenticationRequestsSuite(RequestsHelper):
         THEN return authentication token
         """
         self.mock(UserToken, "token", "mocked_token")
-        self.make_user(**user_data)
-        self.response = self.post("/auth/signin", user_data)
-        self.expect_success(
-            {"name": "user", "email": "user@mail.com", "token": "mocked_token"},
+        response = self.post("/auth/signin", self.args)
+        RequestsHelper.expect_success(
+            response, {**self.user_data, "token": "mocked_token"}
         )
 
     def test_fail_password_signin(self):
@@ -84,9 +98,8 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/signin with wrong password
         THEN return an error
         """
-        self.make_user(**user_data)
-        self.response = self.post("/auth/signin", {**user_data, "password": "blublu"})
-        self.expect_failure({"code": 411})
+        response = self.post("/auth/signin", {**self.args, "password": "blublu"})
+        RequestsHelper.expect_failure(response, {"code": 411})
 
     def test_fail_email_signin(self):
         """
@@ -94,11 +107,9 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/signin with wrong email
         THEN return an error
         """
-        self.make_user(**user_data)
-        self.response = self.post(
-            "/auth/signin", {**user_data, "email": "wrong@mail.com"}
-        )
-        self.expect_failure({"code": 411})
+        args = {**self.args, "email": "wrong@mail.com"}
+        response = self.post("/auth/signin", args)
+        RequestsHelper.expect_failure(response, {"code": 411})
 
     def test_signout(self):
         """
@@ -106,10 +117,9 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/signout
         THEN return success and invalidate token
         """
-        user = self.make_user(**user_data)
-        token = self.login(user)
-        self.response = self.post("/auth/signout")
-        self.expect_success({"code": 200, "description": "Signout successfully."})
+        token = self.login(self.user_data)
+        response = self.post("/auth/signout")
+        RequestsHelper.expect_success(response, {"code": 200})
         assert token.revoked_at is not None
 
     def test_whoami(self):
@@ -118,10 +128,9 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/whoami
         THEN return user info
         """
-        user = self.make_user(**user_data)
-        self.login(user)
-        self.response = self.get("/auth/whoami")
-        self.expect_success({"name": "user", "email": "user@mail.com"})
+        self.login(self.user_data)
+        response = self.get("/auth/whoami")
+        RequestsHelper.expect_success(response, self.user_data)
 
     def test_missing_auth_token(self):
         """
@@ -129,6 +138,16 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN a POST /auth/whoami without auth token
         THEN return an error
         """
-        self.headers.pop("kt_token", None)
-        self.response = self.get("/auth/whoami")
-        self.expect_failure({"code": 401}, code=401)
+        self.headers = {}
+        response = self.get("/auth/whoami")
+        RequestsHelper.expect_failure(response, {"code": 401}, code=401)
+
+    def test_empty_auth_token(self):
+        """
+        GIVEN nothing / or a user
+        WHEN a POST /auth/whoami without auth token
+        THEN return an error
+        """
+        self.headers = {"kt_token": None}
+        response = self.get("/auth/whoami")
+        RequestsHelper.expect_failure(response, {"code": 401}, code=401)
