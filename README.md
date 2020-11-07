@@ -9,5 +9,5 @@ python manage.py run
 
 #### Run tests
 ```
-python manage.py tests
+python manage.py test
 ```

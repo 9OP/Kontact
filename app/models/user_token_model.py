@@ -23,7 +23,7 @@ class UserToken(db.Model, Support):
         self.token = jwt.encode(
             payload,
             Config.SECRET_KEY,
-            algorithm="HS256",
+            algorithm="HS512",
         ).decode("utf-8")
 
     def __repr__(self):
@@ -37,7 +37,7 @@ class UserToken(db.Model, Support):
                 self.token,
                 Config.SECRET_KEY,
                 options={"require": ["exp", "iat", "uid"]},
-                algorithms="HS256",
+                algorithms="HS512",
             )
             return payload["uid"]
         except jwt.ExpiredSignatureError:
