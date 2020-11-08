@@ -46,7 +46,7 @@ def signup():
     )
     user_data = new_user.serialize("id", "email", "name")
     user_data["token"] = UserToken.create(user_id=new_user.id).token
-    return render(user_data)
+    return render(user_data, code=201)
 
 
 def signin():

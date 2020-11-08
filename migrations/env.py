@@ -17,6 +17,8 @@ from flask import current_app
 from app.models import (
     User,
     UserToken,
+    Channel,
+    Membership,
 )
 
 # this is the Alembic Config object, which provides

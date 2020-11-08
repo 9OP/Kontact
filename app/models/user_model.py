@@ -1,3 +1,4 @@
+from sqlalchemy.ext.associationproxy import association_proxy
 from app.models.database import db, bcrypt, Support
 
 
@@ -8,7 +9,9 @@ class User(db.Model, Support):
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+
     tokens = db.relationship("UserToken", backref="user", lazy=True)
+    channels = association_proxy("membership", "channel")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

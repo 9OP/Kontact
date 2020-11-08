@@ -5,9 +5,6 @@ from flask_cors import CORS
 from flask_talisman import Talisman, DEFAULT_CSP_POLICY
 from app.config import Cfg
 
-# to remove
-from app.models import User, UserToken
-
 
 def create_app(env=None):
     env = env or environ.get("FLASK_ENV")
@@ -27,9 +24,10 @@ def create_app(env=None):
     )
 
     with app.app_context():
-        from app.api import api, auth_api
+        from app.api import api, auth_api, channel_api
 
         app.register_blueprint(api)
         app.register_blueprint(auth_api)
+        app.register_blueprint(channel_api)
 
     return app

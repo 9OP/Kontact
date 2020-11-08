@@ -7,7 +7,7 @@
 
 ### Signup
 POST {{host}}/auth/signup
-#Content-Type: {{contentType}}
+Content-Type: {{contentType}}
 
 {
     "email": "martin@mail.com",
@@ -38,3 +38,18 @@ kt_token: {{token}}
 POST {{host}}/auth/signout
 Content-Type: {{contentType}}
 kt_token: {{token}}
+
+
+### Create channel
+POST {{host}}/channel
+Content-Type: {{contentType}}
+# kt_token: {{token}}
+
+{
+    "name": "Channel-6"
+}
+
+### Get all channels
+GET {{host}}/channel
+# Content-Type: {{contentType}}
+# kt_token: {{token}}
