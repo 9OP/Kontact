@@ -65,12 +65,8 @@ class Support(TimestampMixin):
 
     def destroy(self):
         db.session.delete(self)
-        try:
-            db.session.commit()
-            return self
-        except sql_exc.SQLAlchemyError:
-            db.session.rollback()
-            raise apr.ApiError()
+        db.session.commit()
+        return self
 
     @classmethod
     def find(cls, **kwargs):

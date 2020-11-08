@@ -11,7 +11,7 @@ class Channel(db.Model, Support):
     members = association_proxy("channel_memberships", "user")
 
     def __repr__(self):
-        return "<channel: {}>".format(self.id)
+        return "<channel: {}>".format(self.name)
 
     def summary(self):
         channel_data = self.serialize("id", "name", "created_at")

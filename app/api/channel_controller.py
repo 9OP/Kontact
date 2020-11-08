@@ -40,8 +40,8 @@ def destroy(cid):
     return render(f"Channel {channel.name} deleted")
 
 
-def update(cid):
-    pass
+# def update(cid):
+#     pass
 
 
 def add_member(cid, uid):
@@ -57,3 +57,7 @@ def del_member(cid, uid):
     membership = Membership.find(user_id=user.id, channel_id=channel.id)
     membership.destroy()
     return render(f"Member {user.name} deleted from channel {channel.name}")
+
+
+# def update_member(cid, uid):
+#     pass
