@@ -40,6 +40,12 @@ class InvalidParameter(ApiError):
         super().__init__(411, f"Invalid parameter: {parameter}.")
 
 
+# [400] -
+class NotFound(ApiError):
+    def __init__(self, resource):
+        super().__init__(412, f"{resource} not found.")
+
+
 # [401] -
 class LoginFailed(AuthError):
     def __init__(self):

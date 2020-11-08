@@ -7,6 +7,7 @@ from app.api_responses import (
     AccessError,
     AlreadyExists,
     InvalidParameter,
+    NotFound,
     LoginFailed,
     TokenInvalid,
     TokenExpired,
@@ -19,6 +20,7 @@ api.app_errorhandler(AuthError)(handler)
 api.app_errorhandler(AccessError)(handler)
 api.app_errorhandler(AlreadyExists)(handler)
 api.app_errorhandler(InvalidParameter)(handler)
+api.app_errorhandler(NotFound)(handler)
 api.app_errorhandler(LoginFailed)(handler)
 api.app_errorhandler(TokenInvalid)(handler)
 api.app_errorhandler(TokenExpired)(handler)
@@ -51,8 +53,10 @@ channel_api = Blueprint("channel_api", __name__)
 channel_api.route("/channel", methods=["POST"])(channel.create)
 channel_api.route("/channel", methods=["GET"])(channel.index)
 
-channel_api.route("/channel/<id>/membership", methods=["POST"])(channel.add_member)
-channel_api.route("/channel/<id>/membership", methods=["GET"])(channel.get_members)
+channel_api.route("/channel/<cid>/membership/<uid>", methods=["POST"])(
+    channel.add_member
+)
+channel_api.route("/channel/<cid>/membership", methods=["GET"])(channel.get_members)
 
 # channel_api.route("/channel/<id>", methods=["GET"])(channel.show)
 # channel_api.route("/channel/<id>", methods=["PUT"])(channel.update)

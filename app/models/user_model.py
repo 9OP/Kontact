@@ -11,7 +11,7 @@ class User(db.Model, Support):
     password = db.Column(db.String(255), nullable=False)
 
     tokens = db.relationship("UserToken", backref="user", lazy=True)
-    channels = association_proxy("membership", "channel")
+    channels = association_proxy("user_memberships", "channel")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -20,6 +20,11 @@ class User(db.Model, Support):
 
     def __repr__(self):
         return "<user: {}>".format(self.email)
+
+    def summary(self):
+        user_data = self.serialize("id", "email", "name")
+        user_data["channels"] = [c.summary() for c in self.channels]
+        return user_data
 
     def check_password(self, password):
         valid = bcrypt.check_password_hash(self.password, password)

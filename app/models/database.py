@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy import exc as sql_exc
 from sqlalchemy.inspection import inspect
+from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
 import app.api_responses as apr
 
@@ -28,7 +29,14 @@ class TimestampMixin(object):
 
 class Support(TimestampMixin):
     def serialize(self, *args):
-        return {c: getattr(self, c) for c in inspect(self).attrs.keys() if c in args}
+        hybrids = [
+            item.__name__
+            for item in inspect(self.__class__).all_orm_descriptors
+            if isinstance(item, hybrid_property)
+        ]
+        attributes = inspect(self).attrs.keys()
+        cols = hybrids + attributes
+        return {c: getattr(self, c) for c in cols if c in args}
 
     @classmethod
     def create(cls, **kwargs):
@@ -61,7 +69,25 @@ class Support(TimestampMixin):
     def find(cls, **kwargs):
         try:
             res = cls.query.filter_by(**kwargs).first()
+            return res
+        except sql_exc.SQLAlchemyError:
+            raise apr.ApiError()
+
+    @classmethod
+    def find_or_fail(cls, **kwargs):
+        try:
+            res = cls.query.filter_by(**kwargs).first()
         except sql_exc.SQLAlchemyError:
             raise apr.ApiError()
         else:
+            if res is None:
+                raise apr.NotFound(cls.__tablename__)
             return res
+
+    @classmethod
+    def find_all(cls, **kwargs):
+        try:
+            res = cls.query.filter_by(**kwargs).all()
+            return res
+        except sql_exc.SQLAlchemyError:
+            raise apr.ApiError()

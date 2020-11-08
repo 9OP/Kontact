@@ -44,7 +44,7 @@ def signup():
         name=params["name"],
         password=params["password"],
     )
-    user_data = new_user.serialize("id", "email", "name")
+    user_data = new_user.summary()
     user_data["token"] = UserToken.create(user_id=new_user.id).token
     return render(user_data, code=201)
 
@@ -56,7 +56,7 @@ def signin():
     if not user or not user.check_password(params["password"]):
         raise apr.LoginFailed()
 
-    user_data = user.serialize("id", "email", "name")
+    user_data = user.summary()
     user_data["token"] = UserToken.create(user_id=user.id).token
     return render(user_data)
 
@@ -69,5 +69,5 @@ def signout():
 
 @authentication
 def whoami():
-    user_data = g.current_user.serialize("id", "email", "name")
+    user_data = g.current_user.summary()
     return render(user_data)
