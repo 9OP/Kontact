@@ -49,6 +49,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
                 "email": user["email"],
                 "token": "mocked_token",
             },
+            code=201,
         )
 
     def test_fail_signup(self):

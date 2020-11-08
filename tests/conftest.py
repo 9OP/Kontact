@@ -1,7 +1,12 @@
 import pytest
 from app import create_app
 from app.models.database import db
-from app.models import User, UserToken
+from app.models import (
+    User,
+    UserToken,
+    Membership,
+    Channel,
+)
 
 
 @pytest.fixture(scope="module")
@@ -50,4 +55,30 @@ def make_token(database):
         return token
 
     yield _make_token
+    # teardown
+
+
+@pytest.fixture(scope="function")
+def make_channel(database):
+    # setup
+    def _make_channel(**kwargs):
+        channel = Channel(**kwargs)
+        db.session.add(channel)
+        db.session.commit()
+        return channel
+
+    yield _make_channel
+    # teardown
+
+
+@pytest.fixture(scope="function")
+def make_membership(database):
+    # setup
+    def _make_membership(**kwargs):
+        membership = Membership(**kwargs)
+        db.session.add(membership)
+        db.session.commit()
+        return membership
+
+    yield _make_membership
     # teardown
