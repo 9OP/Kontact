@@ -22,8 +22,26 @@ def create():
 
 def index():
     channels = Channel.find_all()
-    channels_data = [c.summary() for c in channels]
+    channels_data = [
+        c.serialize("id", "name", "created_at", "members_count") for c in channels
+    ]
     return render({"channels": channels_data})
+
+
+def show(cid):
+    channel = Channel.find_or_fail(id=cid)
+    channel_data = channel.summary()
+    return render(channel_data)
+
+
+def destroy(cid):
+    channel = Channel.find_or_fail(id=cid)
+    channel.destroy()
+    return render(f"Channel {channel.name} deleted")
+
+
+def update(cid):
+    pass
 
 
 def add_member(cid, uid):
@@ -33,21 +51,9 @@ def add_member(cid, uid):
     return render(f"{user.name} added to {channel.name}", code=201)
 
 
-def get_members(cid):
+def del_member(cid, uid):
     channel = Channel.find_or_fail(id=cid)
-    members = channel.members
-    channel_data = channel.summary()
-    channel_data["members"] = [m.summary() for m in members]
-    return render(channel_data)
-
-
-def show(id):
-    pass
-
-
-def update(id):
-    pass
-
-
-def destroy(id):
-    pass
+    user = User.find_or_fail(id=uid)
+    membership = Membership.find(user_id=user.id, channel_id=channel.id)
+    membership.destroy()
+    return render(f"Member {user.name} deleted from channel {channel.name}")

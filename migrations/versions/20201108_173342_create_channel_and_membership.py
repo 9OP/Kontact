@@ -1,8 +1,8 @@
 """create_channel_and_membership
 
-Revision ID: 11edcd3d0e23
+Revision ID: 519bb7abbd76
 Revises: 2a60af59f650
-Create Date: 2020-11-08 00:18:36.465798
+Create Date: 2020-11-08 17:33:42.342809
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "11edcd3d0e23"
+revision = "519bb7abbd76"
 down_revision = "2a60af59f650"
 branch_labels = None
 depends_on = None
@@ -32,7 +32,6 @@ def upgrade():
         "membership",
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.Column("channel_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
@@ -43,10 +42,7 @@ def upgrade():
         sa.ForeignKeyConstraint(
             ["user_id"], ["user.id"], name=op.f("fk_membership_user_id_user")
         ),
-        sa.PrimaryKeyConstraint(
-            "id", "user_id", "channel_id", name=op.f("pk_membership")
-        ),
-        sa.UniqueConstraint("id", name=op.f("uq_membership_id")),
+        sa.PrimaryKeyConstraint("user_id", "channel_id", name=op.f("pk_membership")),
     )
     # ### end Alembic commands ###
 

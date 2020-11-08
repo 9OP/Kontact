@@ -28,7 +28,7 @@ class TimestampMixin(object):
 
 
 class Support(TimestampMixin):
-    def serialize(self, *args):
+    def serialize(self, *args, **kwargs):
         hybrids = [
             item.__name__
             for item in inspect(self.__class__).all_orm_descriptors
@@ -36,7 +36,11 @@ class Support(TimestampMixin):
         ]
         attributes = inspect(self).attrs.keys()
         cols = hybrids + attributes
-        return {c: getattr(self, c) for c in cols if c in args}
+        return {
+            kwargs.get(c, c): getattr(self, c)
+            for c in cols
+            if c in list(args) + list(kwargs.keys())
+        }
 
     @classmethod
     def create(cls, **kwargs):
@@ -48,9 +52,6 @@ class Support(TimestampMixin):
         except sql_exc.IntegrityError:
             db.session.rollback()
             raise apr.AlreadyExists(cls.__tablename__)
-        # except sql_exc.SQLAlchemyError:
-        #     db.session.rollback()
-        #     raise api_res.ApiError()
 
     def update(self, **kwargs):
         for k, v in kwargs.items():
@@ -61,9 +62,15 @@ class Support(TimestampMixin):
         except sql_exc.IntegrityError:
             db.session.rollback()
             raise apr.AlreadyExists(self.__tablename__)
-        # except sql_exc.SQLAlchemyError:
-        #     db.session.rollback()
-        #     raise api_res.ApiError()
+
+    def destroy(self):
+        db.session.delete(self)
+        try:
+            db.session.commit()
+            return self
+        except sql_exc.SQLAlchemyError:
+            db.session.rollback()
+            raise apr.ApiError()
 
     @classmethod
     def find(cls, **kwargs):

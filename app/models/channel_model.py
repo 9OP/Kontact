@@ -8,15 +8,15 @@ class Channel(db.Model, Support):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
-
     members = association_proxy("channel_memberships", "user")
-    # creator=lambda user: Membership(user=user)
 
     def __repr__(self):
         return "<channel: {}>".format(self.id)
 
     def summary(self):
-        return self.serialize("id", "name", "created_at", "members_count")
+        channel_data = self.serialize("id", "name", "created_at")
+        channel_data["members"] = [c.user_summary() for c in self.channel_memberships]
+        return channel_data
 
     @hybrid_property
     def members_count(self):

@@ -28,6 +28,7 @@ Content-Type: {{contentType}}
 
 ###
 @token = {{login.response.body.token}}
+@uid = {{login.response.body.id}}
 
 
 ### Whoami
@@ -41,15 +42,33 @@ kt_token: {{token}}
 
 
 ### Create channel
+# @name channel
 POST {{host}}/channel
 Content-Type: {{contentType}}
 # kt_token: {{token}}
 
 {
-    "name": "Channel-6"
+    "name": "Channel-5"
 }
+
+###
+@cid = {{channel.response.body.id}}
 
 ### Get all channels
 GET {{host}}/channel
 # Content-Type: {{contentType}}
 # kt_token: {{token}}
+
+
+### Add user to channel
+POST {{host}}/channel/{{cid}}/membership/{{uid}}
+Content-Type: {{contentType}}
+
+### Get a channel members
+GET {{host}}/channel/{{cid}}
+
+### Destroy channel
+DELETE {{host}}/channel/{{cid}}
+
+### Destroy member
+DELETE {{host}}/channel/{{cid}}/membership/{{uid}}
