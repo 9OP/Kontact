@@ -1,5 +1,11 @@
 from sqlalchemy.orm import backref
 from app.models.database import db, Support
+from enum import Enum
+
+
+class Role(Enum):
+    MEMBER = 0
+    MASTER = 1
 
 
 class Membership(db.Model, Support):
@@ -7,6 +13,7 @@ class Membership(db.Model, Support):
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     channel_id = db.Column(db.Integer, db.ForeignKey("channel.id"), primary_key=True)
+    role = db.Column(db.Integer, nullable=False, default=Role.MEMBER)
 
     user = db.relationship(
         "User",
@@ -28,7 +35,7 @@ class Membership(db.Model, Support):
 
     def user_summary(self):
         user_data = self.user.serialize("id", "email", "name")
-        user_data["joined_at"] = self.created_at
+        user_data.update({"role": Role(self.role).name, "joined_at": self.created_at})
         return user_data
 
     def channel_summary(self):

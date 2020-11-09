@@ -30,6 +30,7 @@ def upgrade():
     )
     op.create_table(
         "membership",
+        sa.Column("role", sa.Integer(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("user_id", sa.Integer(), nullable=False),
