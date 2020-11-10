@@ -13,7 +13,7 @@ class Membership(db.Model, Support):
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     channel_id = db.Column(db.Integer, db.ForeignKey("channel.id"), primary_key=True)
-    role = db.Column(db.Integer, nullable=False, default=Role.MEMBER)
+    role = db.Column(db.Integer, nullable=False, default=Role.MEMBER.value)
 
     user = db.relationship(
         "User",

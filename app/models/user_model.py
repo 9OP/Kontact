@@ -1,12 +1,12 @@
 from sqlalchemy.ext.associationproxy import association_proxy
 from app.models.database import db, bcrypt, Support
+from enum import Enum
 
 
-ACCESS = {
-    "guest": 0,
-    "user": 1,
-    "admin": 2,
-}
+class Access(Enum):
+    GUEST = 0
+    USER = 1
+    ADMIN = 2
 
 
 class User(db.Model, Support):
@@ -16,7 +16,7 @@ class User(db.Model, Support):
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    access = db.Column(db.Integer, nullable=False, default=ACCESS["user"])
+    access = db.Column(db.Integer, nullable=False, default=Access.USER.value)
     tokens = db.relationship("UserToken", backref="user", lazy=True)
     channels = association_proxy("user_memberships", "channel")
 
@@ -30,6 +30,7 @@ class User(db.Model, Support):
 
     def summary(self):
         user_data = self.serialize("id", "email", "name")
+        user_data["access"] = Access(self.access).name
         user_data["channels"] = [c.channel_summary() for c in self.user_memberships]
         return user_data
 
