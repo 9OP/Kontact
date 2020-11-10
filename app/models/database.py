@@ -69,28 +69,23 @@ class Support(TimestampMixin):
         return self
 
     @classmethod
-    def find(cls, **kwargs):
+    def __find(cls, **kwargs):
         try:
-            res = cls.query.filter_by(**kwargs).first()
-            return res
+            return cls.query.filter_by(**kwargs)
         except sql_exc.SQLAlchemyError:
             raise apr.ApiError()
 
     @classmethod
-    def find_or_fail(cls, **kwargs):
-        try:
-            res = cls.query.filter_by(**kwargs).first()
-        except sql_exc.SQLAlchemyError:
-            raise apr.ApiError()
-        else:
-            if res is None:
-                raise apr.NotFound(cls.__tablename__)
-            return res
+    def find(cls, **kwargs):
+        return cls.__find(**kwargs).first()
 
     @classmethod
     def find_all(cls, **kwargs):
+        return cls.__find(**kwargs).all()
+
+    @classmethod
+    def find_one(cls, **kwargs):
         try:
-            res = cls.query.filter_by(**kwargs).all()
-            return res
-        except sql_exc.SQLAlchemyError:
-            raise apr.ApiError()
+            return cls.__find(**kwargs).one()
+        except sql_exc.SQLAlchemyError:  # Found none or multiple
+            raise apr.NotFound(cls.__tablename__)

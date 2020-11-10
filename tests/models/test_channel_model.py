@@ -1,5 +1,6 @@
 import pytest
 import app.api_responses as api_res
+from app.models.membership_model import Role
 from tests.conftest import Channel, Membership
 from tests.factories import channel_factory, user_factory
 
@@ -8,15 +9,15 @@ from tests.factories import channel_factory, user_factory
 class ChannelModelSuite:
     @pytest.fixture(autouse=True)
     def _base(self, make_channel, make_user, make_membership):
-        self.make_channel = make_channel
         self.make_user = make_user
+        self.make_channel = make_channel
         self.make_membership = make_membership
 
     def test_define(self):
         """
         GIVEN a Channel model
-        WHEN a channel is already defined
-        THEN check the channel is defined correctly
+        WHEN a Channel is fetched
+        THEN attrs are correct
         """
         channel_data = channel_factory()
         channel = self.make_channel(**channel_data)
@@ -24,9 +25,9 @@ class ChannelModelSuite:
 
     def test_repr(self):
         """
-        GIVEN a Channel model
-        WHEN a channel is defined
-        THEN check repr
+        GIVEN a channel instance
+        WHEN repr
+        THEN returns channel name
         """
         channel_data = channel_factory()
         channel = self.make_channel(**channel_data)
@@ -34,9 +35,9 @@ class ChannelModelSuite:
 
     def test_summary(self):
         """
-        GIVEN a Channel model
-        WHEN a channel is summarized
-        THEN return id, name, created_at and members
+        GIVEN a channel instance
+        WHEN is summarized
+        THEN returns id, name, created_at and members
         """
         user = self.make_user(**user_factory())
         channel = self.make_channel(**channel_factory())
@@ -49,17 +50,18 @@ class ChannelModelSuite:
                 {
                     "id": user.id,
                     "email": user.email,
+                    "role": Role(membership.role).name,
                     "name": user.name,
                     "joined_at": membership.created_at,
                 }
             ],
         }
 
-    def test_count_members(self):
+    def test_members_count(self):
         """
-        GIVEN a Channel model
-        WHEN a new member is added
-        THEN count_members increment
+        GIVEN a channel instance
+        WHEN add new members
+        THEN members_count increment
         """
         user = self.make_user(**user_factory())
         channel = self.make_channel(**channel_factory())

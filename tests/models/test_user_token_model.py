@@ -10,75 +10,88 @@ class UserTokenModelSuite:
     @pytest.fixture(autouse=True)
     def _base(self, make_user, make_token, monkeypatch):
         self.mock = monkeypatch.setattr
-        user_data = user_factory()
-        self.user = make_user(**user_data)
-        self.token = make_token(user_id=self.user.id)
         self.make_user = make_user
         self.make_token = make_token
+        # user_data = user_factory()
+        # self.user = make_user(**user_data)
+        # self.token = make_token(user_id=self.user.id)
 
     def test_define(self):
         """
         GIVEN a UserToken model
-        WHEN a token is already defined
-        THEN check the user_id, revoke_at are defined correctly
+        WHEN a user is fetched
+        THEN attrs are correct
         """
-        assert self.token.user_id == self.user.id
-        assert self.token.revoked_at is None
+        user = self.make_user(**user_factory())
+        token = self.make_token(user_id=user.id)
+        assert token.user_id == user.id
+        assert token.revoked_at is None
 
     def test_repr(self):
         """
-        GIVEN a UserToken model
-        WHEN a token is defined
-        THEN check repr
+        GIVEN a token instance
+        WHEN repr
+        THEN return token id
         """
-        assert self.token.__repr__() == f"<user_token: {self.token.id}>"
-
-    def test_decode(self):
-        """
-        GIVEN a UserToken model
-        WHEN a token is decoded
-        THEN decoded value is user id
-        """
-        assert self.token.decode() == self.user.id
+        user = self.make_user(**user_factory())
+        token = self.make_token(user_id=user.id)
+        assert token.__repr__() == f"<user_token: {token.id}>"
 
     def test_revoke(self):
         """
-        GIVEN a UserToken model
-        WHEN a token is revoked
-        THEN then revoke date is set
+        GIVEN a token instance
+        WHEN revoked
+        THEN revoke date is set
         """
-        self.token.revoke()
-        assert self.token.revoked_at is not None
-        assert self.token.revoked_at >= self.token.created_at
-        assert self.token.revoked_at <= self.token.updated_at
+        user = self.make_user(**user_factory())
+        token = self.make_token(user_id=user.id)
+        token.revoke()
+        assert token.revoked_at is not None
+        assert token.revoked_at >= token.created_at
+        assert token.revoked_at <= token.updated_at
+
+    def test_decode(self):
+        """
+        GIVEN a token instance
+        WHEN decoded
+        THEN return user id
+        """
+        user = self.make_user(**user_factory())
+        token = self.make_token(user_id=user.id)
+        assert token.decode() == user.id
 
     def test_fail_decode_revoked(self):
         """
-        GIVEN a UserToken model
-        WHEN a token is revoked
-        THEN then raise error when decode
+        GIVEN a token instance
+        WHEN revoked
+        THEN raise TokenExpired on decode
         """
-        self.token.revoke()
+        user = self.make_user(**user_factory())
+        token = self.make_token(user_id=user.id)
+        token.revoke()
         with pytest.raises(api_res.TokenExpired):
-            self.token.decode()
+            token.decode()
 
     def test_fail_decode_invalid(self):
         """
-        GIVEN a UserToken model
-        WHEN a token is invalid
-        THEN then raise error when decode
+        GIVEN a token instance
+        WHEN invalid
+        THEN raise TokenInvalid on decode
         """
+        user = self.make_user(**user_factory())
+        token = self.make_token(user_id=user.id)
         self.mock(Config, "SECRET_KEY", "new_secret_key")
         with pytest.raises(api_res.TokenInvalid):
-            self.token.decode()
+            token.decode()
 
     def test_fail_decode_expired(self):
         """
-        GIVEN a UserToken model
-        WHEN a token signature expired
-        THEN then raise error when decode
+        GIVEN a token instance
+        WHEN exp is passed
+        THEN raise TokenExpired one decode
         """
         self.mock(Config, "PAYLOAD_EXPIRATION", -1)  # expire at now-1s
-        new_token = self.make_token(user_id=self.user.id)
+        user = self.make_user(**user_factory())
+        token = self.make_token(user_id=user.id)
         with pytest.raises(api_res.TokenExpired):
-            new_token.decode()
+            token.decode()
