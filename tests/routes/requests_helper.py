@@ -28,6 +28,9 @@ class RequestsHelper:
         self.get = get
         self.mock = monkeypatch.setattr
 
+    def setup_method(self):
+        self.headers = {}
+
     @staticmethod
     def expect_success(response, expected={}, code=200):
         data = json.loads(response.data)

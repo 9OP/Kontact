@@ -10,8 +10,8 @@ POST {{host}}/auth/signup
 Content-Type: {{contentType}}
 
 {
-    "email": "martin@mail.com",
-    "name": "Martin",
+    "email": "test@mail.com",
+    "name": "Test",
     "password": "Abc123*"
 }
 
@@ -22,7 +22,7 @@ POST {{host}}/auth/signin
 Content-Type: {{contentType}}
 
 {
-    "email": "martin@mail.com",
+    "email": "test@mail.com",
     "password": "Abc123*"
 }
 
@@ -45,10 +45,10 @@ kt_token: {{token}}
 # @name channel
 POST {{host}}/channel
 Content-Type: {{contentType}}
-# kt_token: {{token}}
+kt_token: {{token}}
 
 {
-    "name": "Channel-5"
+    "name": "Channel-0"
 }
 
 ###
@@ -57,15 +57,17 @@ Content-Type: {{contentType}}
 ### Get all channels
 GET {{host}}/channel
 # Content-Type: {{contentType}}
-# kt_token: {{token}}
+kt_token: {{token}}
 
 
 ### Add user to channel
-POST {{host}}/channel/{{cid}}/membership/{{uid}}
+POST {{host}}/channel/{{cid}}/membership/1
 Content-Type: {{contentType}}
+kt_token: {{token}}
 
 ### Get a channel members
 GET {{host}}/channel/{{cid}}
+kt_token: {{token}}
 
 ### Destroy channel
 DELETE {{host}}/channel/{{cid}}
