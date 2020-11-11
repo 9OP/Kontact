@@ -5,8 +5,6 @@ import app.api_responses as apr
 
 
 def authentication(func):
-
-    # Flask context available only inside secure_function
     @functools.wraps(func)
     def secure_function(*args, **kwargs):
         if not request.headers.get("kt_token"):

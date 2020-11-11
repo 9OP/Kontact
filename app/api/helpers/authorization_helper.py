@@ -10,12 +10,13 @@ def role_required(role):
     def decorator(func):
         @functools.wraps(func)
         def secure_function(*args, **kwargs):
-            membership = Membership.find(
-                user_id=g.current_user.id, channel_id=kwargs["cid"]
-            )
 
             if g.current_user.access == Access.ADMIN.value:
                 return func(*args, **kwargs)
+
+            membership = Membership.find(
+                user_id=g.current_user.id, channel_id=kwargs["cid"]
+            )
 
             if not membership:
                 raise apr.AccessError(

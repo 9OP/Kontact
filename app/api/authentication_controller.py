@@ -61,9 +61,10 @@ def signin():
     return render(user_data)
 
 
-@authentication
 def signout():
-    g.auth_token.revoke()
+    token = UserToken.find(token=request.headers.get("kt_token"))
+    if token:
+        token.revoke()
     return render("Signout successfully.")
 
 

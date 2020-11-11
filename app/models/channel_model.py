@@ -1,3 +1,4 @@
+from flask import g
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from app.models.database import db, Support
@@ -12,6 +13,9 @@ class Channel(db.Model, Support):
 
     def __repr__(self):
         return "<channel: {}>".format(self.name)
+
+    def short(self):
+        return self.serialize("id", "name", "created_at", "members_count")
 
     def summary(self):
         channel_data = self.serialize("id", "name", "created_at")
