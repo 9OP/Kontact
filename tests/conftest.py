@@ -37,8 +37,8 @@ def make_user(database):
     # setup
     def _make_user(**kwargs):
         user = User(**kwargs)
-        db.session.add(user)
-        db.session.commit()
+        database.session.add(user)
+        database.session.commit()
         return user
 
     yield _make_user
@@ -50,8 +50,8 @@ def make_token(database):
     # setup
     def _make_token(**kwargs):
         token = UserToken(**kwargs)
-        db.session.add(token)
-        db.session.commit()
+        database.session.add(token)
+        database.session.commit()
         return token
 
     yield _make_token
@@ -63,8 +63,8 @@ def make_channel(database):
     # setup
     def _make_channel(**kwargs):
         channel = Channel(**kwargs)
-        db.session.add(channel)
-        db.session.commit()
+        database.session.add(channel)
+        database.session.commit()
         return channel
 
     yield _make_channel
@@ -76,8 +76,8 @@ def make_membership(database):
     # setup
     def _make_membership(**kwargs):
         membership = Membership(**kwargs)
-        db.session.add(membership)
-        db.session.commit()
+        database.session.add(membership)
+        database.session.commit()
         return membership
 
     yield _make_membership

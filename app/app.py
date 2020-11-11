@@ -1,3 +1,9 @@
+# from gevent import monkey
+
+# # Patch app with gevent
+# monkey.patch_all()
+
+
 from os import environ
 from flask import Flask
 from flask_migrate import Migrate
