@@ -57,6 +57,20 @@ class ChannelModelSuite:
             ],
         }
 
+    def test_short(self):
+        """
+        GIVEN a channel instance
+        WHEN is short summarized
+        THEN returns id, name, created_at and members_count
+        """
+        channel = self.make_channel(**channel_factory())
+        assert channel.short() == {
+            "id": channel.id,
+            "name": channel.name,
+            "created_at": channel.created_at,
+            "members_count": channel.members_count,
+        }
+
     def test_members_count(self):
         """
         GIVEN a channel instance

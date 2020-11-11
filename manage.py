@@ -1,7 +1,7 @@
+import os
 from flask.cli import FlaskGroup
 from app import create_app
-import os
-import pytest
+
 
 cli = FlaskGroup(create_app)
 

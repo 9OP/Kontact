@@ -121,7 +121,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN POST /auth/signout
         THEN invalidate token + 200
         """
-        token = self.login(self.user_data)
+        token = self.login(self.user_data["id"])
         response = self.post("/auth/signout")
         RequestsHelper.expect_success(response, {"app_code": 200})
         assert token.revoked_at is not None
@@ -141,7 +141,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN POST /auth/whoami
         THEN return user info
         """
-        self.login(self.user_data)
+        self.login(self.user_data["id"])
         response = self.get("/auth/whoami")
         RequestsHelper.expect_success(response, self.user_data)
 

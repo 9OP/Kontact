@@ -9,7 +9,6 @@ from app.api.helpers import (
     role_required,
     access_required,
 )
-import app.api_responses as apr
 
 
 CHANNEL_SCHEMA = {
@@ -22,7 +21,8 @@ CHANNEL_SCHEMA = {
 
 
 @authentication
-def create():
+@access_required(Access.USER)
+def new():
     params = validator(request.json, CHANNEL_SCHEMA)
     new_channel = Channel.create(name=params["name"])
     Membership.create(  # not very safe, if fail

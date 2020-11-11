@@ -50,7 +50,7 @@ auth_api.route("/whoami", methods=["GET"])(auth.whoami)
 import app.api.channel_controller as channel
 
 channel_api = Blueprint("channel_api", __name__, url_prefix="/channel")
-channel_api.route("", methods=["POST"])(channel.create)
+channel_api.route("", methods=["POST"])(channel.new)
 channel_api.route("", methods=["GET"])(channel.index)
 channel_api.route("/<cid>", methods=["GET"])(channel.show)
 channel_api.route("/<cid>", methods=["DELETE"])(channel.destroy)
