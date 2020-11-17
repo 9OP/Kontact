@@ -11,13 +11,17 @@ class RequestsHelper:
     }
 
     @pytest.fixture(autouse=True)
-    def _requests_base(self, client, monkeypatch):
+    def setup_method(self, client, monkeypatch):
         def post(route, data={}):
             payload = {
                 "data": json.dumps(data),
                 "headers": {**self.base_headers, **self.headers},
             }
             return client.post(route, **payload)
+
+        def get(route):
+            payload = {"headers": {**self.base_headers, **self.headers}}
+            return client.get(route, **payload)
 
         def put(route, data={}):
             payload = {
@@ -26,21 +30,16 @@ class RequestsHelper:
             }
             return client.put(route, **payload)
 
-        def get(route):
-            payload = {"headers": {**self.base_headers, **self.headers}}
-            return client.get(route, **payload)
-
         def delete(route):
             payload = {"headers": {**self.base_headers, **self.headers}}
             return client.delete(route, **payload)
 
         self.post = post
-        self.put = put
         self.get = get
+        self.put = put
         self.delete = delete
-        self.mock = monkeypatch.setattr
 
-    def setup_method(self):
+        self.mock = monkeypatch.setattr
         self.headers = {}
 
     @staticmethod

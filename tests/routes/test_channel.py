@@ -7,10 +7,9 @@ from tests.factories import channel_factory, user_factory
 from tests.conftest import Channel
 
 
-@pytest.mark.usefixtures("database")
 class ChannelRequestsSuite(RequestsHelper):
-    @pytest.fixture(autouse=True)  # scope class for somes
-    def _base(self, make_user, make_channel, make_membership):
+    @pytest.fixture(autouse=True)
+    def setup(self, make_user, make_channel, make_membership):
         self.channel = make_channel(**channel_factory())
         self.guest = make_user(**user_factory(), access=Access.GUEST.value)
         self.user = make_user(**user_factory())  # User by default

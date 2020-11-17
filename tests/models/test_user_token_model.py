@@ -1,20 +1,16 @@
 import pytest
 import app.api_responses as api_res
+from app.config import Config
 from tests.conftest import User, UserToken
 from tests.factories import user_factory
-from app.config import Config
 
 
-@pytest.mark.usefixtures("database")
 class UserTokenModelSuite:
     @pytest.fixture(autouse=True)
-    def _base(self, make_user, make_token, monkeypatch):
+    def setup(self, make_user, make_token, monkeypatch):
         self.mock = monkeypatch.setattr
         self.make_user = make_user
         self.make_token = make_token
-        # user_data = user_factory()
-        # self.user = make_user(**user_data)
-        # self.token = make_token(user_id=self.user.id)
 
     def test_define(self):
         """

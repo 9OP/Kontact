@@ -5,10 +5,9 @@ from tests.conftest import UserToken
 from tests.factories import user_factory
 
 
-@pytest.mark.usefixtures("database")
 class AuthenticationRequestsSuite(RequestsHelper):
     @pytest.fixture(autouse=True)
-    def _base(self, make_token, make_user):
+    def setup(self, make_token, make_user):
         data = user_factory()
         user = make_user(**data)
         self.user_data = {

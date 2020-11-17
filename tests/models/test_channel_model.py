@@ -5,10 +5,9 @@ from tests.conftest import Channel, Membership
 from tests.factories import channel_factory, user_factory
 
 
-@pytest.mark.usefixtures("database")
 class ChannelModelSuite:
     @pytest.fixture(autouse=True)
-    def _base(self, make_channel, make_user, make_membership):
+    def setup(self, make_channel, make_user, make_membership):
         self.make_user = make_user
         self.make_channel = make_channel
         self.make_membership = make_membership

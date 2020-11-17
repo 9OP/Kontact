@@ -40,6 +40,10 @@ POST {{host}}/auth/signout
 Content-Type: {{contentType}}
 kt_token: {{token}}
 
+### Get all users
+GET {{host}}/user
+# Content-Type: {{contentType}}
+kt_token: {{token}}
 
 ### Create channel
 # @name channel

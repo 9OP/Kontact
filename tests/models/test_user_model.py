@@ -5,10 +5,9 @@ from tests.conftest import User
 from tests.factories import user_factory
 
 
-@pytest.mark.usefixtures("database")
 class UserModelSuite:
     @pytest.fixture(autouse=True)
-    def _base(self, make_user):
+    def setup(self, make_user):
         self.make_user = make_user
 
     def test_define(self):
