@@ -41,9 +41,13 @@ auth_api.route("/whoami", methods=["GET"])(auth.whoami)
 
 
 # [User] blueprint
-# user_api = Blueprint("user_api", __name__, url_prefix="/user")
+import app.api.user_controller as user
+
+user_api = Blueprint("user_api", __name__, url_prefix="/user")
+user_api.route("", methods=["GET"])(user.index)
+user_api.route("/<uid>", methods=["GET"])(user.show)
 # user_api.route("/change_password", methods=["POST"])(change_password)
-# user_api.route("/forgot_password", methods=["GET"])(forgot_password)
+# user_api.route("/forgot_password", methods=["POST"])(forgot_password)
 
 
 # [Channel] blueprint

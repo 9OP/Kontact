@@ -1,9 +1,3 @@
-# from gevent import monkey
-
-# # Patch app with gevent
-# monkey.patch_all()
-
-
 from os import environ
 from flask import Flask
 from flask_migrate import Migrate
@@ -30,10 +24,11 @@ def create_app(env=None):
     )
 
     with app.app_context():
-        from app.api import api, auth_api, channel_api
+        from app.api import api, auth_api, user_api, channel_api
 
         app.register_blueprint(api)
         app.register_blueprint(auth_api)
+        app.register_blueprint(user_api)
         app.register_blueprint(channel_api)
 
     return app

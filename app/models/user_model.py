@@ -1,3 +1,4 @@
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from app.models.database import db, bcrypt, Support
 from enum import Enum
@@ -28,11 +29,20 @@ class User(db.Model, Support):
     def __repr__(self):
         return "<user: {}>".format(self.email)
 
+    def short(self):
+        user_data = self.serialize("id", "email", "name", "channels_count")
+        user_data["access"] = Access(self.access).name
+        return user_data
+
     def summary(self):
         user_data = self.serialize("id", "email", "name")
         user_data["access"] = Access(self.access).name
         user_data["channels"] = [c.channel_summary() for c in self.user_memberships]
         return user_data
+
+    @hybrid_property
+    def channels_count(self):
+        return len(self.channels)
 
     def check_password(self, password):
         valid = bcrypt.check_password_hash(self.password, password)

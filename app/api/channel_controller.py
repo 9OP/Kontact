@@ -25,7 +25,7 @@ CHANNEL_SCHEMA = {
 def new():
     params = validator(request.json, CHANNEL_SCHEMA)
     new_channel = Channel.create(name=params["name"])
-    Membership.create(  # not very safe, if fail
+    Membership.create(  # not safe if fail
         user_id=g.current_user.id,
         channel_id=new_channel.id,
         role=Role.MASTER.value,
