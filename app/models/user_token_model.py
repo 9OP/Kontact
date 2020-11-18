@@ -1,7 +1,7 @@
 import jwt
 from datetime import datetime, timedelta
-from app.models.database import db, Support
-from app.config import Config
+from app.models.database import db, Support, GUID
+from config.settings import Config
 import app.api_responses as apr
 
 
@@ -10,7 +10,7 @@ class UserToken(db.Model, Support):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     token = db.Column(db.String, unique=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(GUID, db.ForeignKey("user.id"), nullable=False)
     revoked_at = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):
@@ -36,8 +36,8 @@ class UserToken(db.Model, Support):
             payload = jwt.decode(
                 self.token,
                 Config.SECRET_KEY,
-                options={"require": ["exp", "iat", "uid"]},
                 algorithms="HS512",
+                options={"require": ["exp", "iat", "uid"]},
             )
             return payload["uid"]
         except jwt.ExpiredSignatureError:
