@@ -2,26 +2,24 @@ from os import environ
 from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
-from flask_talisman import Talisman, DEFAULT_CSP_POLICY
-from app.config import Cfg
+from flask_talisman import Talisman
+from config.settings import conf
+from .extensions import JSON_Improved
 
 
-def create_app(env=None):
-    env = env or environ.get("FLASK_ENV")
+def create_app(settings_override=None):
+    env = settings_override or environ.get("FLASK_ENV")
     app = Flask(__name__)
-    app.config.from_object(Cfg[env])
+    app.config.from_object(conf[env])
 
     from app.models.database import db, bcrypt
 
+    app.json_encoder = JSON_Improved
     db.init_app(app)
     bcrypt.init_app(app)
     Migrate(app, db)
     CORS(app)
-    Talisman(
-        app,
-        force_https=environ.get("FORCE_HTTPS") == "true",
-        content_security_policy=environ.get("CSP_DIRECTIVES", DEFAULT_CSP_POLICY),
-    )
+    Talisman(app, force_https=False)
 
     with app.app_context():
         from app.api import api, auth_api, user_api, channel_api

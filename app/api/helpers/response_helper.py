@@ -14,8 +14,7 @@ def handler(exc):
 def render(res=None, code=200):
     if isinstance(res, dict) or isinstance(res, list):
         return jsonify(res), code
-    else:
-        return jsonify({"app_code": 200, "description": res or "success"}), code
+    return jsonify({"app_code": 200, "description": res or "success"}), code
 
 
 def expect_mimetype(mimetype="application/json", methods=["POST", "PUT"]):

@@ -37,16 +37,14 @@ def new():
 @access_required(Access.USER)
 def index():
     channels = Channel.find_all()
-    channels_data = [c.short() for c in channels]
-    return render({"channels": channels_data})
+    return render([c.short() for c in channels])
 
 
 @authentication
 @role_required(Role.MEMBER)
 def show(cid):
     channel = Channel.find_one(id=cid)
-    channel_data = channel.summary()
-    return render(channel_data)
+    return render(channel.summary())
 
 
 @authentication
