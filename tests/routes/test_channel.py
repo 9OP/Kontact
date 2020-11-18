@@ -50,12 +50,10 @@ class ChannelRequestsSuite(RequestsHelper):
         response = self.get("/channel")
         RequestsHelper.expect_success(
             response,
-            {
-                "channels": [
-                    self.to_resp(self.channel.short()),
-                    self.to_resp(chan.short()),
-                ]
-            },
+            [
+                self.to_resp(self.channel.short()),
+                self.to_resp(chan.short()),
+            ],
         )
 
     def test_show(self):
@@ -105,7 +103,7 @@ class ChannelRequestsSuite(RequestsHelper):
         THEN expect failure
         """
         self.login(self.master.id)
-        assert self.member.channels == [self.channel]
+        assert self.member.channels[0].id == self.channel.id
         response = self.delete(
             f"/channel/{self.channel.id}/membership/{self.member.id}"
         )

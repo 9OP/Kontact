@@ -1,6 +1,6 @@
 import pytest
 import app.api_responses as api_res
-from app.config import Config
+from config.settings import Config
 from tests.conftest import User, UserToken
 from tests.factories import user_factory
 

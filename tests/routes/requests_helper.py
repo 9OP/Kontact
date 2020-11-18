@@ -46,7 +46,11 @@ class RequestsHelper:
     def expect_success(response, expected={}, code=200):
         data = json.loads(response.data)
         assert response.status_code == code
-        assert expected.items() <= data.items()
+        if isinstance(expected, dict):
+            assert expected.items() <= data.items()
+        if isinstance(expected, list):
+            assert len(data) == len(expected)
+            assert all([a == b for a, b in zip(data, expected)])
 
     @staticmethod
     def expect_failure(response, expected={}, code=400):

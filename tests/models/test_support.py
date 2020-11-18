@@ -107,7 +107,7 @@ class SupportSuite:
         user_data2 = user_factory()
         user1 = self.make_user(**user_data1)
         user2 = self.make_user(**user_data2)
-        assert User.find_all() == [user1, user2]
+        assert [u.id for u in User.find_all()] == [user1.id, user2.id]
 
     def test_find_one(self):
         """
@@ -117,7 +117,7 @@ class SupportSuite:
         """
         user = self.make_user(**user_factory())
         found = User.find_one(email=user.email)
-        assert found == user
+        assert found.id == user.id
 
     def test_find_one_not_found(self):
         """
