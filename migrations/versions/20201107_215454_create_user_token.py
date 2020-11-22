@@ -6,6 +6,7 @@ Create Date: 2020-11-07 21:54:54.188509
 
 """
 from alembic import op
+from sqlalchemy.dialects.postgresql import UUID
 import sqlalchemy as sa
 
 
@@ -24,7 +25,7 @@ def upgrade():
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("token", sa.String(), nullable=False),
-        sa.Column("user_id", sa.CHAR(32), nullable=False),
+        sa.Column("user_id", UUID(), nullable=False),
         sa.Column("revoked_at", sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(
             ["user_id"], ["user.id"], name=op.f("fk_user_token_user_id_user")

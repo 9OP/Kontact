@@ -6,6 +6,7 @@ Create Date: 2020-11-08 17:33:42.342809
 
 """
 from alembic import op
+from sqlalchemy.dialects.postgresql import UUID
 import sqlalchemy as sa
 
 
@@ -22,7 +23,7 @@ def upgrade():
         "channel",
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("id", sa.CHAR(32), nullable=False),
+        sa.Column("id", UUID(), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=False),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_channel")),
         sa.UniqueConstraint("id", name=op.f("uq_channel_id")),
@@ -33,8 +34,8 @@ def upgrade():
         sa.Column("role", sa.Integer(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("user_id", sa.CHAR(32), nullable=False),
-        sa.Column("channel_id", sa.CHAR(32), nullable=False),
+        sa.Column("user_id", UUID(), nullable=False),
+        sa.Column("channel_id", UUID(), nullable=False),
         sa.ForeignKeyConstraint(
             ["channel_id"],
             ["channel.id"],

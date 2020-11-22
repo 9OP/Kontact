@@ -1,6 +1,7 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
-from app.models.database import db, bcrypt, Support, GUID
+from sqlalchemy.dialects.postgresql import UUID
+from app.models.database import db, bcrypt, Support
 from enum import Enum
 import uuid
 
@@ -14,7 +15,7 @@ class Access(Enum):
 class User(db.Model, Support):
     __tablename__ = "user"
 
-    id = db.Column(GUID, primary_key=True, unique=True, default=uuid.uuid4)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)

@@ -1,14 +1,14 @@
-from flask import g
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
-from app.models.database import db, Support, GUID
+from sqlalchemy.dialects.postgresql import UUID
+from app.models.database import db, Support
 import uuid
 
 
 class Channel(db.Model, Support):
     __tablename__ = "channel"
 
-    id = db.Column(GUID, primary_key=True, unique=True, default=uuid.uuid4)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(255), unique=True, nullable=False)
     members = association_proxy("channel_memberships", "user")
 

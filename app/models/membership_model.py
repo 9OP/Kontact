@@ -1,5 +1,6 @@
 from sqlalchemy.orm import backref
-from app.models.database import db, Support, GUID
+from sqlalchemy.dialects.postgresql import UUID
+from app.models.database import db, Support
 from enum import Enum
 
 
@@ -11,8 +12,10 @@ class Role(Enum):
 class Membership(db.Model, Support):
     __tablename__ = "membership"
 
-    user_id = db.Column(GUID, db.ForeignKey("user.id"), primary_key=True)
-    channel_id = db.Column(GUID, db.ForeignKey("channel.id"), primary_key=True)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user.id"), primary_key=True)
+    channel_id = db.Column(
+        UUID(as_uuid=True), db.ForeignKey("channel.id"), primary_key=True
+    )
     role = db.Column(db.Integer, nullable=False, default=Role.MEMBER.value)
 
     user = db.relationship(

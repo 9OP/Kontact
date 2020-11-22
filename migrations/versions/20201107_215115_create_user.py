@@ -6,6 +6,7 @@ Create Date: 2020-11-07 21:51:15.018091
 
 """
 from alembic import op
+from sqlalchemy.dialects.postgresql import UUID
 import sqlalchemy as sa
 
 
@@ -22,7 +23,7 @@ def upgrade():
         "user",
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("id", sa.CHAR(32), nullable=False),
+        sa.Column("id", UUID(), nullable=False),
         sa.Column("access", sa.Integer(), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=False),

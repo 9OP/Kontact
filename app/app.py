@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_talisman import Talisman
 from config.settings import conf
-from .extensions import JSON_Improved
+from app.extensions import JSON_Improved
 
 
 def create_app(settings_override=None):

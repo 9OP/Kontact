@@ -1,16 +1,18 @@
 import jwt
+from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime, timedelta
-from app.models.database import db, Support, GUID
+from app.models.database import db, Support
 from config.settings import Config
 import app.api_responses as apr
+import uuid
 
 
 class UserToken(db.Model, Support):
     __tablename__ = "user_token"
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.String, unique=True, nullable=False)
-    user_id = db.Column(GUID, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user.id"), nullable=False)
     revoked_at = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):
@@ -18,7 +20,7 @@ class UserToken(db.Model, Support):
         payload = {
             "exp": datetime.utcnow() + timedelta(seconds=Config.PAYLOAD_EXPIRATION),
             "iat": datetime.utcnow(),
-            "uid": kwargs["user_id"],
+            "uid": kwargs["user_id"].hex,  # convert UUID to hex
         }
         self.token = jwt.encode(
             payload,
@@ -39,7 +41,7 @@ class UserToken(db.Model, Support):
                 algorithms="HS512",
                 options={"require": ["exp", "iat", "uid"]},
             )
-            return payload["uid"]
+            return uuid.UUID(payload["uid"])  # convert hex to UUID
         except jwt.ExpiredSignatureError:
             raise apr.TokenExpired()
         except jwt.InvalidTokenError:  # default error jwt
