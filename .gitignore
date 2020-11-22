@@ -6,3 +6,4 @@ venv/
 .coverage
 coverage_report/
 .DS_Store
+.env
