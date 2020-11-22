@@ -7,6 +7,7 @@ worker_connections = 50
 timeout = 30
 keepalive = 2
 
+reload = True
 errorlog = "-"
 loglevel = "debug"
 accesslog = "-"

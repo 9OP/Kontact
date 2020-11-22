@@ -6,32 +6,32 @@ load_dotenv(path.join(basedir, "../.env"))
 
 
 class Config:
+    # App
     SECRET_KEY = environ.get("SECRET_KEY")
     PAYLOAD_EXPIRATION = 7200  # 2 hours
 
+    # Database
+    DB_ADDR = environ.get("DB_ADDR")
+    DB_PORT = environ.get("DB_PORT")
+    DB_NAME = environ.get("DB_NAME")
+    DB_USER = environ.get("DB_USER")
+    DB_PASS = environ.get("DB_PASS")
+    SQLALCHEMY_DATABASE_URI = (
+        f"postgresql://{DB_USER}:{DB_PASS}@{DB_ADDR}:{DB_PORT}/{DB_NAME}"
+    )
+
 
 class ProdConfig(Config):
-    # ENV = "production"
-    # DEBUG = False
-    TESTING = False
-    SQLALCHEMY_DATABASE_URI = environ.get("PROD_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevConfig(Config):
-    # ENV = "development"
-    # DEBUG = False
-    TESTING = False
-    SQLALCHEMY_DATABASE_URI = environ.get("DEV_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class TestConfig(Config):
-    # ENV = "testing"
-    DEBUG = False  # true cause pytest crashes
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = environ.get("TEST_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_DATABASE_URI = "postgresql://tester:secret@db:5432/kontact_test"
 
 
 conf = {
