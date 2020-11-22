@@ -52,22 +52,22 @@ class ChannelRequestsSuite(RequestsHelper):
             code=201,
         )
 
-    # def test_index(self):
-    #     """
-    #     GIVEN multiple channel instances
-    #     WHEN GET /channel as user
-    #     THEN returns all channel
-    #     """
-    #     self.login(self.user.id)
-    #     chan = self.make_channel(**channel_factory())
-    #     response = self.get("/channel")
-    #     RequestsHelper.expect_success(
-    #         response,
-    #         [
-    #             self.to_resp(self.channel.short()),
-    #             self.to_resp(chan.short()),
-    #         ],
-    #     )
+    def test_index(self, _user, _channel, make_channel):
+        """
+        GIVEN multiple channel instances
+        WHEN GET /channel as user
+        THEN returns all channel
+        """
+        self.login(self.user.id)
+        chan = make_channel(**channel_factory())
+        response = self.get("/channel")
+        RequestsHelper.expect_success(
+            response,
+            [
+                self.channel.short(),
+                chan.short(),
+            ],
+        )
 
     def test_show(self, _member):
         """

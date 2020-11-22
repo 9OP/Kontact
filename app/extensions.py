@@ -6,9 +6,6 @@ class JSON_Improved(JSONEncoder):
     """Improved / custom json encoder"""
 
     def default(self, obj):
-        try:
-            if isinstance(obj, UUID):
-                return str(obj)
-        except TypeError:
-            pass
+        if isinstance(obj, UUID):
+            return str(obj)
         return JSONEncoder.default(self, obj)
