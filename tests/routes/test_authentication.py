@@ -5,9 +5,10 @@ from tests.conftest import UserToken
 from tests.factories import user_factory
 
 
+@pytest.mark.usefixtures("cleandb")
 class AuthenticationRequestsSuite(RequestsHelper):
-    @pytest.fixture(autouse=True)
-    def setup(self, make_token, make_user):
+    @pytest.fixture()
+    def user(self, make_user):
         data = user_factory()
         user = make_user(**data)
         self.user_data = {
@@ -21,8 +22,6 @@ class AuthenticationRequestsSuite(RequestsHelper):
             "password": data["password"],
             "name": data["name"],
         }
-        self.make_user = make_user
-        self.make_token = make_token
 
     # Generic controller test
     def test_fail_route(self):
@@ -35,7 +34,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         RequestsHelper.expect_failure(response, {"app_code": 1000}, code=405)
 
     # Generic controller test
-    def test_fail_mimetypes(self):
+    def test_fail_mimetypes(self, user):
         """
         GIVEN wrong mimetypes
         WHEN POST request
@@ -64,7 +63,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
             code=201,
         )
 
-    def test_signup_fail_already_registered(self):
+    def test_signup_fail_already_registered(self, user):
         """
         GIVEN a user already registered
         WHEN POST /auth/signup
@@ -73,7 +72,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         response = self.post("/auth/signup", self.args)
         RequestsHelper.expect_failure(response, {"app_code": 410})
 
-    def test_signup_fail_email_validation(self):
+    def test_signup_fail_email_validation(self, user):
         """
         GIVEN wrong email
         WHEN POST /auth/signup
@@ -83,7 +82,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         response = self.post("/auth/signup", args)
         RequestsHelper.expect_failure(response, {"app_code": 411})
 
-    def test_signup_fail_password_validation(self):
+    def test_signup_fail_password_validation(self, user):
         """
         GIVEN weak password
         WHEN POST /auth/signup
@@ -93,7 +92,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         response = self.post("/auth/signup", args)
         RequestsHelper.expect_failure(response, {"app_code": 411})
 
-    def test_signin(self):
+    def test_signin(self, user):
         """
         GIVEN a registered user
         WHEN OST /auth/signin
@@ -105,7 +104,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
             response, {**self.user_data, "token": "mocked_token"}
         )
 
-    def test_signin_fail_credentials(self):
+    def test_signin_fail_credentials(self, user):
         """
         GIVEN a registered user
         WHEN POST /auth/signin with wrong password
@@ -114,7 +113,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         response = self.post("/auth/signin", {**self.args, "password": "blublu"})
         RequestsHelper.expect_failure(response, {"app_code": 419}, code=401)
 
-    def test_signout(self):
+    def test_signout(self, user):
         """
         GIVEN a user registered
         WHEN POST /auth/signout
@@ -134,7 +133,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         response = self.post("/auth/signout")
         RequestsHelper.expect_success(response, {"app_code": 200})
 
-    def test_whoami(self):
+    def test_whoami(self, user):
         """
         GIVEN a user registered
         WHEN POST /auth/whoami

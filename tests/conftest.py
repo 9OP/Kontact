@@ -21,63 +21,68 @@ def client(app):
     return app.test_client()
 
 
-@pytest.fixture(scope="function")
-def database(app):
+@pytest.fixture(scope="module")
+def initdb(app):
     db.init_app(app)
     db.drop_all()
     db.create_all()
-
-    yield db
-
-    db.session.close()
+    db.session.commit()
 
 
 @pytest.fixture(scope="function")
-def make_user(database):
+def cleandb(initdb):
+    db.drop_all()
+    db.create_all()
+    yield db
+    db.session.close()
+
+
+@pytest.fixture(scope="module")
+def make_user(initdb):
     # setup
     def _make_user(**kwargs):
         user = User(**kwargs)
-        database.session.add(user)
-        database.session.commit()
+        db.session.add(user)
+        db.session.commit()
         return user
 
     yield _make_user
     # teardown
 
 
-@pytest.fixture(scope="function")
-def make_token(database):
+@pytest.fixture(scope="module")
+def make_token(initdb):
     # setup
     def _make_token(**kwargs):
         token = UserToken(**kwargs)
-        database.session.add(token)
-        database.session.commit()
+        db.session.add(token)
+        db.session.commit()
         return token
 
     yield _make_token
     # teardown
 
 
-@pytest.fixture(scope="function")
-def make_channel(database):
+@pytest.fixture(scope="module")
+def make_channel(initdb):
     # setup
     def _make_channel(**kwargs):
         channel = Channel(**kwargs)
-        database.session.add(channel)
-        database.session.commit()
+        db.session.add(channel)
+        db.session.commit()
         return channel
 
     yield _make_channel
     # teardown
 
 
-@pytest.fixture(scope="function")
-def make_membership(database):
+@pytest.fixture(scope="module")
+def make_membership(initdb):
     # setup
     def _make_membership(**kwargs):
         membership = Membership(**kwargs)
-        database.session.add(membership)
-        database.session.commit()
+        db.session.add(membership)
+        db.session.commit()
         return membership
 
     yield _make_membership

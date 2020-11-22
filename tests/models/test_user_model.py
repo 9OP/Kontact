@@ -5,6 +5,7 @@ from tests.conftest import User
 from tests.factories import user_factory
 
 
+@pytest.mark.usefixtures("cleandb")
 class UserModelSuite:
     @pytest.fixture(autouse=True)
     def setup(self, make_user):

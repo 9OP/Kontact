@@ -5,6 +5,7 @@ from tests.conftest import User, UserToken
 from tests.factories import user_factory
 
 
+@pytest.mark.usefixtures("cleandb")
 class UserTokenModelSuite:
     @pytest.fixture(autouse=True)
     def setup(self, make_user, make_token, monkeypatch):

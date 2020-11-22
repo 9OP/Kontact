@@ -5,6 +5,7 @@ from tests.conftest import Channel, Membership
 from tests.factories import channel_factory, user_factory
 
 
+@pytest.mark.usefixtures("cleandb")
 class MembershipModelSuite:
     @pytest.fixture(autouse=True)
     def setup(self, make_channel, make_user, make_membership):
