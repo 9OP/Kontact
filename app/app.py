@@ -1,3 +1,8 @@
+import gevent
+from gevent import monkey
+
+monkey.patch_all()
+
 from os import environ
 from flask import Flask
 from flask_migrate import Migrate
@@ -5,6 +10,8 @@ from flask_cors import CORS
 from flask_talisman import Talisman
 from config.settings import conf
 from app.extensions import JSON_Improved
+
+from app.api.channel_socket import socketio
 
 
 def create_app(settings_override=None):
@@ -17,6 +24,7 @@ def create_app(settings_override=None):
     app.json_encoder = JSON_Improved
     db.init_app(app)
     bcrypt.init_app(app)
+    socketio.init_app(app)
     Migrate(app, db)
     CORS(app)
     Talisman(app, force_https=False)
