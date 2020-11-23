@@ -1,3 +1,5 @@
+import functools
+from flask import g
 from threading import Lock
 from flask import Flask, render_template, session, request
 from flask_socketio import (
@@ -15,6 +17,28 @@ async_mode = None
 socketio = SocketIO(cors_allowed_origins="*", async_mode=async_mode)
 thread = None
 thread_lock = Lock()
+
+
+# # Check authentication token for every request
+# def authenticated_only(f):
+#     @functools.wraps(f)
+#     def wrapped(*args, **kwargs):
+#         if not g.current_user:
+#             disconnect()
+#         else:
+#             return f(*args, **kwargs)
+
+#     return wrapped
+
+
+# @socketio.on("my event")
+# @authenticated_only
+# def handle_my_custom_event(data):
+#     emit(
+#         "my response",
+#         {"message": "{0} has joined".format(current_user.name)},
+#         broadcast=True,
+#     )
 
 
 def background_thread():
