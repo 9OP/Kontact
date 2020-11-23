@@ -1,4 +1,3 @@
-from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy import exc as sql_exc
@@ -8,8 +7,6 @@ from datetime import datetime
 import app.api_responses as apr
 import uuid
 
-
-bcrypt = Bcrypt()
 
 convention = {
     "ix": "ix_%(column_0_label)s",

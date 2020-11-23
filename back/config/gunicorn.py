@@ -1,8 +1,8 @@
 bind = "0.0.0.0:5000"
 proc = "gunicorn_kontact_back"
 
-workers = 1
-worker_class = "gevent"  # "sync"
+workers = 3
+worker_class = "sync"  # "gevent"
 worker_connections = 50
 timeout = 30
 keepalive = 2

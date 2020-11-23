@@ -1,9 +1,12 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.dialects.postgresql import UUID
-from app.models.database import db, bcrypt, Support
+from werkzeug.security import safe_str_cmp
+from app.models.database import db, Support
 from enum import Enum
 import uuid
+import hashlib
+import bcrypt
 
 
 class Access(Enum):
@@ -25,11 +28,21 @@ class User(db.Model, Support):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        pwd = kwargs["password"]
-        self.password = bcrypt.generate_password_hash(pwd, 10).decode("utf-8")
+        self.password = User.hash_password(kwargs["password"])
 
     def __repr__(self):
         return "<user: {}>".format(self.email)
+
+    @staticmethod
+    def hash_password(password):
+        digest = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        hashed = bcrypt.hashpw(digest.encode("utf-8"), bcrypt.gensalt(6))
+        return hashed.decode("utf-8")
+
+    def check_password(self, password):
+        hashed = self.password.encode("utf-8")
+        digest = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        return bcrypt.checkpw(digest.encode("utf-8"), hashed)
 
     def short(self):
         user_data = self.serialize("id", "email", "name", "channels_count")
@@ -45,7 +58,3 @@ class User(db.Model, Support):
     @hybrid_property
     def channels_count(self):
         return len(self.channels)
-
-    def check_password(self, password):
-        valid = bcrypt.check_password_hash(self.password, password)
-        return valid

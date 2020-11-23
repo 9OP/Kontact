@@ -1,0 +1,3 @@
+# Beacon
+
+Kontact websocket server
