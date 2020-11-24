@@ -14,6 +14,3 @@ RUN pip install -r requirements.txt
 
 # copy project
 COPY . /app/
-
-ENTRYPOINT [ "./entrypoint.sh" ]
-CMD [ "gunicorn", "-c", "python:config.gunicorn", "app:create_app()" ]

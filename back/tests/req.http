@@ -10,7 +10,7 @@ POST {{host}}/auth/signup
 Content-Type: {{contentType}}
 
 {
-    "email": "test16@mail.com",
+    "email": "test19@mail.com",
     "name": "Test",
     "password": "Abc123*ö"
 }
@@ -22,7 +22,7 @@ POST {{host}}/auth/signin
 Content-Type: {{contentType}}
 
 {
-    "email": "test15@mail.com",
+    "email": "test19@mail.com",
     "password": "Abc123*ö"
 }
 

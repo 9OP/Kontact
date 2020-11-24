@@ -5,8 +5,8 @@ services:
     build:
       context: ./back
       dockerfile: back.dockerfile
-    # entrypoint: "./back/entrypoint.sh"
-    # command: "gunicorn -c python:back.config.gunicorn 'back:app:create_app()'"
+    entrypoint: "./entrypoint.sh"
+    command: "gunicorn -c python:config.gunicorn 'app:create_app()'"
     volumes:
       - ./back:/app
     ports:
@@ -20,9 +20,9 @@ services:
       dockerfile: db.dockerfile
     restart: always
     environment:
-      POSTGRES_DB: kontact_dev # ${DB_NAME}
-      POSTGRES_USER: developer # ${DB_USER}
-      POSTGRES_PASSWORD: secret # ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     volumes:
       - db-data:/var/lib/postgresql/data
 

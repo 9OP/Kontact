@@ -28,7 +28,7 @@ class User(db.Model, Support):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.password = User.hash_password(kwargs["password"])
+        self.password = User.hash_password(kwargs["password"]).decode("utf-8")
 
     def __repr__(self):
         return "<user: {}>".format(self.email)
@@ -36,8 +36,8 @@ class User(db.Model, Support):
     @staticmethod
     def hash_password(password):
         digest = hashlib.sha256(password.encode("utf-8")).hexdigest()
-        hashed = bcrypt.hashpw(digest.encode("utf-8"), bcrypt.gensalt(6))
-        return hashed.decode("utf-8")
+        salt = bcrypt.gensalt(rounds=10)
+        return bcrypt.hashpw(digest.encode("utf-8"), salt)
 
     def check_password(self, password):
         hashed = self.password.encode("utf-8")
