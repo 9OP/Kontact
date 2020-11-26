@@ -1,0 +1,29 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beacon test</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.1/socket.io.js"
+        integrity="sha512-vGcPDqyonHb0c11UofnOKdSAt5zYRpKI4ow+v6hat4i96b7nHSn8PQyk0sT5L9RECyksp+SztCPP6bqeeGaRKg=="
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1>Beacon</h1>
+
+    <button onClick="sendMsg()">Hit Me</button>
+    <script>
+        // const socket = io("http://127.0.0.1:3000");
+
+        const socket = io();
+
+        function sendMsg() {
+            console.log("sendMsg")
+            socket.emit("message", "HELLO WORLD");
+        }
+    </script>
+</body>
+
+</html>

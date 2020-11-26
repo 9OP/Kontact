@@ -1,17 +1,11 @@
 import http from 'http';
 
+const server = http.createServer().listen(3000, '0.0.0.0');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const io = require('socket.io')(server);
 
-const hostname = '127.0.0.1';
-const port = 3000;
-
-
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World this is beacon');
-});
-
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+// eslint-disable-next-line space-before-function-paren
+io.on('connection', (socket: any) => {
+  // console.log('user connected');
+  socket.emit('welcome', 'welcome man');
 });
