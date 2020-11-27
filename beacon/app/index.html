@@ -1,8 +1,6 @@
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beacon test</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.1/socket.io.js"
@@ -13,16 +11,33 @@
 <body>
     <h1>Beacon</h1>
 
-    <button onClick="sendMsg()">Hit Me</button>
-    <script>
-        // const socket = io("http://127.0.0.1:3000");
+    <ul id="events"></ul>
 
-        const socket = io();
+    <button onClick="sendMsg()">Hit Me</button>
+
+    <script>
+        const $events = document.getElementById('events');
+
+        const newItem = (content) => {
+            const item = document.createElement('li');
+            item.innerText = content;
+            return item;
+        };
+
+        const auth = {auth: {token: 'authToken123'}};
+        const socket = io("http://127.0.0.1:3000", auth);
 
         function sendMsg() {
-            console.log("sendMsg")
             socket.emit("message", "HELLO WORLD");
         }
+
+        socket.on('connect', () => {
+            $events.appendChild(newItem('connect'));
+        });
+
+        socket.on('hello', (data) => {
+            $events.appendChild(newItem(`hello - ${data}`));
+        });
     </script>
 </body>
 
