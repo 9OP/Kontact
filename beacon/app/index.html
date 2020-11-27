@@ -13,7 +13,9 @@
 
     <ul id="events"></ul>
 
-    <button onClick="sendMsg()">Hit Me</button>
+    <button onClick="sendMsg()">Send Msg</button>
+
+    <button onClick="joinChannel()">Join Channel</button>
 
     <script>
         const $events = document.getElementById('events');
@@ -30,6 +32,16 @@
         function sendMsg() {
             socket.emit("message", "HELLO WORLD");
         }
+
+        let channelCpt = 1;
+        function joinChannel() {
+            socket.emit('JOIN_CHANNEL', channelCpt);
+            channelCpt += 1;
+        }
+
+        socket.on('JOIN_CHANNEL_SUCCESS', () => {
+            console.log('succesfully joined channel')
+        })
 
         socket.on('connect', () => {
             $events.appendChild(newItem('connect'));

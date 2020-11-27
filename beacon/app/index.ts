@@ -22,13 +22,24 @@ io.use((socket, next) => {
 io.on('connection', (socket: Socket) => {
   socket.emit('welcome', 'welcome man');
 
-  console.log('SocketId: ', socket.id);
-  console.log('SocketHandshake: ', socket.handshake);
+  // console.log('SocketId: ', socket.id);
+  // console.log('SocketHandshake: ', socket.handshake);
+
+  socket.join('channel-0');
+
+  console.log('Channels: ', socket.rooms);
 
   socket.on('message', () => {
     console.log('message');
     cpt += 1;
     socket.emit('hello', cpt);
+  });
+
+  socket.on('JOIN_CHANNEL', (channel) => {
+    console.log(channel);
+    socket.join(`channel-${channel}`);
+    console.log('Channels: ', socket.rooms);
+    socket.emit('JOIN_CHANNEL_SUCCESS');
   });
 });
 
