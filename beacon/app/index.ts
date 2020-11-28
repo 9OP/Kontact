@@ -1,61 +1,40 @@
-/* eslint-disable no-console */
-import { createServer } from 'http';
+import * as http from 'http';
 import { Server, Socket } from 'socket.io';
+import { bindEvent } from './helpers';
+// load dotenv and config options
 
-const httpServer = createServer().listen(3000, '0.0.0.0');
+// Middlewares
+import auth from './middlewares/auth';
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: '*',
-  },
+// Events
+import * as messageHandlers from './controllers/messages';
+
+// assign namespaces
+const handlers = Object.values({
+  ...messageHandlers,
 });
 
-let cpt = 0;
-
-io.use((socket, next) => {
-  const token = socket.handshake.auth;
-  // ...
-  console.log('AuthnToken: ', token);
-  next();
-});
-
-io.on('connection', (socket: Socket) => {
-  socket.emit('welcome', 'welcome man');
-
-  // console.log('SocketId: ', socket.id);
-  // console.log('SocketHandshake: ', socket.handshake);
-
-  socket.join('channel-0');
-
-  console.log('Channels: ', socket.rooms);
-
-  socket.on('message', () => {
-    console.log('message');
-    cpt += 1;
-    socket.emit('hello', cpt);
+const createApp = (listener: http.Server): void => {
+  const io = new Server({
+    cors: {
+      origin: '*',
+    },
   });
 
-  socket.on('JOIN_CHANNEL', (channel) => {
-    console.log(channel);
-    socket.join(`channel-${channel}`);
-    console.log('Channels: ', socket.rooms);
-    socket.emit('JOIN_CHANNEL_SUCCESS');
-  });
-});
+  io.listen(listener);
 
+  io.use(auth);
+
+  io.on('connection', (socket: Socket) => {
+    console.log('connect');
+
+    handlers.forEach((handler) => {
+      bindEvent(socket, handler);
+    });
+  });
+};
+
+// Create app
+const httpServer = http.createServer();
+createApp(httpServer);
 httpServer.listen(3000);
-
-// // in a middleware
-// io.use(async (socket, next) => {
-//   try {
-//     const user = await fetchUser(socket);
-//     socket.user = user;
-//   } catch (e) {
-//     next(new Error("unknown user"));
-//   }
-// });
-
-// const server = require('https').createServer({
-//   key: fs.readFileSync('/tmp/key.pem'),
-//   cert: fs.readFileSync('/tmp/cert.pem')
-// });

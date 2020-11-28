@@ -30,26 +30,30 @@
         const socket = io("http://127.0.0.1:3000", auth);
 
         function sendMsg() {
-            socket.emit("message", "HELLO WORLD");
+            socket.emit("message:send", {message: "HELLO WORLD", to: "Martin"});
         }
 
-        let channelCpt = 1;
-        function joinChannel() {
-            socket.emit('JOIN_CHANNEL', channelCpt);
-            channelCpt += 1;
-        }
-
-        socket.on('JOIN_CHANNEL_SUCCESS', () => {
-            console.log('succesfully joined channel')
+        socket.on("message:send:error", (data) => {
+            console.log(data);
         })
 
-        socket.on('connect', () => {
-            $events.appendChild(newItem('connect'));
-        });
+        // let channelCpt = 1;
+        // function joinChannel() {
+        //     socket.emit('JOIN_CHANNEL', channelCpt);
+        //     channelCpt += 1;
+        // }
 
-        socket.on('hello', (data) => {
-            $events.appendChild(newItem(`hello - ${data}`));
-        });
+        // socket.on('JOIN_CHANNEL_SUCCESS', () => {
+        //     console.log('succesfully joined channel')
+        // })
+
+        // socket.on('connect', () => {
+        //     $events.appendChild(newItem('connect'));
+        // });
+
+        // socket.on('hello', (data) => {
+        //     $events.appendChild(newItem(`hello - ${data}`));
+        // });
     </script>
 </body>
 
