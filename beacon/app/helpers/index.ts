@@ -1,53 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Socket } from 'socket.io';
-import * as Joi from 'joi';
+import Joi from 'joi';
 
-function assert(condition: boolean, message: string) {
-  if (!condition) {
-    const mess = message || 'Assertion failed';
-    throw new Error(mess);
-  }
+type SocketEvent = (socket: Socket, payload: any) => void;
+interface Event {
+  name: string,
+  func: SocketEvent,
+  validation: Joi.ObjectSchema<any>,
 }
 
-/**
-   * Create an event to be implemented into sockets
-   * @param {String} name - The name of the event
-   * @param {object} rules - Object containing Joi validation rules
-   * @param {Function} fn - The function to be called on event
-   * @returns {*} The event Object
-   */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createEvent = (
   name: string,
-  rules: any,
-  fn: (socket: Socket, payload: any) => any,
-): any => {
-  assert(!!name, 'helpers - socket.createEvent() must have a name');
-  assert(typeof fn === 'function', 'helpers - socket.createEvent() must have a function');
+  rules: Joi.SchemaMap<any>,
+  func: SocketEvent,
+): Event => ({
+  name,
+  func,
+  validation: rules && Joi.object().keys(rules),
+});
 
-  return {
-    name,
-    fn,
-    validation: rules && Joi.object().keys(rules),
-  };
-};
+export const bindEvent = (socket: Socket, event: Event): void => {
+  const { name, func, validation } = event;
 
-/**
-   * Bind an event to a socket
-   * @param {String} name - The name of the event
-   * @param {any} validation - A Joi object validation
-   * @param {Function} fn - The function to be called on event
-   */
-export const bindEvent = (socket: Socket, { name, validation, fn }: any) => {
   socket.on(name, (payload = {}) => {
-    // Validate
-
     if (validation) {
-      validation.validateAsync(payload).then((val: any) => {
-        console.log('pass validation: ', val);
-      }).catch((err: any) => socket.emit(`${name}:error`, { err }));
-      // throw new Error(`Failed to validate input ${err.details[0].message}`);
+      validation.validateAsync(payload).catch((err: any) => socket.emit(`${name}:error`, { err }));
     }
-
-    return fn(socket, payload);
+    return func(socket, payload);
   });
 };

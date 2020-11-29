@@ -4,16 +4,17 @@ import { bindEvent } from './helpers';
 // load dotenv and config options
 
 // Middlewares
-import auth from './middlewares/auth';
+import { authentication } from './middlewares';
 
 // Events
-import * as messageHandlers from './controllers/messages';
+import { messageHandlers } from './controllers';
 
 // assign namespaces
 const handlers = Object.values({
   ...messageHandlers,
 });
 
+// App factory
 const createApp = (listener: http.Server): void => {
   const io = new Server({
     cors: {
@@ -23,11 +24,9 @@ const createApp = (listener: http.Server): void => {
 
   io.listen(listener);
 
-  io.use(auth);
+  io.use(authentication);
 
   io.on('connection', (socket: Socket) => {
-    console.log('connect');
-
     handlers.forEach((handler) => {
       bindEvent(socket, handler);
     });

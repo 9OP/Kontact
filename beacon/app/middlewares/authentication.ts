@@ -1,14 +1,16 @@
 /* eslint-disable no-console */
 import { Socket } from 'socket.io';
 
-const auth = (socket: Socket, next: () => void): void => {
+export default (socket: Socket, next: () => void): void => {
   const token = socket.handshake.auth;
-  // ...
+  // http request to /auth/whoami {token}
   console.log('AuthnToken: ', token);
+  /*
+  for channel in user.channels
+    socket.join(channel)
+  */
   next();
 };
-
-export default auth;
 
 // // in a middleware
 // io.use(async (socket, next) => {
