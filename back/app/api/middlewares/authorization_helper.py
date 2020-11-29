@@ -1,9 +1,9 @@
 import functools
 from flask import request, g
-import app.api_responses as apr
 from app.models import Membership
 from app.models.membership_model import Role
 from app.models.user_model import Access
+import app.api_responses as apr
 
 
 def role_required(role):

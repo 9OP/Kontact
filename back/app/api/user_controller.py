@@ -1,10 +1,7 @@
 from app.models import User
 from app.models.user_model import Access
-from app.api.helpers import (
-    render,
-    authentication,
-    access_required,
-)
+from app.api.middlewares import authentication, access_required
+from app.api.helpers import render
 
 
 @authentication

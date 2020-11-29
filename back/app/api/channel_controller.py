@@ -2,13 +2,8 @@ from flask import request, g
 from app.models import Channel, User, Membership
 from app.models.membership_model import Role
 from app.models.user_model import Access
-from app.api.helpers import (
-    validator,
-    render,
-    authentication,
-    role_required,
-    access_required,
-)
+from app.api.middlewares import authentication, role_required, access_required
+from app.api.helpers import validator, render
 
 
 CHANNEL_SCHEMA = {

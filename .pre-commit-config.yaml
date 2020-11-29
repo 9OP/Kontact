@@ -6,12 +6,14 @@ repos:
       - id: black
         language_version: python3.9
         files: ^back/
+        name: "[BACK] linting - black"
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.4
     hooks:
       - id: flake8
         args: ["--config", "./back/.flake8"]
         files: ^back/
+        name: "[BACK] syntax compliance - flake8"
 
   # Node / beacon pre-commit
   - repo: https://github.com/pre-commit/mirrors-eslint
@@ -20,6 +22,7 @@ repos:
       - id: eslint
         files: ^beacon/.*ts$
         types: [file]
+        name: "[BEACON] linting - eslint"
 
   # Generic pre-commit
   - repo: https://github.com/pre-commit/pre-commit-hooks

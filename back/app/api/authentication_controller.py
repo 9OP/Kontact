@@ -1,6 +1,7 @@
 from flask import request, g
 from app.models import User, UserToken
-from app.api.helpers import validator, render, authentication
+from app.api.helpers import validator, render
+from app.api.middlewares import authentication
 import app.api_responses as apr
 
 _EMAIL_SCHEMA = {
