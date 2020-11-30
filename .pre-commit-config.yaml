@@ -24,6 +24,15 @@ repos:
         types: [file]
         name: "[BEACON] linting - eslint"
 
+  # React / fron pre-commit
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v7.14.0
+    hooks:
+      - id: eslint
+        files: ^front/.*ts(x)$
+        types: [file]
+        name: "[FRONT] linting - eslint"
+
   # Generic pre-commit
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.3.0
