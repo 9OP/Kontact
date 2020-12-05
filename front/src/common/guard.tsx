@@ -1,15 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import * as React from 'react';
+import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
 
-export interface ProtectedRouteProps extends RouteProps {
+export interface GuardProps extends RouteProps {
   isAuthenticated: boolean;
   isAllowed: boolean;
   restrictedPath: string;
   authenticationPath: string;
 }
 
-export const Guard: React.FC<ProtectedRouteProps> = (props: ProtectedRouteProps) => {
+export default function Guard(props: GuardProps): JSX.Element {
   const {
     isAuthenticated, isAllowed, authenticationPath, restrictedPath,
   } = props;
@@ -27,6 +27,6 @@ export const Guard: React.FC<ProtectedRouteProps> = (props: ProtectedRouteProps)
     return <Route {...props} component={renderComponent} render={undefined} />;
   }
   return <Route {...props} />;
-};
+}
 
-export default Guard;
+// Create loginGuard, AuthGuard etc...
