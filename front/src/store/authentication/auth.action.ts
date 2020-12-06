@@ -3,14 +3,8 @@ import {
   SIGNIN,
   SIGNUP,
   SIGNOUT,
-  FETCH_USER,
 } from './auth.action-types';
 
-export function fetchUser(): authActionTypes {
-  return {
-    type: FETCH_USER,
-  };
-}
 export function signup(auth: {name: string, email: string, password: string}): authActionTypes {
   return {
     payload: auth,

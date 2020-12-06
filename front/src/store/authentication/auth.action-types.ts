@@ -1,9 +1,10 @@
-export const FETCH_USER = '[AUTH] Fetch User';
+import { Action } from 'redux';
+
 export const SIGNUP = '[AUTH] Signup';
 export const SIGNIN = '[AUTH] Signin';
 export const SIGNOUT = '[AUTH] Signout';
 
-interface signupAction {
+interface signupAction extends Action {
   type: typeof SIGNUP;
   payload: {
     name: string;
@@ -12,7 +13,7 @@ interface signupAction {
   };
 }
 
-interface signinAction {
+interface signinAction extends Action {
   type: typeof SIGNIN;
   payload: {
     email: string;
@@ -20,12 +21,8 @@ interface signinAction {
   };
 }
 
-interface signoutAction {
+interface signoutAction extends Action {
   type: typeof SIGNOUT;
 }
 
-interface fetchUserAction {
-  type: typeof FETCH_USER;
-}
-
-export type authActionTypes = signupAction | signinAction | signoutAction | fetchUserAction;
+export type authActionTypes = signupAction | signinAction | signoutAction;
