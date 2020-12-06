@@ -7,20 +7,36 @@ import {
   FormLabel,
   Input,
   Button,
+  Spinner,
+  InputGroup,
+  InputRightElement,
+  Icon,
 } from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import ErrorMessage from '../error';
 
 interface Props {
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void,
+  signin: (event: React.FormEvent<HTMLFormElement>) => void,
   setEmail: React.Dispatch<React.SetStateAction<string>>,
   setPassword: React.Dispatch<React.SetStateAction<string>>,
+  error: string,
+  isLoading: boolean,
+  showPassword: boolean,
+  setShowPassword: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-export default function LoginForm(props: Props): JSX.Element {
+export default (props: Props): JSX.Element => {
   const {
-    handleSubmit,
+    signin,
     setEmail,
     setPassword,
+    error,
+    isLoading,
+    showPassword,
+    setShowPassword,
   } = props;
+
+  const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
     <Flex width="full" align="center" justifyContent="center">
@@ -31,7 +47,8 @@ export default function LoginForm(props: Props): JSX.Element {
         </Box>
 
         <Box my={4} textAlign="left">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={signin}>
+            {error && <ErrorMessage message={error} />}
             <FormControl>
               <FormLabel>Email</FormLabel>
               <Input
@@ -43,15 +60,26 @@ export default function LoginForm(props: Props): JSX.Element {
             </FormControl>
             <FormControl mt={6}>
               <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                placeholder="*******"
-                size="md"
-                onChange={(event) => setPassword(event.currentTarget.value)}
-              />
+              <InputGroup>
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="*******"
+                  size="md"
+                  onChange={(event) => setPassword(event.currentTarget.value)}
+                />
+                <InputRightElement width="3rem">
+                  <Button h="1.5rem" size="sm" onClick={handlePasswordVisibility}>
+                    {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
             </FormControl>
-            <Button type="submit" colorScheme="teal" variant="outline" width="full" mt={4}>
-              Sign In
+            <Button colorScheme="teal" variant="outline" type="submit" width="full" mt={4}>
+              {isLoading ? (
+                <Spinner size="md" thickness="2px" speed="0.65s" colorScheme="teal" />
+              ) : (
+                'Sign In'
+              )}
             </Button>
           </form>
         </Box>
@@ -59,4 +87,4 @@ export default function LoginForm(props: Props): JSX.Element {
       </Box>
     </Flex>
   );
-}
+};

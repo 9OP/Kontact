@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk } from '../../store';
-import { signin } from '../../store/authentication/auth.effect';
-import LoginForm from './login.view';
+import * as effect from '../../store/authentication/auth.effect';
+import LoginView from './login.view';
 
 const mapState = null;
 
 const mapDispatch = (dispatch: DispThunk) => ({
-  login: (email: string, password: string) => dispatch(signin(email, password)),
+  signin: (email: string, password: string) => dispatch(effect.signin(email, password)),
 });
 
 const connector = connect(
@@ -20,23 +20,31 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux
 
-function Login(props: Props): JSX.Element {
-  const { login } = props;
+const Login = (props: Props): JSX.Element => {
+  const { signin } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    login(email, password);
+    setIsLoading(true);
+    signin(email, password);
   };
 
   return (
-    <LoginForm
-      handleSubmit={handleSubmit}
+    <LoginView
+      signin={handleSignin}
       setEmail={setEmail}
       setPassword={setPassword}
+      error={error}
+      isLoading={isLoading}
+      showPassword={showPassword}
+      setShowPassword={setShowPassword}
     />
   );
-}
+};
 
 export default connector(Login);

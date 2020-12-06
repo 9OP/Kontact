@@ -6,7 +6,13 @@ import {
   Button,
 } from '@chakra-ui/react';
 
-export default function Home(): JSX.Element {
+interface Props {
+  signout: () => void,
+}
+
+export default (props: Props): JSX.Element => {
+  const { signout } = props;
+
   return (
     <Flex width="full" align="center" justifyContent="center">
       <Box
@@ -25,7 +31,7 @@ export default function Home(): JSX.Element {
             variant="outline"
             width="full"
             mt={4}
-            // onClick={() => setIsLoggedIn(false)}
+            onClick={() => signout()}
           >
             Sign out
           </Button>
@@ -33,4 +39,4 @@ export default function Home(): JSX.Element {
       </Box>
     </Flex>
   );
-}
+};
