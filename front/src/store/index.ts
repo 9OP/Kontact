@@ -7,6 +7,7 @@ import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 // Reducers
 import userReducer from './user/user.reducer';
+import requestReducer from './request/request.reducer';
 import errorReducer from './error/error.reducer';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -14,7 +15,8 @@ export const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 export const rootReducer = combineReducers({
   user: userReducer,
-  error: errorReducer,
+  requests: requestReducer,
+  errors: errorReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

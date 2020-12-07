@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import { errorActionTypes, CREATE_ERROR, RESET_ERRORS } from './error.action-types';
+import { errorActionTypes } from './error.action-types';
 
 export function errorActionCreator(
-  action: typeof CREATE_ERROR,
+  action: string,
   error: Error,
 ): errorActionTypes {
   return {
@@ -11,19 +11,3 @@ export function errorActionCreator(
     payload: error,
   };
 }
-
-export function resetErrorsAction(): errorActionTypes {
-  return {
-    type: RESET_ERRORS,
-  };
-}
-
-// export function errorActionDeletor(
-//   action: typeof CREATE_ERROR[],
-// ): errorActionTypes {
-//   return {
-//     type: action,
-//     error: false,
-//     payload: null as unknown as Error,
-//   };
-// }

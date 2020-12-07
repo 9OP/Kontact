@@ -1,4 +1,4 @@
-import { errorActionTypes, RESET_ERRORS } from './error.action-types';
+import { errorActionTypes } from './error.action-types';
 
 interface State {
   [key: string]: string
@@ -10,19 +10,19 @@ export default function errorReducer(
   state: State = INITIAL_STATE,
   action: errorActionTypes,
 ): State {
-  if (action.type === RESET_ERRORS) {
-    return INITIAL_STATE;
-  }
-
-  if (!action.error) {
-    const key = action.type;
+  if (action.type.includes('[REQUEST]')) {
+    const key = action.type.replace('[REQUEST]', '[ERROR]');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [key]: _, ...rest } = state;
     return rest;
   }
 
-  return {
-    ...state,
-    [action.type]: action.payload.message,
-  };
+  if (action.error) {
+    return {
+      ...state,
+      [action.type]: action.payload.message,
+    };
+  }
+
+  return state;
 }

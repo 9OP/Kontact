@@ -21,12 +21,12 @@ const JsonToUser = (json: any): IUser => ({
 });
 
 export const signin = async (email: string, password: string): Promise<IUser> => {
+  await new Promise((r) => setTimeout(r, 700));
   const res = await fetch(`${API}/auth/signin`, {
     method: 'post',
     headers: { 'Content-type': 'application/json' },
     body: JSON.stringify({ email, password }),
   }).then(handleApiErrors);
-  await new Promise((r) => setTimeout(r, 500));
   localStorage.setItem(TOKEN, res.token);
   return JsonToUser(res);
 };
