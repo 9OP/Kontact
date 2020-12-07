@@ -22,3 +22,7 @@ export function whoamiErrorAction(error: Error): errorActionTypes {
 export function signoutErrorAction(error: Error): errorActionTypes {
   return errorActionCreator(SIGNOUT_ERROR, error);
 }
+
+// export function resetAuthErrorAction(): errorActionTypes {
+//   return errorActionDeletor(SIGNIN_ERROR);
+// }

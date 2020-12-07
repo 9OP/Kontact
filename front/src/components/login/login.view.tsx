@@ -10,7 +10,6 @@ import {
   Spinner,
   InputGroup,
   InputRightElement,
-  Icon,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import ErrorMessage from '../error';

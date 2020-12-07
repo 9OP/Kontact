@@ -1,5 +1,6 @@
 import { AppThunk } from '..';
 import { IUser } from '../../common/models/user.model';
+import { resetErrorsAction } from '../error/error.actions';
 import { setUserAction, resetUserAction } from '../user/user.actions';
 import { signinErrorAction } from './auth.actions';
 import * as httpService from './auth.http';
@@ -8,9 +9,12 @@ export const signin = (
   email: string,
   password: string,
 ): AppThunk => async (dispatch) => {
+  // dispatch(signinRequestAction());
   httpService.signin(email, password)
     .then((user: IUser) => {
       dispatch(setUserAction(user));
+      dispatch(resetErrorsAction());
+      // dispatch(resetAuthErrorAction());
     })
     .catch(() => {
       dispatch(resetUserAction());

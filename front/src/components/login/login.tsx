@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-import { DispThunk } from '../../store';
+import { DispThunk, RootState } from '../../store';
 import * as effect from '../../store/authentication/auth.effect';
+import { selectSigninError } from '../../store/authentication/auth.selectors';
 import LoginView from './login.view';
 
-const mapState = null;
+const mapState = (state: RootState) => ({
+  error: selectSigninError(state),
+});
 
 const mapDispatch = (dispatch: DispThunk) => ({
   signin: (email: string, password: string) => dispatch(effect.signin(email, password)),
@@ -21,10 +24,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const Login = (props: Props): JSX.Element => {
-  const { signin } = props;
+  const { signin, error } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
