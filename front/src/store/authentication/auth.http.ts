@@ -1,16 +1,9 @@
+import { handleApiErrors } from '../../common/http/api';
+import { getToken, saveToken } from '../../common/http/local_storage';
 import { IUser } from '../../common/models/user.model';
 
 const API = process.env.REACT_APP_BASE_URL as string;
 const TOKEN = process.env.REACT_APP_AUTH_TOKEN as string;
-
-async function handleApiErrors(response: Response) {
-  const json = await response.json();
-  if (!response.ok) {
-    // discriminate type of errors
-    throw Error(json.description || response.statusText);
-  }
-  return json;
-}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToUser = (json: any): IUser => ({
@@ -27,7 +20,7 @@ export const signin = async (email: string, password: string): Promise<IUser> =>
     headers: { 'Content-type': 'application/json' },
     body: JSON.stringify({ email, password }),
   }).then(handleApiErrors);
-  localStorage.setItem(TOKEN, res.token);
+  saveToken(res.token);
   return JsonToUser(res);
 };
 
@@ -40,20 +33,19 @@ export const signup = async (email: string, password: string, name: string): Pro
   return JsonToUser(res);
 };
 
-export const signout = async (): Promise<Response> => {
-  const token = localStorage.getItem(TOKEN) || '';
-  const res = await fetch(`${API}/auth/signout`, {
+export const signout = async (): Promise<void> => {
+  const token = getToken();
+  await fetch(`${API}/auth/signout`, {
     method: 'post',
     headers: {
       'Content-type': 'application/json',
       [TOKEN]: token,
     },
   }).then(handleApiErrors);
-  return res;
 };
 
 export const whoami = async (): Promise<IUser> => {
-  const token = localStorage.getItem(TOKEN) || '';
+  const token = getToken();
   const res = await fetch(`${API}/auth/whoami`, {
     method: 'get',
     headers: {

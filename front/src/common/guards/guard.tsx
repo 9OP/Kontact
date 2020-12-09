@@ -3,36 +3,17 @@ import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
 
 export interface Props extends RouteProps {
-  isAuthenticated?: () => boolean;
-  isAllowed?: () => boolean;
-  restrictedPath?: string;
-  authenticationPath?: string;
+  isAllowed: boolean;
+  fallbackPath: string;
 }
 
-const defaultProps = {
-  isAuthenticated: () => true,
-  isAllowed: () => true,
-  restrictedPath: '/',
-  authenticationPath: '/',
-};
-
-export default function Guard(props: Props = defaultProps): JSX.Element {
-  let {
-    isAuthenticated, isAllowed, authenticationPath, restrictedPath,
-  } = props;
-
-  isAuthenticated = isAuthenticated || defaultProps.isAuthenticated;
-  isAllowed = isAllowed || defaultProps.isAllowed;
-  authenticationPath = authenticationPath || defaultProps.authenticationPath;
-  restrictedPath = restrictedPath || defaultProps.restrictedPath;
+export default function Guard(props: Props): JSX.Element {
+  const { isAllowed, fallbackPath } = props;
 
   let redirectPath = '';
 
-  if (!isAuthenticated()) {
-    redirectPath = authenticationPath;
-  }
-  if (isAuthenticated() && !isAllowed()) {
-    redirectPath = restrictedPath;
+  if (!isAllowed) {
+    redirectPath = fallbackPath;
   }
 
   if (redirectPath) {

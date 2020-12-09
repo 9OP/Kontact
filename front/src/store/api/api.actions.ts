@@ -1,28 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
-import { Action } from 'redux';
-
-interface apiActionRequest extends Action {
-  type: string;
-}
-interface apiActionSuccess extends Action {
-  type: string;
-  payload: any;
-}
-interface apiActionFailure extends Action {
-  type: string;
-  payload: Error;
-}
-
-export type apiActionType =
-  | apiActionRequest
-  | apiActionSuccess
-  | apiActionFailure;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  apiActionRequest,
+  apiActionSuccess,
+  apiActionFailure,
+} from './api.action-types';
 
 interface apiActions {
   request: () => apiActionRequest;
-  success: (data?: any) => apiActionSuccess;
-  failure: (error: Error) => apiActionFailure;
+  success: () => apiActionSuccess;
+  failure: (error: string) => apiActionFailure;
 }
 
 export function apiActionsCreator(type: string): apiActions {
@@ -30,12 +17,11 @@ export function apiActionsCreator(type: string): apiActions {
     type: `${type}_REQUEST`,
   });
 
-  const successAction = (data?: any): apiActionSuccess => ({
+  const successAction = (): apiActionSuccess => ({
     type: `${type}_SUCCESS`,
-    payload: data,
   });
 
-  const failureAction = (error: Error): apiActionFailure => ({
+  const failureAction = (error: string): apiActionFailure => ({
     type: `${type}_FAILURE`,
     payload: error,
   });

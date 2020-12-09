@@ -4,20 +4,18 @@ import { RouteProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Guard from './guard';
 import { selectUser } from '../../store/user/user.selectors';
+import { HOME_PATH } from '../constants';
 
 export default (props: RouteProps): JSX.Element => {
   const user = useSelector(selectUser);
 
-  // If user is defined, then redirect to /
-  // It prevents access to /login once authenticated
-  const restrictedPath = '/';
-  const isAllowed = () => user === null;
+  const isUserNull = user === null;
 
   return (
     <Guard
       {...props}
-      restrictedPath={restrictedPath}
-      isAllowed={isAllowed}
+      fallbackPath={HOME_PATH}
+      isAllowed={isUserNull}
     />
   );
 };

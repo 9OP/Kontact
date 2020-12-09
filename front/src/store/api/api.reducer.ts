@@ -1,4 +1,4 @@
-import { apiActionType } from './api.actions';
+import { apiActionType } from './api.action-types';
 
 const REQUEST_ACTION = 'REQUEST';
 const SUCCESS_ACTION = 'SUCCESS';
@@ -19,6 +19,7 @@ export default function apiReducer(
   type = action.type.includes(SUCCESS_ACTION) ? SUCCESS_ACTION : type;
   type = action.type.includes(FAILURE_ACTION) ? FAILURE_ACTION : type;
   const key = action.type.replace(`_${type}`, '');
+  const { payload } = action;
 
   switch (type) {
     case REQUEST_ACTION:
@@ -34,7 +35,7 @@ export default function apiReducer(
     case FAILURE_ACTION:
       return {
         ...state,
-        [key]: { ...state.key, error: 'generic error', loading: false },
+        [key]: { ...state.key, error: payload, loading: false },
       };
 
     default:

@@ -5,7 +5,7 @@ const INITIAL_STATE: IUser = null as unknown as IUser;
 
 export default function userReducer(state: IUser = INITIAL_STATE, action: userActionTypes): IUser {
   switch (action.type) {
-    case SET_USER: // case SIGNIN
+    case SET_USER:
       return action.payload;
     case RESET_USER:
       return INITIAL_STATE;
