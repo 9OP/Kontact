@@ -3,12 +3,12 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk, RootState } from '../../store';
 import * as effect from '../../store/authentication/auth.effect';
-import { selectSigninError, selectSigninRequest } from '../../store/authentication/auth.selectors';
+import { signinSelectors } from '../../store/authentication/auth.selectors';
 import LoginView from './login.view';
 
 const mapState = (state: RootState) => ({
-  error: selectSigninError(state),
-  isLoading: selectSigninRequest(state),
+  error: signinSelectors.error(state),
+  isLoading: signinSelectors.loading(state),
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
