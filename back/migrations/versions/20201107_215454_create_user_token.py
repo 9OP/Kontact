@@ -23,8 +23,7 @@ def upgrade():
         "user_token",
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("token", sa.String(), nullable=False),
+        sa.Column("id", UUID(), nullable=False),
         sa.Column("user_id", UUID(), nullable=False),
         sa.Column("revoked_at", sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(
@@ -32,7 +31,6 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_user_token")),
         sa.UniqueConstraint("id", name=op.f("uq_user_token_id")),
-        sa.UniqueConstraint("token", name=op.f("uq_user_token_token")),
     )
     # ### end Alembic commands ###
 

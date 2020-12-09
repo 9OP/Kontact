@@ -7,16 +7,15 @@ import app.api_responses as apr
 def authentication(func):
     @functools.wraps(func)
     def secure_function(*args, **kwargs):
-        if not request.headers.get("kt_token"):
+        try:
+            bearer = request.headers.get("Authorization").strip()
+            token = bearer.split()[-1]
+        except:
             raise apr.AuthError(description="Authentication token required.")
 
-        token = UserToken.find(token=request.headers.get("kt_token"))
-        if not token:
-            raise apr.TokenInvalid()
-
-        uid = token.decode()
-        g.current_user = User.find(id=uid)
-        g.auth_token = token
+        uid, tid = UserToken.decode(token)
+        g.current_user = User.find_one(id=uid)
+        g.auth_token = UserToken.find_one(id=tid)
         return func(*args, **kwargs)
 
     return secure_function

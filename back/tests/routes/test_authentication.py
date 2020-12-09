@@ -5,6 +5,10 @@ from tests.conftest import UserToken
 from tests.factories import user_factory
 
 
+def stub_encode(*args, **kwargs):
+    return "mocked_token"
+
+
 @pytest.mark.usefixtures("cleandb")
 class AuthenticationRequestsSuite(RequestsHelper):
     @pytest.fixture()
@@ -50,7 +54,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN POST /auth/signup
         THEN returns user + 201
         """
-        self.mock(UserToken, "token", "mocked_token")
+        self.mock(UserToken, "encode", stub_encode)
         user = user_factory()
         response = self.post("/auth/signup", user)
         RequestsHelper.expect_success(
@@ -98,7 +102,7 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN OST /auth/signin
         THEN returns authentication token
         """
-        self.mock(UserToken, "token", "mocked_token")
+        self.mock(UserToken, "encode", stub_encode)
         response = self.post("/auth/signin", self.args)
         RequestsHelper.expect_success(
             response, {**self.user_data, "token": "mocked_token"}
@@ -124,14 +128,14 @@ class AuthenticationRequestsSuite(RequestsHelper):
         RequestsHelper.expect_success(response, {"app_code": 200})
         assert token.revoked_at is not None
 
-    def test_signout_without_token(self):
-        """
-        GIVEN no user / no token
-        WHEN POST /auth/signout
-        THEN 200
-        """
-        response = self.post("/auth/signout")
-        RequestsHelper.expect_success(response, {"app_code": 200})
+    # def test_signout_without_token(self):
+    #     """
+    #     GIVEN no user / no token
+    #     WHEN POST /auth/signout
+    #     THEN 200
+    #     """
+    #     response = self.post("/auth/signout")
+    #     RequestsHelper.expect_success(response, {"app_code": 200})
 
     def test_whoami(self, user):
         """
@@ -158,6 +162,6 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN POST /auth/whoami with none token
         THEN return 401
         """
-        self.headers = {"kt_token": None}
+        self.headers = {"Authorization": None}
         response = self.get("/auth/whoami")
         RequestsHelper.expect_failure(response, {"app_code": 420}, code=401)

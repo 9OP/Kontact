@@ -68,6 +68,6 @@ class RequestsHelper:
         assert expected.items() <= data.items()
 
     def login(self, user_id):
-        tk = UserToken.create(user_id=user_id)
-        self.headers["kt_token"] = tk.token
-        return tk
+        token = UserToken.create(user_id=user_id)
+        self.headers["Authorization"] = f"Bearer {token.encode()}"
+        return token

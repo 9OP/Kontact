@@ -46,7 +46,7 @@ def signup():
         password=params["password"],
     )
     user_data = new_user.summary()
-    user_data["token"] = UserToken.create(user_id=new_user.id).token
+    user_data["token"] = UserToken.create(user_id=new_user.id).encode()
     return render(user_data, code=201)
 
 
@@ -58,14 +58,13 @@ def signin():
         raise apr.LoginFailed()
 
     user_data = user.summary()
-    user_data["token"] = UserToken.create(user_id=user.id).token
+    user_data["token"] = UserToken.create(user_id=user.id).encode()
     return render(user_data)
 
 
+@authentication
 def signout():
-    token = UserToken.find(token=request.headers.get("kt_token"))
-    if token:
-        token.revoke()
+    g.auth_token.revoke()
     return render("Signout successfully.")
 
 

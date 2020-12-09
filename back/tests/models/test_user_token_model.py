@@ -55,7 +55,7 @@ class UserTokenModelSuite:
         """
         user = self.make_user(**user_factory())
         token = self.make_token(user_id=user.id)
-        assert token.decode() == user.id
+        assert UserToken.decode(token.encode()) == (user.id, token.id)
 
     def test_fail_decode_revoked(self):
         """
@@ -67,7 +67,7 @@ class UserTokenModelSuite:
         token = self.make_token(user_id=user.id)
         token.revoke()
         with pytest.raises(api_res.TokenExpired):
-            token.decode()
+            UserToken.decode(token.encode())
 
     def test_fail_decode_invalid(self):
         """
@@ -76,10 +76,10 @@ class UserTokenModelSuite:
         THEN raise TokenInvalid on decode
         """
         user = self.make_user(**user_factory())
-        token = self.make_token(user_id=user.id)
+        token = self.make_token(user_id=user.id).encode()
         self.mock(Config, "SECRET_KEY", "new_secret_key")
         with pytest.raises(api_res.TokenInvalid):
-            token.decode()
+            UserToken.decode(token)
 
     def test_fail_decode_expired(self):
         """
@@ -91,4 +91,4 @@ class UserTokenModelSuite:
         user = self.make_user(**user_factory())
         token = self.make_token(user_id=user.id)
         with pytest.raises(api_res.TokenExpired):
-            token.decode()
+            UserToken.decode(token.encode())

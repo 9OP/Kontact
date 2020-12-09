@@ -10,9 +10,9 @@ POST {{host}}/auth/signup
 Content-Type: {{contentType}}
 
 {
-    "email": "test19@mail.com",
-    "name": "Test",
-    "password": "Abc123*ö"
+    "email": "Martin@mail.com",
+    "name": "Martin",
+    "password": "Abc123*"
 }
 
 
@@ -22,8 +22,8 @@ POST {{host}}/auth/signin
 Content-Type: {{contentType}}
 
 {
-    "email": "test19@mail.com",
-    "password": "Abc123*ö"
+    "email": "Martin@mail.com",
+    "password": "Abc123*"
 }
 
 ###
@@ -33,12 +33,12 @@ Content-Type: {{contentType}}
 
 ### Whoami
 GET {{host}}/auth/whoami
-kt_token: {{token}}
+Authorization: Bearer {{token}}
 
 ### Signout user
 POST {{host}}/auth/signout
 Content-Type: {{contentType}}
-kt_token: {{token}}
+Authorization: Bearer {{token}}
 
 ### Get all users
 GET {{host}}/user
