@@ -2,7 +2,7 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk } from '../../store';
-import * as effect from '../../store/authentication/auth.effect';
+import * as effect from '../../store/authentication/auth.effects';
 import HomeView from './home.view';
 
 const mapState = null;

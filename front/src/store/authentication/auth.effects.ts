@@ -22,6 +22,7 @@ export const signin = (
     dispatch(success(user));
   } catch {
     dispatch(resetUserAction());
+    // create error message wrt catched error
     dispatch(failure(Error('invalid mail or address or whatever')));
   }
 };

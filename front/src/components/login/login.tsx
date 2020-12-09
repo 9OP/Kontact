@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk, RootState } from '../../store';
-import * as effect from '../../store/authentication/auth.effect';
+import * as effect from '../../store/authentication/auth.effects';
 import { signinSelectors } from '../../store/authentication/auth.selectors';
 import LoginView from './login.view';
 

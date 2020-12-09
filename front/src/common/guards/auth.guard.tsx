@@ -4,7 +4,7 @@ import { RouteProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Guard from './guard';
 import { selectUser } from '../../store/user/user.selectors';
-import * as effect from '../../store/authentication/auth.effect';
+import * as effect from '../../store/authentication/auth.effects';
 
 export default (props: RouteProps): JSX.Element => {
   const dispatch = useDispatch();
