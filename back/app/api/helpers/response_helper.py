@@ -11,10 +11,11 @@ def handler(exc):
     return response
 
 
-def render(res=None, code=200):
-    if isinstance(res, dict) or isinstance(res, list):
-        return jsonify(res), code
-    return jsonify({"app_code": 200, "description": res or "success"}), code
+def render(data=None, code=200, cookie=None):
+    res = jsonify(data)
+    if cookie:
+        res.set_cookie(**cookie)
+    return res, code
 
 
 def expect_mimetype(mimetype="application/json", methods=["POST", "PUT"]):

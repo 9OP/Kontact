@@ -30,6 +30,9 @@ Content-Type: {{contentType}}
 @token = {{login.response.body.token}}
 @uid = {{login.response.body.id}}
 
+### Key
+GET {{host}}/auth/key
+
 
 ### Whoami
 GET {{host}}/auth/whoami
