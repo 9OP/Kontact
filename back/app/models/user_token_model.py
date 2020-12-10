@@ -1,4 +1,5 @@
 import jwt
+from cryptography.fernet import Fernet
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime, timedelta
 from app.models.database import db, Support
@@ -10,14 +11,14 @@ import uuid
 class UserToken(db.Model, Support):
     __tablename__ = "user_token"
 
-    # id = db.Column(db.Integer, primary_key=True)
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    # token = db.Column(db.String, unique=True, nullable=False)
+    key = db.Column(db.String, nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user.id"), nullable=False)
     revoked_at = db.Column(db.DateTime)
 
-    # def __init__(self, **kwargs):
-    #     super().__init__(**kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.key = Fernet.generate_key().decode("utf-8")
 
     def __repr__(self):
         return "<user_token: {}>".format(self.id)

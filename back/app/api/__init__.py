@@ -38,6 +38,7 @@ auth_api.route("/signup", methods=["POST"])(auth.signup)
 auth_api.route("/signin", methods=["POST"])(auth.signin)
 auth_api.route("/signout", methods=["POST"])(auth.signout)
 auth_api.route("/whoami", methods=["GET"])(auth.whoami)
+auth_api.route("/key", methods=["GET"])(auth.key)
 
 
 # [User] blueprint
