@@ -1,4 +1,4 @@
-const TOKEN = process.env.REACT_APP_AUTH_TOKEN as string;
+const TOKEN = 'encrypted-authorization-bearer';
 
 // Implement encryption / decryption of Token
 
@@ -8,4 +8,8 @@ export function getToken(): string {
 
 export function saveToken(token: string): void {
   localStorage.setItem(TOKEN, token);
+}
+
+export function clearToken(): void {
+  localStorage.setItem(TOKEN, '');
 }
