@@ -1,4 +1,4 @@
-from flask import request, g
+from flask import request, g, session
 from app.models import User, UserToken
 from app.api.helpers import validator, render, encrypt, decrypt
 from app.api.middlewares import authentication
@@ -59,12 +59,14 @@ def signin():
     token = UserToken.create(user_id=user.id)
     user_data = user.summary()
     user_data["token"] = token.encode()
-    cookie = {
-        "key": "csrf",
-        "value": encrypt(str(token.id)),
-        "httponly": True,
-    }
-    return render(user_data, cookie=cookie)
+    session["token"] = token.id
+    return render(user_data)
+
+    # cookie = {
+    #     "key": "csrf",
+    #     "value": encrypt(str(token.id)),
+    #     "httponly": True,
+    # }
 
 
 @authentication
@@ -80,6 +82,6 @@ def whoami():
 
 
 def key():
-    csrf = request.cookies.get("csrf")
-    token = UserToken.find_one(id=decrypt(csrf))
+    # csrf = request.cookies.get("csrf")
+    token = UserToken.find_one(id=session["token"])
     return render({"key": token.key})
