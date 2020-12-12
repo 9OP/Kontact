@@ -1,25 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-underscore-dangle */
 import {
-  combineReducers, applyMiddleware, compose, Action,
+  combineReducers,
+  applyMiddleware,
+  compose,
+  Action,
+  createStore,
 } from 'redux';
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 // Reducers
-import userReducer from './user/user.reducer';
+import authReducer from './authentication/auth.reducer';
 import apiReducer from './api/api.reducer';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-export const enhancer = composeEnhancers(applyMiddleware(thunk));
+const middlewares = [thunk];
+export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
 export const rootReducer = combineReducers({
-  user: userReducer,
+  auth: authReducer,
   api: apiReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action>;
 export type DispThunk = ThunkDispatch<RootState, unknown, Action>
+
+export const store = createStore(
+  rootReducer,
+  enhancer,
+);
 
 /* ThunkAction<R, S, E, A>
   R = return of thunk

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { RouteProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Guard from './guard';
-import { selectUser } from '../../store/user/user.selectors';
+import { selectUser } from '../../store/authentication/auth.selectors';
 import * as effect from '../../store/authentication/auth.effects';
 import { LOGIN_PATH } from '../constants';
 

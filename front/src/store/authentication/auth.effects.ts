@@ -1,11 +1,13 @@
 import { AppThunk } from '..';
-import { setUserAction, resetUserAction } from '../user/user.actions';
 import {
+  setUserAction,
+  resetUserAction,
   signinActions,
   signupActions,
   whoamiActions,
   signoutActions,
 } from './auth.actions';
+
 import * as httpService from './auth.http';
 
 export const signin = (
