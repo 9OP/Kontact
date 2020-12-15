@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { bindEvent } from './helpers';
@@ -8,6 +9,9 @@ import { authentication } from './middlewares';
 
 // Events
 import { messageHandlers } from './controllers';
+
+// Load .env
+dotenv.config();
 
 // assign namespaces
 const handlers = Object.values({

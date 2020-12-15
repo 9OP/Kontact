@@ -1,39 +1,49 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 import axios from 'axios';
 import { Socket } from 'socket.io';
+import { IUser } from '../models/user.model';
+import { ExtSocket } from '../types';
 
-const whoami = async (token: string) => {
-  // console.log(token);
-  const res = await axios.get(
-    'http://localhost:5000/auth/whoami',
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-  // catch error flow
+// const { BACKEND_API } = process.env;
+const BACKEND_API = 'http://localhost:5000';
 
-  return res.data;
+const JSONtoIUser = (data: any): IUser => ({
+  id: data.id,
+  email: data.email,
+  name: data.name,
+  access: data.access,
+  channels: data.channels,
+  // TODO: Convert channels properly
+});
+
+const whoami = async (token: string): Promise<IUser> => {
+  // Env var for back api
+  try {
+    const res = await axios.get(
+      `${BACKEND_API}/auth/whoami`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    return JSONtoIUser(res.data);
+  } catch (err) {
+    throw new Error('Unauthorized');
+  }
 };
 
 export default async (socket: Socket, next: (any?: any) => void): Promise<void> => {
   const { token } = socket.handshake.auth as {token: string};
 
   try {
-    // http request to /auth/whoami {token}
-
-    /*
-  for channel in user.channels
-    socket.join(channel)
-  */
-
     const user = await whoami(token);
-    console.log(user);
-    // add user to socket
+    user.token = token;
+    // eslint-disable-next-line no-param-reassign
+    (socket as ExtSocket).user = user;
+
+    user.channels?.forEach((channel) => {
+      socket.join(`channel:${channel.id}`);
+    });
+
     next();
-  } catch (e) {
-    next(new Error('unknown user'));
+  } catch (err) {
+    next(err);
   }
 };

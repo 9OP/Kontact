@@ -21,6 +21,7 @@ export const sendMessage = createEvent(
   SEND_MESSAGE_VALIDATION,
   (socket: Socket, payload: Message): void => {
     console.log('message:send', socket.id, payload);
+    console.log('Rooms:', socket.rooms);
     // add author id in payload
     // socket.to(payload.channel).emit(SEND_MESSAGE, { message: payload.message });
     // console.log('message: ', payload.message);
