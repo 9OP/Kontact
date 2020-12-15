@@ -16,10 +16,14 @@ import { IUser } from '../../common/models/user.model';
 interface Props {
   signout: () => void;
   user: IUser;
+  setMessage: React.Dispatch<React.SetStateAction<string>>,
+  sendMessage: () => void;
 }
 
 export default (props: Props): JSX.Element => {
-  const { signout, user } = props;
+  const {
+    signout, user, setMessage, sendMessage,
+  } = props;
 
   return (
     <Box>
@@ -74,14 +78,14 @@ export default (props: Props): JSX.Element => {
             placeholder=".... "
             size="sm"
             resize="none"
-            // onChange={(event) => setMessage(event.currentTarget.value)}
+            onChange={(event) => setMessage(event.currentTarget.value)}
           />
           <Button
             colorScheme="blue"
             variant="outline"
             width="full"
             mt={4}
-            // onClick={() => ping()}
+            onClick={() => sendMessage()}
           >
             Send message
           </Button>

@@ -11,6 +11,17 @@ const JsonToUser = (json: any): IUser => ({
   access: json.access,
 });
 
+const connect = (token: string) => {
+  back.authorization = { Authorization: `Bearer ${token}` };
+  beacon.connect(token);
+};
+
+const disconnect = () => {
+  back.authorization = null;
+  beacon.disconnect();
+  clearToken();
+};
+
 const key = async (): Promise<string> => {
   const res = await back.get({
     route: 'auth/key',
@@ -19,27 +30,14 @@ const key = async (): Promise<string> => {
 };
 
 export const signin = async (email: string, password: string): Promise<IUser> => {
-  await new Promise((r) => setTimeout(r, 700));
-
-  // Post credentials to server
+  // await new Promise((r) => setTimeout(r, 400));
   const res = await back.post({
     route: 'auth/signin',
     payload: { email, password },
   });
-
-  // Get JWT token
   const { token } = res;
-
-  // Save token in local storage and encrypt it with session key
   saveToken(token, await key());
-
-  // Set the authorization header for the backend API
-  back.authorization = { Authorization: `Bearer ${token}` };
-
-  // Connect to Beacon, the websocket server
-  beacon.connect(token);
-
-  // Send back user
+  connect(token);
   return JsonToUser(res);
 };
 
@@ -52,24 +50,15 @@ export const signup = async (email: string, password: string, name: string): Pro
 };
 
 export const signout = async (): Promise<void> => {
-  await back.post({
-    route: 'auth/signout',
-  });
-  beacon.disconnect();
-  clearToken();
+  await back.post({ route: 'auth/signout' });
+  disconnect();
 };
 
 export const whoami = async (): Promise<IUser> => {
-  // If authorization is not defined
   if (!back.authorization) {
-    // Fetch decryption key from server and decrypt local storage
     const token = getToken(await key());
-
-    // Then update authorization header
-    back.authorization = { Authorization: `Bearer ${token}` };
+    connect(token);
   }
-  const res = await back.get({
-    route: 'auth/whoami',
-  });
+  const res = await back.get({ route: 'auth/whoami' });
   return JsonToUser(res);
 };

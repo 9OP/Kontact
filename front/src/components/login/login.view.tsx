@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Flex,
   Box,
@@ -20,8 +20,6 @@ interface Props {
   setPassword: React.Dispatch<React.SetStateAction<string>>,
   error: string,
   isLoading: boolean,
-  showPassword: boolean,
-  setShowPassword: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default (props: Props): JSX.Element => {
@@ -31,10 +29,8 @@ export default (props: Props): JSX.Element => {
     setPassword,
     error,
     isLoading,
-    showPassword,
-    setShowPassword,
   } = props;
-
+  const [showPassword, setShowPassword] = useState(false);
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (

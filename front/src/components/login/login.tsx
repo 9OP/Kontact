@@ -28,7 +28,8 @@ const Login = (props: Props): JSX.Element => {
   const { signin, error, isLoading } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+
+  // TODO: email/password validation
 
   const handleSignin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,8 +43,6 @@ const Login = (props: Props): JSX.Element => {
       setPassword={setPassword}
       error={error}
       isLoading={isLoading}
-      showPassword={showPassword}
-      setShowPassword={setShowPassword}
     />
   );
 };

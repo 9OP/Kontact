@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
 
-const TOKEN = 'encrypted-authorization-bearer';
+const TOKEN = 'kontact-auth-bearer';
 
 function enc(message: string, secret: string): string {
   const b64 = CryptoJS.AES.encrypt(message, secret).toString();
