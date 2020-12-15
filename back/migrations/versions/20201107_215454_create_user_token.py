@@ -24,7 +24,6 @@ def upgrade():
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("id", UUID(), nullable=False),
-        sa.Column("key", sa.String(length=255), nullable=False),
         sa.Column("user_id", UUID(), nullable=False),
         sa.Column("revoked_at", sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(

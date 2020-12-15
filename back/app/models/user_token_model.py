@@ -12,13 +12,8 @@ class UserToken(db.Model, Support):
     __tablename__ = "user_token"
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    key = db.Column(db.String, nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user.id"), nullable=False)
     revoked_at = db.Column(db.DateTime)
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.key = Fernet.generate_key().decode("utf-8")
 
     def __repr__(self):
         return "<user_token: {}>".format(self.id)

@@ -1,6 +1,9 @@
+from os import urandom
+from base64 import b64encode
+
 from flask import request, g, session
 from app.models import User, UserToken
-from app.api.helpers import validator, render, encrypt, decrypt
+from app.api.helpers import validator, render
 from app.api.middlewares import authentication
 import app.api_responses as apr
 
@@ -59,14 +62,8 @@ def signin():
     token = UserToken.create(user_id=user.id)
     user_data = user.summary()
     user_data["token"] = token.encode()
-    session["token"] = token.id
+    session["local_storage_key"] = b64encode(urandom(16)).decode()
     return render(user_data)
-
-    # cookie = {
-    #     "key": "csrf",
-    #     "value": encrypt(str(token.id)),
-    #     "httponly": True,
-    # }
 
 
 @authentication
@@ -82,6 +79,5 @@ def whoami():
 
 
 def key():
-    # csrf = request.cookies.get("csrf")
-    token = UserToken.find_one(id=session["token"])
-    return render({"key": token.key})
+    key = session["local_storage_key"]
+    return render({"key": key})
