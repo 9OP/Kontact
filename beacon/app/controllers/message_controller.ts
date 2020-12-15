@@ -20,10 +20,11 @@ export const sendMessage = createEvent(
   SEND_MESSAGE,
   SEND_MESSAGE_VALIDATION,
   (socket: Socket, payload: Message): void => {
+    console.log('message:send', socket.id, payload);
     // add author id in payload
-    socket.to(payload.channel).emit(SEND_MESSAGE, { message: payload.message });
-    console.log('message: ', payload.message);
-    console.log('channel: ', payload.channel);
-    console.log('socketId: ', socket.id);
+    // socket.to(payload.channel).emit(SEND_MESSAGE, { message: payload.message });
+    // console.log('message: ', payload.message);
+    // console.log('channel: ', payload.channel);
+    // console.log('socketId: ', socket.id);
   },
 );

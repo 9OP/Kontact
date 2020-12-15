@@ -27,6 +27,12 @@ const createApp = (listener: http.Server): void => {
   io.use(authentication);
 
   io.on('connection', (socket: Socket) => {
+    console.log(`Socket ${socket.id} connected.`);
+
+    socket.on('disconnect', () => {
+      console.log(`Socket ${socket.id} disconnected.`);
+    });
+
     handlers.forEach((handler) => {
       bindEvent(socket, handler);
     });
@@ -36,4 +42,4 @@ const createApp = (listener: http.Server): void => {
 // Create app
 const httpServer = http.createServer();
 createApp(httpServer);
-httpServer.listen(3000);
+httpServer.listen(4000);
