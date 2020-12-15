@@ -2,41 +2,93 @@ import React from 'react';
 import {
   Flex,
   Box,
-  Text,
   Button,
+  Avatar,
+  AvatarBadge,
+  Stack,
+  Heading,
+  Textarea,
+  Badge,
+  Text,
 } from '@chakra-ui/react';
+import { IUser } from '../../common/models/user.model';
 
 interface Props {
-  signout: () => void,
+  signout: () => void;
+  user: IUser;
 }
 
 export default (props: Props): JSX.Element => {
-  const { signout } = props;
+  const { signout, user } = props;
 
   return (
-    <Flex width="full" align="center" justifyContent="center">
-      <Box
-        p={8}
-        maxWidth="500px"
-        borderWidth={1}
-        borderRadius={8}
-        boxShadow="lg"
-      >
-        <Box textAlign="center">
-          <Text>
-            logged in!
-          </Text>
+    <Box>
+      <Flex width="full" align="center" justifyContent="center">
+        <Box
+          p={8}
+          maxWidth="700px"
+          borderWidth={1}
+          borderRadius={8}
+          boxShadow="lg"
+        >
+          <Box textAlign="left">
+            <Stack direction="row" spacing="24px">
+              <Avatar boxSize="3em">
+                <AvatarBadge boxSize="1em" bg="blue.500" />
+              </Avatar>
+              <Box>
+                <Stack direction="row">
+                  <Heading as="h3" size="lg">
+                    {user.name}
+                    <Badge ml="2" variant="outline" colorScheme="blue">
+                      {user.access}
+                    </Badge>
+                  </Heading>
+                </Stack>
+                <Text fontSize="sm" color="gray.500">{user.email}</Text>
+              </Box>
+            </Stack>
+
+            <Button
+              colorScheme="orange"
+              variant="outline"
+              width="full"
+              mt={4}
+              onClick={() => signout()}
+            >
+              Sign out
+            </Button>
+          </Box>
+        </Box>
+      </Flex>
+
+      <Flex mt="5" width="full" align="center" justifyContent="center">
+        <Box
+          p={3}
+          maxWidth="700px"
+          borderWidth={1}
+          borderRadius={8}
+          boxShadow="lg"
+        >
+          <Textarea
+            placeholder=".... "
+            size="sm"
+            resize="none"
+            // onChange={(event) => setMessage(event.currentTarget.value)}
+          />
           <Button
-            colorScheme="orange"
+            colorScheme="blue"
             variant="outline"
             width="full"
             mt={4}
-            onClick={() => signout()}
+            // onClick={() => ping()}
           >
-            Sign out
+            Send message
           </Button>
         </Box>
-      </Box>
-    </Flex>
+        {/* {data} */}
+      </Flex>
+    </Box>
+
   );
 };
