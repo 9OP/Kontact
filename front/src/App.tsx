@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { HOME_PATH, LOGIN_PATH } from './common/constants';
 import { AuthGuard, LoginGuard } from './common/guards';
-import ThemeToggler from './components/theme_toggler';
+
 // import Toast from './components/toast';
 import Login from './components/login';
 import Home from './components/home/home';
@@ -11,7 +11,6 @@ import Home from './components/home/home';
 function App(): JSX.Element {
   return (
     <Router>
-      <ThemeToggler />
       {/* <Toast /> */}
       <LoginGuard path={LOGIN_PATH} component={Login} />
       <AuthGuard exact path={HOME_PATH} component={Home} />

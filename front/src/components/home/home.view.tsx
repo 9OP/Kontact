@@ -27,45 +27,6 @@ export default (props: Props): JSX.Element => {
 
   return (
     <Box>
-      <Flex width="full" align="center" justifyContent="center">
-        <Box
-          p={8}
-          maxWidth="700px"
-          borderWidth={1}
-          borderRadius={8}
-          boxShadow="lg"
-        >
-          <Box textAlign="left">
-            <Stack direction="row" spacing="24px">
-              <Avatar boxSize="3em">
-                <AvatarBadge boxSize="1em" bg="blue.500" />
-              </Avatar>
-              <Box>
-                <Stack direction="row">
-                  <Heading as="h3" size="lg">
-                    {user.name}
-                    <Badge ml="2" variant="outline" colorScheme="blue">
-                      {user.access}
-                    </Badge>
-                  </Heading>
-                </Stack>
-                <Text fontSize="sm" color="gray.500">{user.email}</Text>
-              </Box>
-            </Stack>
-
-            <Button
-              colorScheme="orange"
-              variant="outline"
-              width="full"
-              mt={4}
-              onClick={() => signout()}
-            >
-              Sign out
-            </Button>
-          </Box>
-        </Box>
-      </Flex>
-
       <Flex mt="5" width="full" align="center" justifyContent="center">
         <Box
           p={3}
