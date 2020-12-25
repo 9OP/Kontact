@@ -11,6 +11,7 @@ import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 // Reducers
 import authReducer from './authentication/auth.reducer';
+import membershipsReducer from './memberships/memberships.reducer';
 import apiReducer from './api/api.reducer';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -19,6 +20,7 @@ export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
 export const rootReducer = combineReducers({
   auth: authReducer,
+  memberships: membershipsReducer,
   api: apiReducer,
 });
 

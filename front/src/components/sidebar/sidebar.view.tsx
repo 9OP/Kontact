@@ -9,7 +9,6 @@ import {
   Badge,
   Text,
   Divider,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import ThemeToggler from '../theme_toggler';
 import { IUser } from '../../common/models/user.model';
@@ -21,20 +20,20 @@ interface Props {
 
 export default (props: Props): JSX.Element => {
   const { signout, user } = props;
-  const bg = useColorModeValue('gray.50', 'gray.800');
-  const border = useColorModeValue('gray.200', 'gray.700');
+  // const bg = useColorModeValue('gray.50', 'gray.800');
+  // const border = useColorModeValue('gray.200', 'gray.700');
 
   return (
     <Box
       as="nav"
-      bg={bg}
+      // bg={bg}
       width="17rem"
       height="100vh"
       position="fixed"
       overflow="auto"
       boxShadow="xl"
-      borderRight="1px solid"
-      borderRightColor={border}
+      // borderRight="1px solid"
+      // borderRightColor={border}
     >
       {/* Header */}
       <Box padding="1.15rem" textAlign="left">

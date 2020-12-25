@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ChakraProvider } from '@chakra-ui/react';
 import { store } from './store';
-import App from './app';
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>

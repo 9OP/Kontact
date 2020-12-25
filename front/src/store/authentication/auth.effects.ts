@@ -1,4 +1,5 @@
 import { AppThunk } from '..';
+import { setMembershipsAction } from '../memberships/memberships.actions';
 import {
   setUserAction,
   resetUserAction,
@@ -7,8 +8,8 @@ import {
   whoamiActions,
   signoutActions,
 } from './auth.actions';
-
 import * as httpService from './auth.http';
+import * as membershipsHttpService from '../memberships/memberships.http';
 
 export const signin = (
   email: string,
@@ -20,6 +21,11 @@ export const signin = (
   try {
     const user = await httpService.signin(email, password);
     dispatch(setUserAction(user));
+
+    // const memberships = await membershipsHttpService.fetchMemberships();
+    // console.log(memberships);
+    // dispatch(setMembershipsAction(memberships));
+
     dispatch(success());
   } catch (err) {
     // console.log(err);
@@ -54,6 +60,11 @@ export const whoami = (): AppThunk => async (dispatch) => {
   try {
     const user = await httpService.whoami();
     dispatch(setUserAction(user));
+
+    // const memberships = await membershipsHttpService.fetchMemberships();
+    // console.log(memberships);
+    // dispatch(setMembershipsAction(memberships));
+
     dispatch(success());
   } catch {
     dispatch(resetUserAction());
@@ -67,6 +78,7 @@ export const signout = (): AppThunk => async (dispatch) => {
   dispatch(request());
   try {
     await httpService.signout();
+    window.location.reload(); // reset Redux store
     dispatch(resetUserAction());
     dispatch(success());
   } catch {
