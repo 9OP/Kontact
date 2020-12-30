@@ -54,7 +54,6 @@ class AuthenticationRequestsSuite(RequestsHelper):
         WHEN POST /auth/signup
         THEN returns user + 201
         """
-        self.mock(UserToken, "encode", stub_encode)
         user = user_factory()
         response = self.post("/auth/signup", user)
         RequestsHelper.expect_success(
@@ -62,7 +61,6 @@ class AuthenticationRequestsSuite(RequestsHelper):
             {
                 "name": user["name"],
                 "email": user["email"],
-                "token": "mocked_token",
             },
             code=201,
         )

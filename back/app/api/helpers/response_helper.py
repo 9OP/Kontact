@@ -12,6 +12,8 @@ def handler(exc):
 
 
 def render(data=None, code=200, cookie=None):
+    if isinstance(data, str):
+        data = {"description": data, "app_code": code}
     res = jsonify(data)
     if cookie:
         res.set_cookie(**cookie)
