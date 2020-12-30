@@ -10,7 +10,7 @@ export default function membershipReducer(
 ): State {
   switch (action.type) {
     case SET_MEMBERSHIPS:
-      return { ...action.payload };
+      return [...action.payload];
 
     default:
       return state;

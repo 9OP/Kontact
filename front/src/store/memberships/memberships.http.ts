@@ -6,7 +6,7 @@ import { IMembership } from '../../common/models/membership.model';
 const JsonToMemberships = (json: any): IMembership[] => {
   const memberhips: IMembership[] = [];
 
-  json.array.forEach((m: IMembership) => {
+  json.forEach((m: IMembership) => {
     memberhips.push({ id: m.id, name: m.name });
   });
 
@@ -15,6 +15,5 @@ const JsonToMemberships = (json: any): IMembership[] => {
 
 export const fetchMemberships = async (): Promise<IMembership[]> => {
   const res = await back.get({ route: 'auth/whoami' });
-
   return JsonToMemberships(res.channels);
 };

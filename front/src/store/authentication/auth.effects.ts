@@ -1,5 +1,4 @@
 import { AppThunk } from '..';
-import { setMembershipsAction } from '../memberships/memberships.actions';
 import {
   setUserAction,
   resetUserAction,
@@ -9,7 +8,6 @@ import {
   signoutActions,
 } from './auth.actions';
 import * as httpService from './auth.http';
-import * as membershipsHttpService from '../memberships/memberships.http';
 
 export const signin = (
   email: string,
@@ -19,13 +17,10 @@ export const signin = (
 
   dispatch(request());
   try {
+    // const [user, memberships] = await httpService.signin(email, password);
     const user = await httpService.signin(email, password);
     dispatch(setUserAction(user));
-
-    // const memberships = await membershipsHttpService.fetchMemberships();
-    // console.log(memberships);
     // dispatch(setMembershipsAction(memberships));
-
     dispatch(success());
   } catch (err) {
     // console.log(err);
@@ -58,13 +53,10 @@ export const whoami = (): AppThunk => async (dispatch) => {
 
   dispatch(request());
   try {
+    // const [user, memberships] = await httpService.whoami();
     const user = await httpService.whoami();
     dispatch(setUserAction(user));
-
-    // const memberships = await membershipsHttpService.fetchMemberships();
-    // console.log(memberships);
     // dispatch(setMembershipsAction(memberships));
-
     dispatch(success());
   } catch {
     dispatch(resetUserAction());

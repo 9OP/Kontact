@@ -30,7 +30,7 @@ const key = async (): Promise<string> => {
 };
 
 export const signin = async (email: string, password: string): Promise<IUser> => {
-  // await new Promise((r) => setTimeout(r, 400));
+  await new Promise((r) => setTimeout(r, 400));
   const res = await back.post({
     route: 'auth/signin',
     payload: { email, password },
@@ -38,6 +38,7 @@ export const signin = async (email: string, password: string): Promise<IUser> =>
   const { token } = res;
   saveToken(token, await key());
   connect(token);
+  // return [JsonToUser(res), JsonToMemberships(res.channels)];
   return JsonToUser(res);
 };
 
@@ -60,5 +61,6 @@ export const whoami = async (): Promise<IUser> => {
     connect(token);
   }
   const res = await back.get({ route: 'auth/whoami' });
+  // return [JsonToUser(res), JsonToMemberships(res.channels)];
   return JsonToUser(res);
 };

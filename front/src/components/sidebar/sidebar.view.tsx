@@ -9,19 +9,33 @@ import {
   Badge,
   Text,
   Divider,
+  List,
+  ListItem,
 } from '@chakra-ui/react';
 import ThemeToggler from '../theme_toggler';
 import { IUser } from '../../common/models/user.model';
+import { IMembership } from '../../common/models/membership.model';
 
 interface Props {
   signout: () => void;
   user: IUser;
+  memberships: IMembership[],
 }
 
 export default (props: Props): JSX.Element => {
-  const { signout, user } = props;
+  const { signout, user, memberships } = props;
   // const bg = useColorModeValue('gray.50', 'gray.800');
   // const border = useColorModeValue('gray.200', 'gray.700');
+
+  const renderChannels = () => (
+    <List spacing={3}>
+      { memberships.map((m: IMembership) => (
+        <ListItem key={m.id}>
+          {m.name}
+        </ListItem>
+      ))}
+    </List>
+  );
 
   return (
     <Box
@@ -55,6 +69,9 @@ export default (props: Props): JSX.Element => {
         </Stack>
       </Box>
       <Divider />
+
+      {/* Channels */}
+      { (memberships && memberships.length) ? renderChannels() : null}
 
       {/* Footer */}
       <Box position="absolute" bottom="0" width="100%">
