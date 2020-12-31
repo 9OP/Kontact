@@ -61,6 +61,5 @@ export const whoami = async (): Promise<IUser> => {
     connect(token);
   }
   const res = await back.get({ route: 'auth/whoami' });
-  // return [JsonToUser(res), JsonToMemberships(res.channels)];
   return JsonToUser(res);
 };

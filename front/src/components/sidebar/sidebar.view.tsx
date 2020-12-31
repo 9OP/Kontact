@@ -20,18 +20,23 @@ interface Props {
   signout: () => void;
   user: IUser;
   memberships: IMembership[],
+  openChannel: (cid: string) => void,
 }
 
 export default (props: Props): JSX.Element => {
-  const { signout, user, memberships } = props;
+  const {
+    signout, user, memberships, openChannel,
+  } = props;
   // const bg = useColorModeValue('gray.50', 'gray.800');
   // const border = useColorModeValue('gray.200', 'gray.700');
 
   const renderChannels = () => (
-    <List spacing={3}>
+    <List spacing={3} marginTop="3rem">
       { memberships.map((m: IMembership) => (
-        <ListItem key={m.id}>
-          {m.name}
+        <ListItem key={m.id} padding="1rem" onClick={() => openChannel(m.id)}>
+          <Badge colorScheme="teal" fontSize="1.2em">
+            {`# ${m.name}`}
+          </Badge>
         </ListItem>
       ))}
     </List>

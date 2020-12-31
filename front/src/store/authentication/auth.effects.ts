@@ -17,15 +17,11 @@ export const signin = (
 
   dispatch(request());
   try {
-    // const [user, memberships] = await httpService.signin(email, password);
     const user = await httpService.signin(email, password);
     dispatch(setUserAction(user));
-    // dispatch(setMembershipsAction(memberships));
     dispatch(success());
   } catch (err) {
-    // console.log(err);
     dispatch(resetUserAction());
-    // dispatch(failure('Mail or password invalid'));
     dispatch(failure(err.message));
   }
 };
@@ -53,10 +49,8 @@ export const whoami = (): AppThunk => async (dispatch) => {
 
   dispatch(request());
   try {
-    // const [user, memberships] = await httpService.whoami();
     const user = await httpService.whoami();
     dispatch(setUserAction(user));
-    // dispatch(setMembershipsAction(memberships));
     dispatch(success());
   } catch {
     dispatch(resetUserAction());
