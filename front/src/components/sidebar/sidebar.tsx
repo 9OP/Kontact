@@ -31,23 +31,23 @@ type Props = PropsFromRedux
 
 const Sidebar = (props: Props): JSX.Element => {
   const {
-    user, signout, fetchMemberships, memberships, fetchChannel,
+    user,
+    signout,
+    fetchMemberships,
+    memberships,
+    fetchChannel,
   } = props;
 
   useEffect(() => {
     fetchMemberships();
   }, []);
 
-  const handleOpenChannel = (cid: string) => {
-    fetchChannel(cid);
-  };
-
   return (
     <SidebarView
       user={user}
       signout={signout}
       memberships={memberships}
-      openChannel={handleOpenChannel}
+      selectChannel={fetchChannel}
     />
   );
 };

@@ -5,9 +5,13 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 
-export default (): JSX.Element => {
-  const a = 0;
-  // test
+interface Props {
+  cid: string;
+}
+
+export default (props: Props): JSX.Element => {
+  const { cid } = props;
+
   return (
     <Box
       bottom="0"

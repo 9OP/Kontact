@@ -1,29 +1,37 @@
 import React from 'react';
-import {
-  Flex,
-  Box,
-  Button,
-  Avatar,
-  AvatarBadge,
-  Stack,
-  Heading,
-  Textarea,
-  Badge,
-  Text,
-} from '@chakra-ui/react';
-import MessageBox from './message_box';
+import { connect, ConnectedProps } from 'react-redux';
 
-export default (): JSX.Element => {
-  const a = 0;
-  // test
+import { DispThunk, RootState } from '../../store';
+import { selectChannel } from '../../store/channel/channel.selectors';
+import MainView from './main.view';
+
+const mapState = (state: RootState) => ({
+  channel: selectChannel(state),
+});
+
+// const mapDispatch = (dispatch: DispThunk) => ({
+//   signout: () => dispatch(auth.signout()),
+//   fetchMemberships: () => dispatch(mberships.fetch()),
+//   fetchChannel: (cid: string) => dispatch(channel.fetch(cid)),
+// });
+
+const mapDispatch = null;
+
+const connector = connect(
+  mapState,
+  mapDispatch,
+);
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux
+
+const Main = (props: Props): JSX.Element => {
+  const { channel } = props;
+
   return (
-    <Box height="100vh" marginLeft="17rem" position="relative">
-      <Box display="flex" flexDirection="column">
-        <Box>
-          Chat Box
-        </Box>
-        <MessageBox />
-      </Box>
-    </Box>
+    <MainView channel={channel} />
   );
 };
+
+export default connector(Main);

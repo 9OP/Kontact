@@ -79,5 +79,5 @@ def whoami():
 
 
 def key():
-    key = session["local_storage_key"]
+    key = session.get("local_storage_key")
     return render({"key": key})
