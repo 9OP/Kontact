@@ -17,7 +17,6 @@ const JSONtoIUser = (data: any): IUser => ({
 });
 
 const whoami = async (token: string): Promise<IUser> => {
-  // Env var for back api
   try {
     const res = await axios.get(
       `${BACKEND_API}/auth/whoami`,
@@ -34,7 +33,7 @@ export default async (socket: Socket, next: (any?: any) => void): Promise<void> 
 
   try {
     const user = await whoami(token);
-    user.token = token;
+    user.token = token; // store token for next requests
     // eslint-disable-next-line no-param-reassign
     (socket as ExtSocket).user = user;
 

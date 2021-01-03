@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { back } from '../../common/network/api';
+import { back } from '../../common/network/back';
 import { IMembership } from '../../common/models/membership.model';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

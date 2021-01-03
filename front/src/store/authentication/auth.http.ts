@@ -1,4 +1,4 @@
-import { back } from '../../common/network/api';
+import { back } from '../../common/network/back';
 import { beacon } from '../../common/network/socket';
 import { getToken, saveToken, clearToken } from '../../common/local_storage';
 import { IUser } from '../../common/models/user.model';

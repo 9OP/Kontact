@@ -5,6 +5,7 @@ import { Socket } from 'socket.io';
 import { createEvent } from '../helpers';
 
 const SEND_MESSAGE = 'message:send';
+const RECEIVE_MESSAGE = 'message:receive';
 
 const SEND_MESSAGE_VALIDATION = {
   message: Joi.string().required(), // message
@@ -20,12 +21,9 @@ export const sendMessage = createEvent(
   SEND_MESSAGE,
   SEND_MESSAGE_VALIDATION,
   (socket: Socket, payload: Message): void => {
-    console.log('message:send', socket.id, payload);
-    console.log('Rooms:', socket.rooms);
     // add author id in payload
-    // socket.to(payload.channel).emit(SEND_MESSAGE, { message: payload.message });
-    // console.log('message: ', payload.message);
-    // console.log('channel: ', payload.channel);
-    // console.log('socketId: ', socket.id);
+    const cid = payload.channel;
+    socket.to(`channel:${cid}`).emit(RECEIVE_MESSAGE, { message: payload.message }); // to room
+    socket.emit(RECEIVE_MESSAGE, { message: payload.message }); // to sender
   },
 );
