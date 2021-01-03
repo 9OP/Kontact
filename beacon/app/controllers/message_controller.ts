@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-console */
 import Joi from 'joi';
-import { Socket } from 'socket.io';
 import { createEvent } from '../helpers';
+import { ExtSocket } from '../types';
 
 const SEND_MESSAGE = 'message:send';
 const RECEIVE_MESSAGE = 'message:receive';
@@ -20,10 +20,12 @@ interface Message {
 export const sendMessage = createEvent(
   SEND_MESSAGE,
   SEND_MESSAGE_VALIDATION,
-  (socket: Socket, payload: Message): void => {
-    // add author id in payload
-    const cid = payload.channel;
-    socket.to(`channel:${cid}`).emit(RECEIVE_MESSAGE, { message: payload.message }); // to room
-    socket.emit(RECEIVE_MESSAGE, { message: payload.message }); // to sender
+  (socket: ExtSocket, payload: Message): void => {
+    const response = {
+      author: socket.user.id,
+      message: payload.message,
+    };
+    socket.to(payload.channel).emit(RECEIVE_MESSAGE, response); // to room
+    socket.emit(RECEIVE_MESSAGE, response); // to sender
   },
 );

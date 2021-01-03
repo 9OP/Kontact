@@ -1,7 +1,6 @@
-interface Ichannel {
+export interface IMembership {
   id: string,
-  name: string,
-  membersCount: number,
+  name: string
 }
 
 export interface IUser {
@@ -9,6 +8,6 @@ export interface IUser {
   email: string,
   name: string,
   access: string,
-  channels?: Ichannel[],
-  token?: string,
+  memberships: IMembership[],
+  token: string | null,
 }

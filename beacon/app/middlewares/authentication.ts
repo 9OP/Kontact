@@ -1,20 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { Socket } from 'socket.io';
-import { IUser } from '../models/user.model';
+import { IUser, IMembership } from '../models/user.model';
 import { ExtSocket } from '../types';
 
 // const { BACKEND_API } = process.env;
 const BACKEND_API = 'http://localhost:5000';
 
-const JSONtoIUser = (data: any): IUser => ({
-  id: data.id,
-  email: data.email,
-  name: data.name,
-  access: data.access,
-  channels: data.channels,
-  // TODO: Convert channels properly
-});
+const JSONtoIUser = (data: any): IUser => {
+  const memberships: IMembership[] = [];
+
+  data.channels.forEach((m: any) => {
+    memberships.push({
+      id: m.id,
+      name: m.name,
+    });
+  });
+
+  return {
+    id: data.id,
+    email: data.email,
+    name: data.name,
+    access: data.access,
+    memberships,
+    token: null,
+  };
+};
 
 const whoami = async (token: string): Promise<IUser> => {
   try {
@@ -37,9 +48,7 @@ export default async (socket: Socket, next: (any?: any) => void): Promise<void> 
     // eslint-disable-next-line no-param-reassign
     (socket as ExtSocket).user = user;
 
-    user.channels?.forEach((channel) => {
-      socket.join(`channel:${channel.id}`);
-    });
+    user.memberships?.forEach((channel) => socket.join(channel.id));
 
     next();
   } catch (err) {

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Socket } from 'socket.io';
 import Joi from 'joi';
+import { ExtSocket } from '../types';
 
-type SocketEvent = (socket: Socket, payload: any) => void;
+type SocketEvent = (socket: ExtSocket, payload: any) => void;
 interface Event {
   name: string,
   func: SocketEvent,
@@ -19,7 +19,7 @@ export const createEvent = (
   validation: rules && Joi.object().keys(rules),
 });
 
-export const bindEvent = (socket: Socket, event: Event): void => {
+export const bindEvent = (socket: ExtSocket, event: Event): void => {
   const { name, func, validation } = event;
 
   socket.on(name, (payload = {}) => {

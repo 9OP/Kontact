@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import * as http from 'http';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { bindEvent } from './helpers';
 // load dotenv and config options
 
@@ -9,6 +9,7 @@ import { authentication } from './middlewares';
 
 // Events
 import { messageHandlers } from './controllers';
+import { ExtSocket } from './types';
 
 // Load .env
 dotenv.config();
@@ -30,7 +31,7 @@ const createApp = (listener: http.Server): void => {
 
   io.use(authentication);
 
-  io.on('connection', (socket: Socket) => {
+  io.on('connection', (socket: ExtSocket) => {
     console.log(`Socket ${socket.id} connected.`);
 
     socket.on('disconnect', () => {

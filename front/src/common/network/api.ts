@@ -25,6 +25,7 @@ class Api {
 
   authorization: headersType | null;
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   constructor({
     host = defaultHost,
     headers = defaultHeaders,
