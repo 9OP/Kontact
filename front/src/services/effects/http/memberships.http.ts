@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-import { back } from '../../common/network/api';
-import { IMembership } from '../../common/models/membership.model';
+import { back } from '../../../common/network/api';
+import { IMembership } from '../../../common/models/membership.model';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToMemberships = (json: any): IMembership[] => {

@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-import { back } from '../../common/network/api';
-import { IChannel, IMember } from '../../common/models/channel.model';
+import { back } from '../../../common/network/api';
+import { IChannel, IMember } from '../../../common/models/channel.model';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToChannel = (json: any): IChannel => {

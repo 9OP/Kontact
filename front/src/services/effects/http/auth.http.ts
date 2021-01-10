@@ -1,7 +1,7 @@
-import { back } from '../../common/network/api';
-import { beacon } from '../../common/network/socket';
-import { getToken, saveToken, clearToken } from '../../common/local_storage';
-import { IUser } from '../../common/models/user.model';
+import { back } from '../../../common/network/api';
+import { beacon } from '../../../common/network/socket';
+import { getToken, saveToken, clearToken } from '../../../common/local_storage';
+import { IUser } from '../../../common/models/user.model';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToUser = (json: any): IUser => ({

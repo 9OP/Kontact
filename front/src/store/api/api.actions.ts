@@ -1,12 +1,10 @@
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   apiActionRequest,
   apiActionSuccess,
   apiActionFailure,
 } from './api.action-types';
 
-interface apiActions {
+export interface apiActions {
   request: () => apiActionRequest;
   success: () => apiActionSuccess;
   failure: (error: string) => apiActionFailure;

@@ -1,4 +1,5 @@
-import { AppThunk } from '../store';
+import { AppThunk } from '../../store';
+import effect from '../../store/api/api.effect';
 import {
   setUserAction,
   resetUserAction,
@@ -6,24 +7,23 @@ import {
   signupActions,
   whoamiActions,
   signoutActions,
-} from '../store/authentication/auth.actions';
+} from '../../store/authentication/auth.actions';
 import * as httpService from './http/auth.http';
 
 export const signin = (
   email: string,
   password: string,
 ): AppThunk => async (dispatch) => {
-  const { request, success, failure } = signinActions;
-
-  dispatch(request());
-  try {
+  const successCb = async () => {
     const user = await httpService.signin(email, password);
     dispatch(setUserAction(user));
-    dispatch(success());
-  } catch (err) {
+  };
+
+  const failureCb = async () => {
     dispatch(resetUserAction());
-    dispatch(failure(err.message));
-  }
+  };
+
+  await effect(dispatch, signinActions, successCb, failureCb);
 };
 
 export const signup = (
@@ -31,44 +31,41 @@ export const signup = (
   email: string,
   password: string,
 ): AppThunk => async (dispatch) => {
-  const { request, success, failure } = signupActions;
-
-  dispatch(request());
-  try {
+  const successCb = async () => {
     const user = await httpService.signup(email, password, name);
     dispatch(setUserAction(user));
-    dispatch(success());
-  } catch {
+  };
+
+  const failureCb = async () => {
     dispatch(resetUserAction());
-    dispatch(failure('invalid mail or address or whatever'));
-  }
+  };
+
+  await effect(dispatch, signupActions, successCb, failureCb);
 };
 
 export const whoami = (): AppThunk => async (dispatch) => {
-  const { request, success, failure } = whoamiActions;
-
-  dispatch(request());
-  try {
+  const successCb = async () => {
     const user = await httpService.whoami();
     dispatch(setUserAction(user));
-    dispatch(success());
-  } catch {
+  };
+
+  const failureCb = async () => {
     dispatch(resetUserAction());
-    dispatch(failure('invalid mail or address or whatever'));
-  }
+  };
+
+  await effect(dispatch, whoamiActions, successCb, failureCb);
 };
 
 export const signout = (): AppThunk => async (dispatch) => {
-  const { request, success, failure } = signoutActions;
-
-  dispatch(request());
-  try {
+  const successCb = async () => {
     await httpService.signout();
     window.location.reload(); // reset Redux store
     dispatch(resetUserAction());
-    dispatch(success());
-  } catch {
+  };
+
+  const failureCb = async () => {
     dispatch(resetUserAction());
-    dispatch(failure('invalid mail or address or whatever'));
-  }
+  };
+
+  await effect(dispatch, signoutActions, successCb, failureCb);
 };

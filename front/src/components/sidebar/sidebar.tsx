@@ -2,22 +2,18 @@ import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk, RootState } from '../../store';
-import * as auth from '../../effects/auth.effects';
-import * as mberships from '../../effects/memberships.effects';
-import * as channel from '../../effects/channel.effects';
-import { selectUser } from '../../store/authentication/auth.selectors';
-import { selectMemberships } from '../../store/memberships/memberships.selectors';
+import { authDataManager, membershipsDataManager, channelDataManager } from '../../services';
 import SidebarView from './sidebar.view';
 
 const mapState = (state: RootState) => ({
-  user: selectUser(state),
-  memberships: selectMemberships(state),
+  user: authDataManager.selectUser(state),
+  memberships: membershipsDataManager.selectMemberships(state),
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
-  signout: () => dispatch(auth.signout()),
-  fetchMemberships: () => dispatch(mberships.fetch()),
-  fetchChannel: (cid: string) => dispatch(channel.fetch(cid)),
+  signout: () => dispatch(authDataManager.signout()),
+  fetchMemberships: () => dispatch(membershipsDataManager.fetchMemberships()),
+  fetchChannel: (cid: string) => dispatch(channelDataManager.fetchChannel(cid)),
 });
 
 const connector = connect(

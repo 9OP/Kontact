@@ -12,7 +12,6 @@ import {
   InputRightElement,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import ErrorMessage from '../error';
 import ThemeToggler from '../theme_toggler';
 
 interface Props {
@@ -48,7 +47,7 @@ export default (props: Props): JSX.Element => {
 
           <Box my={4} textAlign="left">
             <form onSubmit={signin}>
-              {error && <ErrorMessage message={error} />}
+
               <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input
@@ -83,6 +82,7 @@ export default (props: Props): JSX.Element => {
               </Button>
             </form>
           </Box>
+          {error}
         </Box>
       </Flex>
     </Box>

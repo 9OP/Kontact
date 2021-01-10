@@ -2,17 +2,16 @@ import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk, RootState } from '../../store';
-import * as effect from '../../effects/auth.effects';
-import { signinSelectors } from '../../store/authentication/auth.selectors';
+import { authDataManager } from '../../services';
 import LoginView from './login.view';
 
 const mapState = (state: RootState) => ({
-  error: signinSelectors.error(state),
-  isLoading: signinSelectors.loading(state),
+  error: authDataManager.signinSelectors.error(state),
+  isLoading: authDataManager.signinSelectors.loading(state),
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
-  signin: (email: string, password: string) => dispatch(effect.signin(email, password)),
+  signin: (email: string, password: string) => dispatch(authDataManager.signin(email, password)),
 });
 
 const connector = connect(

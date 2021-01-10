@@ -12,7 +12,7 @@ class Socket {
 
   subscriptions: {event: string, fn: Function}[];
 
-  emissions: {event: string, payload: any}[];
+  emissions: {event: string, payload: any, ack?: Function}[];
 
   constructor(host: string, opts?: SocketIOClient.ConnectOpts) {
     const defaultConf = {
@@ -26,7 +26,7 @@ class Socket {
   }
 
   public connect(token: string) {
-    if (this.socket) { return; }
+    if (this.socket) { this.disconnect(); }
 
     const auth = { auth: { token } };
     this.socket = io(this.host, { ...this.options, ...auth });
@@ -36,7 +36,7 @@ class Socket {
       this.socket.on(sub.event, sub.fn);
     });
     this.emissions.forEach((em) => {
-      this.socket.on(em.event, em.payload);
+      this.socket.emit(em.event, em.payload, em?.ack);
     });
   }
 
@@ -53,11 +53,11 @@ class Socket {
     }
   }
 
-  public emit(event: string, payload: any) {
+  public emit(event: string, payload: any, ack?: Function) {
     if (this.socket) {
-      this.socket.emit(event, payload);
+      this.socket.emit(event, payload, ack);
     } else {
-      this.emissions.push({ event, payload });
+      this.emissions.push({ event, payload, ack });
     }
   }
 }
