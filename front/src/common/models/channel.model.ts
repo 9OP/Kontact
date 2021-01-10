@@ -6,6 +6,14 @@ export interface IMember {
   joinedAt: Date;
 }
 
+export interface IMessage {
+  // id: string,
+  authorId: string;
+  // verified: boolean;
+  content: string;
+  date: Date;
+}
+
 export interface IChannel {
   id: string;
   name: string;

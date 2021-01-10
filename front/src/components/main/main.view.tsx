@@ -7,10 +7,11 @@ import Message from './message';
 
 interface Props {
   channel: IChannel
+  send: (message: string) => void;
 }
 
 export default (props: Props): JSX.Element => {
-  const { channel } = props;
+  const { channel, send } = props;
 
   return (
     <Box height="100vh" marginLeft="17rem" position="relative">
@@ -18,7 +19,7 @@ export default (props: Props): JSX.Element => {
         ? (
           <Box display="flex" flexDirection="column">
             <Chat channel={channel} />
-            <Message cid={channel.id} />
+            <Message send={send} />
           </Box>
         )
         : null }

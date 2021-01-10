@@ -5,22 +5,13 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 
-import { beacon } from '../../common/network/socket';
-
 interface Props {
-  cid: string;
+  send: (message: string) => void;
 }
 
 export default (props: Props): JSX.Element => {
+  const { send } = props;
   const [message, setMessage] = useState('');
-  const { cid } = props;
-
-  const sendMessage = () => {
-    beacon.socket.emit('message:send', {
-      message,
-      channel: cid,
-    });
-  };
 
   return (
     <Box
@@ -40,7 +31,7 @@ export default (props: Props): JSX.Element => {
         variant="outline"
         width="full"
         mt={4}
-        onClick={() => sendMessage()}
+        onClick={() => send(message)}
       >
         Send message
       </Button>

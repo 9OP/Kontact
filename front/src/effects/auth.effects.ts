@@ -1,4 +1,4 @@
-import { AppThunk } from '..';
+import { AppThunk } from '../store';
 import {
   setUserAction,
   resetUserAction,
@@ -6,8 +6,8 @@ import {
   signupActions,
   whoamiActions,
   signoutActions,
-} from './auth.actions';
-import * as httpService from './auth.http';
+} from '../store/authentication/auth.actions';
+import * as httpService from './http/auth.http';
 
 export const signin = (
   email: string,

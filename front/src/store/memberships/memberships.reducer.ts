@@ -1,5 +1,5 @@
 import { IMembership } from '../../common/models/membership.model';
-import { membershipsActionTypes, SET_MEMBERSHIPS } from './memberships.actions';
+import { membershipsActionTypes, SET_MEMBERSHIPS, RESET_MEMBERSHIPS } from './memberships.action-types';
 
 type State = IMembership[]
 
@@ -11,6 +11,8 @@ export default function membershipReducer(
   switch (action.type) {
     case SET_MEMBERSHIPS:
       return [...action.payload];
+    case RESET_MEMBERSHIPS:
+      return INITIAL_STATE;
 
     default:
       return state;

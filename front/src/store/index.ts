@@ -13,6 +13,7 @@ import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import authReducer from './authentication/auth.reducer';
 import membershipsReducer from './memberships/memberships.reducer';
 import channelReducer from './channel/channel.reducer';
+import messagesReducer from './channel/messages/messages.reducer';
 import apiReducer from './api/api.reducer';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -22,7 +23,10 @@ export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 export const rootReducer = combineReducers({
   auth: authReducer,
   memberships: membershipsReducer,
-  channel: channelReducer,
+  channel: combineReducers({
+    info: channelReducer,
+    messages: messagesReducer,
+  }),
   api: apiReducer,
 });
 

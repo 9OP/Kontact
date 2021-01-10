@@ -1,4 +1,4 @@
-import { back } from '../../common/network/back';
+import { back } from '../../common/network/api';
 import { beacon } from '../../common/network/socket';
 import { getToken, saveToken, clearToken } from '../../common/local_storage';
 import { IUser } from '../../common/models/user.model';
@@ -38,7 +38,6 @@ export const signin = async (email: string, password: string): Promise<IUser> =>
   const { token } = res;
   saveToken(token, await key());
   connect(token);
-  // return [JsonToUser(res), JsonToMemberships(res.channels)];
   return JsonToUser(res);
 };
 

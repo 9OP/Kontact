@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk, RootState } from '../../store';
-import * as auth from '../../store/authentication/auth.effects';
-import * as mberships from '../../store/memberships/memberships.effect';
-import * as channel from '../../store/channel/channel.effects';
+import * as auth from '../../effects/auth.effects';
+import * as mberships from '../../effects/memberships.effects';
+import * as channel from '../../effects/channel.effects';
 import { selectUser } from '../../store/authentication/auth.selectors';
 import { selectMemberships } from '../../store/memberships/memberships.selectors';
 import SidebarView from './sidebar.view';

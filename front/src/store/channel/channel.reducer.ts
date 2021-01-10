@@ -1,5 +1,5 @@
 import { IChannel } from '../../common/models/channel.model';
-import { channelActionTypes, SET_CHANNEL } from './channel.actions';
+import { channelActionTypes, SET_CHANNEL, RESET_CHANNEL } from './channel.action-types';
 
 type State = IChannel
 
@@ -11,6 +11,8 @@ export default function channelReducer(
   switch (action.type) {
     case SET_CHANNEL:
       return action.payload;
+    case RESET_CHANNEL:
+      return INITIAL_STATE;
 
     default:
       return state;

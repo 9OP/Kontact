@@ -1,37 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Box } from '@chakra-ui/react';
+
 import { IChannel } from '../../common/models/channel.model';
-import { beacon } from '../../common/network/socket';
+import { selectMessages } from '../../store/channel/messages/messages.selector';
 
 interface Props {
   channel: IChannel
 }
 
-interface response {
-  author: string,
-  message: string,
-}
-
 export default (props: Props): JSX.Element => {
   const { channel } = props;
-  const [messages, setMessages] = useState<response[]>([]);
-
-  useEffect(() => {
-    beacon.socket.on('message:receive', (data: response) => {
-      setMessages((prevState) => [...prevState, data]);
-    });
-
-    // unmount: detach listenner to avoid memory leak
-  }, []);
+  const messages = useSelector(selectMessages);
 
   const renderMessages = () => (
-    messages.map((m: response) => (
-      <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
-        {m.author}
+    messages.map((m, i) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg" key={i}>
+        {m.authorId}
         {' '}
         -
         {' '}
-        {m.message}
+        {m.content}
       </Box>
     ))
   );
