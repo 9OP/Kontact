@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Box,
   Badge,
   List,
   ListItem,
@@ -28,8 +29,11 @@ export default (props: Props): JSX.Element => {
   );
 
   return (
-    <List spacing={3} marginTop="3rem">
-      {(memberships && memberships.length) ? renderChannels() : null}
-    </List>
+    <Box marginBottom="auto">
+      <List spacing={3} marginTop="3rem">
+        {(memberships && memberships.length) ? renderChannels() : null}
+      </List>
+    </Box>
+
   );
 };

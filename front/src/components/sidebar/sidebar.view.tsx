@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { IUser } from '../../common/models/user.model';
 import { IMembership } from '../../common/models/membership.model';
 
@@ -23,19 +23,17 @@ export default (props: Props): JSX.Element => {
   } = props;
 
   return (
-    <Box
+    <Flex
       as="nav"
+      flexDirection="column"
       width="17rem"
       height="100vh"
-      position="fixed"
       overflow="auto"
-      boxShadow="xl"
+      borderRight="1px solid gray"
     >
       <HeaderView user={user} />
-      <Divider />
       <MembershipsView memberships={memberships} selectChannel={selectChannel} />
-
       <FooterView signout={signout} />
-    </Box>
+    </Flex>
   );
 };

@@ -15,26 +15,24 @@ export default (props: Props): JSX.Element => {
 
   return (
     <Box
-      bottom="0"
-      position="absolute"
       padding="1rem"
-      width="full"
+      borderTop="1px solid gray"
     >
+      <Button
+        colorScheme="blue"
+        variant="outline"
+        width="full"
+        mb={4}
+        onClick={() => send(message)}
+      >
+        Send message
+      </Button>
       <Textarea
         placeholder=".... "
         size="sm"
         resize="none"
         onChange={(event) => setMessage(event.currentTarget.value)}
       />
-      <Button
-        colorScheme="blue"
-        variant="outline"
-        width="full"
-        mt={4}
-        onClick={() => send(message)}
-      >
-        Send message
-      </Button>
     </Box>
 
   );

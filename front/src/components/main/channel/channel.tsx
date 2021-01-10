@@ -2,15 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box } from '@chakra-ui/react';
 
-import { IChannel } from '../../common/models/channel.model';
-import { selectMessages } from '../../store/channel/messages/messages.selector';
+import { selectMessages } from '../../../store/channel/messages/messages.selector';
 
-interface Props {
-  channel: IChannel
-}
-
-export default (props: Props): JSX.Element => {
-  const { channel } = props;
+export default (): JSX.Element => {
   const messages = useSelector(selectMessages);
 
   const renderMessages = () => (
@@ -27,8 +21,11 @@ export default (props: Props): JSX.Element => {
   );
 
   return (
-    <Box>
-      {channel.name}
+    <Box
+      marginBottom="auto"
+      // padding="1rem"
+      overflow="auto"
+    >
       {(messages && messages.length) ? renderMessages() : null}
     </Box>
   );

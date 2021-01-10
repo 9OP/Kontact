@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
-import Main from '../main/main';
+import Main from '../main';
 import SideBar from '../sidebar';
 
 export default (): JSX.Element => (
-  <Box>
+  <Flex direction="row">
     <SideBar />
     <Main />
-  </Box>
+  </Flex>
 );
