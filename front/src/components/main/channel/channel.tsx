@@ -1,32 +1,33 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Box } from '@chakra-ui/react';
+import { connect, ConnectedProps } from 'react-redux';
 
+import { RootState } from '../../../store';
 import { selectMessages } from '../../../store/channel/messages/messages.selector';
+import ChannelView from './channel.view';
 
-export default (): JSX.Element => {
-  const messages = useSelector(selectMessages);
+const mapState = (state: RootState) => ({
+  messages: selectMessages(state),
+});
 
-  const renderMessages = () => (
-    messages.map((m, i) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg" key={i}>
-        {m.authorId}
-        {' '}
-        -
-        {' '}
-        {m.content}
-      </Box>
-    ))
-  );
+const mapDispatch = {};
+
+const connector = connect(
+  mapState,
+  mapDispatch,
+);
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux
+
+const Channel = (props: Props): JSX.Element => {
+  const { messages } = props;
 
   return (
-    <Box
-      marginBottom="auto"
-      // padding="1rem"
-      overflow="auto"
-    >
-      {(messages && messages.length) ? renderMessages() : null}
-    </Box>
+    <ChannelView
+      messages={messages}
+    />
   );
 };
+
+export default connector(Channel);

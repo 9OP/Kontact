@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import { RootState } from '../../store';
 import { selectChannel } from '../../store/channel/channel.selectors';
-import { sendMessage } from '../../services/effects/socket/message.socket';
+
 import MainView from './main.view';
 
 const mapState = (state: RootState) => ({
@@ -23,13 +23,10 @@ type Props = PropsFromRedux
 
 const Main = (props: Props): JSX.Element => {
   const { channel } = props;
-
-  const send = (message: string) => {
-    sendMessage(channel.id, message);
-  };
+  const channelLoaded = !!channel;
 
   return (
-    <MainView channel={channel} send={send} />
+    <MainView channelLoaded={channelLoaded} />
   );
 };
 

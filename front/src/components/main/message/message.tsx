@@ -1,39 +1,43 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Textarea,
-} from '@chakra-ui/react';
+import { connect, ConnectedProps } from 'react-redux';
 
-interface Props {
-  send: (message: string) => void;
-}
+import { RootState } from '../../../store';
+import { selectChannel } from '../../../store/channel/channel.selectors';
+import { sendMessage } from '../../../services/effects/socket/message.socket';
+import MessageView from './message.view';
 
-export default (props: Props): JSX.Element => {
-  const { send } = props;
+const mapState = (state: RootState) => ({
+  channel: selectChannel(state),
+});
+
+const mapDispatch = {};
+
+const connector = connect(
+  mapState,
+  mapDispatch,
+);
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux
+
+const Message = (props: Props): JSX.Element => {
   const [message, setMessage] = useState('');
+  const { channel } = props;
+
+  // use callback
+  const send = () => {
+    sendMessage(channel.id, message);
+    setMessage('');
+  };
 
   return (
-    <Box
-      padding="1rem"
-      borderTop="1px solid gray"
-    >
-      <Button
-        colorScheme="blue"
-        variant="outline"
-        width="full"
-        mb={4}
-        onClick={() => send(message)}
-      >
-        Send message
-      </Button>
-      <Textarea
-        placeholder=".... "
-        size="sm"
-        resize="none"
-        onChange={(event) => setMessage(event.currentTarget.value)}
-      />
-    </Box>
-
+    <MessageView
+      send={send}
+      message={message}
+      setMessage={setMessage}
+    />
   );
 };
+
+export default connector(Message);

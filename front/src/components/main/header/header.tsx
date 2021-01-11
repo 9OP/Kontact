@@ -1,26 +1,33 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { IChannel } from '../../../common/models/channel.model';
+import { RootState } from '../../../store';
+import { selectChannel } from '../../../store/channel/channel.selectors';
+import HeaderView from './header.view';
 
-interface Props {
-  channel: IChannel;
-}
+const mapState = (state: RootState) => ({
+  channel: selectChannel(state),
+});
 
-export default (props: Props): JSX.Element => {
+const mapDispatch = {};
+
+const connector = connect(
+  mapState,
+  mapDispatch,
+);
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux
+
+const Header = (props: Props): JSX.Element => {
   const { channel } = props;
 
   return (
-    <Box
-      height="60px"
-      minHeight="60px"
-      padding=".5rem"
-      borderBottom="1px solid gray"
-      backgroundColor="teal.200"
-    >
-      {channel.name}
-      ---
-      {channel.createdAt.toDateString()}
-    </Box>
+    <HeaderView
+      channel={channel}
+    />
   );
 };
+
+export default connector(Header);
