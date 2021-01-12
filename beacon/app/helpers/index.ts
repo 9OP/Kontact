@@ -23,9 +23,12 @@ export const bindEvent = (socket: ExtSocket, event: Event): void => {
   const { name, func, validation } = event;
 
   socket.on(name, (payload = {}) => {
-    if (validation) {
-      validation.validateAsync(payload).catch((err: any) => socket.emit(`${name}:error`, { err }));
-    }
-    return func(socket, payload);
+    validation.validateAsync(payload)
+      .then(
+        () => func(socket, payload),
+      )
+      .catch(
+        (err: any) => socket.emit(`${name}:error`, { error: err }),
+      );
   });
 };
