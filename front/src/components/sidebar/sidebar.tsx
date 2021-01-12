@@ -30,8 +30,6 @@ const Sidebar = (props: Props): JSX.Element => {
     user,
     signout,
     fetchMemberships,
-    memberships,
-    fetchChannel,
   } = props;
 
   useEffect(() => {
@@ -42,8 +40,6 @@ const Sidebar = (props: Props): JSX.Element => {
     <SidebarView
       user={user}
       signout={signout}
-      memberships={memberships}
-      selectChannel={fetchChannel}
     />
   );
 };

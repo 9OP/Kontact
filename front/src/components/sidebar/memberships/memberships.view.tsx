@@ -1,29 +1,31 @@
 import React from 'react';
 import {
   Box,
-  Badge,
   List,
   ListItem,
 } from '@chakra-ui/react';
 import { IMembership } from '../../../common/models/membership.model';
+import { IChannel } from '../../../common/models/channel.model';
 
 interface Props {
   memberships: IMembership[],
-  selectChannel: (cid: string) => void,
+  fetchChannel: (cid: string) => void,
+  channel: IChannel,
 }
 
 export default (props: Props): JSX.Element => {
-  const {
-    memberships,
-    selectChannel,
-  } = props;
+  const { memberships, fetchChannel, channel } = props;
 
   const renderChannels = () => (
     memberships.map((m: IMembership) => (
-      <ListItem key={m.id} padding="1rem" onClick={() => selectChannel(m.id)}>
-        <Badge colorScheme="teal" fontSize="1.2em" _hover={{ cursor: 'pointer' }}>
-          {`# ${m.name}`}
-        </Badge>
+      <ListItem
+        key={m.id}
+        padding="1rem"
+        _hover={{ cursor: 'pointer', backgroundColor: 'teal.100' }}
+        backgroundColor={m.id === channel?.id ? 'teal.200' : 'gray.100'}
+        onClick={() => fetchChannel(m.id)}
+      >
+        {`> ${m.name}`}
       </ListItem>
     ))
   );
