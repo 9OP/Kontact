@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-console */
 import Joi from 'joi';
-import { createEvent } from '../helpers';
+import { createEvent } from './events';
 import { ExtSocket } from '../types';
 
 const SEND_MESSAGE = 'message:send';
@@ -25,6 +25,7 @@ export const sendMessage = createEvent(
       author: socket.user.id,
       message: payload.message,
     };
+    throw new Error('test error');
     socket.to(payload.channel).emit(RECEIVE_MESSAGE, response); // to room
     socket.emit(RECEIVE_MESSAGE, response); // to sender
   },

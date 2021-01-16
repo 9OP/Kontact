@@ -1,13 +1,22 @@
+/* eslint-disable no-shadow */
+enum Access {
+  GUEST = '<guest>',
+  USER = '<user>',
+  ADMIN = '<admin>',
+}
+
+enum Role {
+  MEMBER = '<member>',
+  MASTER = '<master>',
+}
+
 export interface IMembership {
   id: string,
-  name: string
+  role: Role,
 }
 
 export interface IUser {
   id: string,
-  email: string,
-  name: string,
-  access: string,
+  access: Access,
   memberships: IMembership[],
-  token: string | null,
 }

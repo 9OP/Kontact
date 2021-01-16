@@ -1,23 +1,13 @@
 import dotenv from 'dotenv';
 import * as http from 'http';
 import { Server } from 'socket.io';
-import { bindEvent } from './helpers';
-// load dotenv and config options
 
-// Middlewares
-import { authentication } from './middlewares';
-
-// Events
-import { messageHandlers } from './controllers';
 import { ExtSocket } from './types';
+import { authentication } from './middlewares';
+import binders from './controllers';
 
 // Load .env
 dotenv.config();
-
-// assign namespaces
-const handlers = Object.values({
-  ...messageHandlers,
-});
 
 // App factory
 const createApp = (listener: http.Server): void => {
@@ -38,9 +28,7 @@ const createApp = (listener: http.Server): void => {
       console.log(`Socket ${socket.id} disconnected.`);
     });
 
-    handlers.forEach((handler) => {
-      bindEvent(socket, handler);
-    });
+    binders.forEach((binder) => binder(socket));
   });
 };
 

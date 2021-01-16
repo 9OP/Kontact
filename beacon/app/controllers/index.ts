@@ -1,4 +1,11 @@
 /* eslint-disable import/prefer-default-export */
-import * as messageHandlers from './message_controller';
+import { bindEvent } from './events';
+import * as messageController from './message_controller';
 
-export { messageHandlers };
+const messageBinders = [
+  bindEvent(messageController.sendMessage),
+];
+
+export default [
+  ...messageBinders,
+];
