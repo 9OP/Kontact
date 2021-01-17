@@ -2,7 +2,7 @@ from flask import request, g
 from app.models import Channel, User, Membership
 from app.models.membership_model import Role
 from app.models.user_model import Access
-from app.api.middlewares import authentication, role_required, access_required
+from app.api.middlewares import authentication, require
 from app.api.helpers import validator, render
 
 
@@ -16,7 +16,7 @@ CHANNEL_SCHEMA = {
 
 
 @authentication
-@access_required(Access.USER)
+@require(access=Access.USER)
 def new():
     params = validator(request.json, CHANNEL_SCHEMA)
     new_channel = Channel.create(name=params["name"])
@@ -29,25 +29,32 @@ def new():
 
 
 @authentication
-@access_required(Access.USER)
+@require(access=Access.ADMIN)
 def index():
     channels = Channel.find_all()
-    return render([c.short() for c in channels])
+    return render([c.summary() for c in channels])
 
 
 @authentication
-@role_required(Role.MEMBER)
+@require(role=Role.MEMBER)
 def show(cid):
     channel = Channel.find_one(id=cid)
-    return render(channel.summary())
+    return render(channel.summary(verbose=True))
 
 
 @authentication
-@role_required(Role.MASTER)
+@require(role=Role.MASTER)
 def destroy(cid):
     channel = Channel.find_one(id=cid)
     channel.destroy()
     return render(f"Channel {channel.name} deleted")
+
+
+@authentication
+@require(access=Access.USER)
+def memberships():
+    memberships = Membership.find_all(user_id=g.current_user.id)
+    return render([m.summary("channel") for m in memberships])
 
 
 # def update(cid):
@@ -55,7 +62,7 @@ def destroy(cid):
 
 
 @authentication
-@role_required(Role.MASTER)
+@require(role=Role.MASTER)
 def add_member(cid, uid):
     channel = Channel.find_one(id=cid)
     user = User.find_one(id=uid)
@@ -64,7 +71,7 @@ def add_member(cid, uid):
 
 
 @authentication
-@role_required(Role.MASTER)
+@require(role=Role.MASTER)
 def del_member(cid, uid):
     channel = Channel.find_one(id=cid)
     user = User.find_one(id=uid)

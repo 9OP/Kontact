@@ -38,6 +38,10 @@ GET {{host}}/auth/key
 GET {{host}}/auth/whoami
 Authorization: Bearer {{token}}
 
+### Memberships
+GET {{host}}/channel/memberships
+Authorization: Bearer {{token}}
+
 ### Signout user
 POST {{host}}/auth/signout
 Content-Type: {{contentType}}

@@ -36,12 +36,11 @@ class Membership(db.Model, Support):
     def __repr__(self):
         return "<membership: <uid: {}, cid: {}>>".format(self.user_id, self.channel_id)
 
-    def user_summary(self):
-        user_data = self.user.serialize("id", "email", "name")
-        user_data.update({"role": Role(self.role).name, "joined_at": self.created_at})
-        return user_data
-
-    def channel_summary(self):
-        channel_data = self.channel.serialize("id", "name")
-        channel_data["joined_at"] = self.created_at
-        return channel_data
+    def summary(self, source=None):
+        switcher = {
+            "user": self.user.serialize("id", "name", "email"),
+            "channel": self.channel.serialize("id", "name"),
+        }
+        membership_data = self.serialize("role", created_at="joined_at")
+        membership_data.update(switcher.get(source, {}))
+        return membership_data

@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   back:
@@ -8,7 +8,7 @@ services:
     entrypoint: "./entrypoint.sh"
     command: "gunicorn -c python:config.gunicorn 'app:create_app()'"
     volumes:
-      - ./back:/app
+      - ./back:/back
     ports:
       - "5000:5000"
     depends_on:
@@ -29,7 +29,7 @@ services:
   adminer:
     image: adminer:standalone
     environment:
-      ADMINER_DESIGN: 'mvt'
+      ADMINER_DESIGN: "mvt"
     ports:
       - "8082:8080"
     links:

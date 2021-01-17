@@ -70,7 +70,7 @@ class Support(TimestampMixin):
     def __find(cls, **kwargs):
         try:
             return cls.query.filter_by(**kwargs)
-        except sql_exc.SQLAlchemyError:
+        except:  # except sql_exc.SQLAlchemyError:
             raise apr.ApiError()
 
     @classmethod

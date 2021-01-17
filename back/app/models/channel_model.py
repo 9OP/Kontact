@@ -15,12 +15,11 @@ class Channel(db.Model, Support):
     def __repr__(self):
         return "<channel: {}>".format(self.name)
 
-    def short(self):
-        return self.serialize("id", "name", "created_at", "members_count")
-
-    def summary(self):
-        channel_data = self.serialize("id", "name", "created_at")
-        channel_data["members"] = [c.user_summary() for c in self.channel_memberships]
+    def summary(self, verbose=False):
+        channel_data = self.serialize("id", "name", "created_at", "members_count")
+        if verbose:
+            members = [c.summary("user") for c in self.channel_memberships]
+            channel_data["members"] = members
         return channel_data
 
     @hybrid_property

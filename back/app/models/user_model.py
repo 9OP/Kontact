@@ -23,6 +23,7 @@ class User(db.Model, Support):
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     access = db.Column(db.Integer, nullable=False, default=Access.USER.value)
+
     tokens = db.relationship("UserToken", backref="user", lazy=True)
     channels = association_proxy("user_memberships", "channel")
 
@@ -44,15 +45,11 @@ class User(db.Model, Support):
         digest = hashlib.sha256(password.encode("utf-8")).hexdigest()
         return bcrypt.checkpw(digest.encode("utf-8"), hashed)
 
-    def short(self):
-        user_data = self.serialize("id", "email", "name", "channels_count")
-        user_data["access"] = Access(self.access).name
-        return user_data
-
-    def summary(self):
-        user_data = self.serialize("id", "email", "name")
-        user_data["access"] = Access(self.access).name
-        user_data["channels"] = [c.channel_summary() for c in self.user_memberships]
+    def summary(self, verbose=False):
+        user_data = self.serialize("id", "email", "name", "access", "channels_count")
+        if verbose:
+            channels = [u.summary("channel") for u in self.user_memberships]
+            user_data["channels"] = channels
         return user_data
 
     @hybrid_property
