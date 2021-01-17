@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import { RootState } from '../../../store';
 import { selectChannel } from '../../../store/channel/channel.selectors';
-import { sendMessage } from '../../../services/effects/socket/message.socket';
+import { sendMessage } from '../../../services/effects/messages.effects';
 import MessageView from './message.view';
 
 const mapState = (state: RootState) => ({

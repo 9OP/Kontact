@@ -1,27 +1,26 @@
 /* eslint-disable import/prefer-default-export */
-import { beacon } from '../../../common/network/socket';
-import { store } from '../../../store';
-import { addMessageAction } from '../../../store/channel/messages/messages.actions';
+import { beacon, beaconEmitter, beaconHandler } from '../../../common/network/socket';
 
-interface response {
+export interface response {
   author: string,
   message: string,
 }
 
-beacon.on('message:receive', (data: response) => {
-  // Should call addMessageAction only if current channel id match the received message channel
+// beacon.on('connect_error', (err: any) => {
+//   console.log('connect_error', err.message);
+// });
 
-  store.dispatch(addMessageAction({
-    authorId: data.author,
-    content: data.message,
-    date: new Date(),
-  }));
-});
+// beacon.on('error', (err: any) => {
+//   console.log('socket error', err, err?.message);
+// });
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const sendMessage = (cid: string, mess: string, ack?: Function): void => {
-  beacon.emit('message:send', {
-    message: mess,
-    channel: cid,
-  }, ack);
-};
+// beacon.on('message:send:error', (err: any) => {
+//   console.log('message:send:error', err?.message);
+// });
+
+// beacon.on('connect', () => {
+//   console.log('socket connected');
+// });
+
+export const receive = beaconHandler('message:receive');
+export const send = beaconEmitter('message:send');

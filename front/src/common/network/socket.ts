@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
@@ -62,9 +63,35 @@ class Socket {
   }
 }
 
+type callback = (data?: any) => void;
+
+const eventHandlerCreator = (socket: Socket) => {
+  return (event: string) => {
+    return (cb: callback) => {
+      socket.on(event, (data?: any) => cb(data));
+    };
+  };
+};
+
+const eventEmitterCreator = (socket: Socket) => {
+  return (event: string) => {
+    return (payload: any) => new Promise((resolve, reject) => {
+      socket.emit(event, payload, (ans: any) => {
+        if (ans === `${event}:error`) {
+          reject(new Error('Event error'));
+        } else {
+          resolve(ans);
+        }
+      });
+    });
+  };
+};
+
 /**
  * Beacon Api
  */
 const BEACON = process.env.REACT_APP_BEACON_URL as string;
 
 export const beacon = new Socket(BEACON);
+export const beaconHandler = eventHandlerCreator(beacon);
+export const beaconEmitter = eventEmitterCreator(beacon);
