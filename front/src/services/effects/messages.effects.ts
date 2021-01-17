@@ -1,13 +1,20 @@
 /* eslint-disable import/prefer-default-export */
-import { store } from '../../store';
-import { addMessageAction } from '../../store/channel/messages/messages.actions';
+import { store, AppThunk } from '../../store';
+import { addMessageAction, sendMessageActions } from '../../store/channel/messages/messages.actions';
 import * as message from './socket/message.socket';
 
-export const sendMessage = async (cid: string, mess: string): Promise<void> => {
+export const sendMessage = (
+  cid: string,
+  mess: string,
+): AppThunk => async (dispatch) => {
+  const { request, success, failure } = sendMessageActions;
+
+  dispatch(request());
   try {
-    await message.send({ message: mess, channel: cid });
+    await message.send({ channel: cid, message: mess });
+    dispatch(success());
   } catch (err) {
-    console.log(err);
+    dispatch(failure(err.message));
   }
 };
 

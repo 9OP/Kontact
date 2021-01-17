@@ -6,13 +6,13 @@ import {
 } from '@chakra-ui/react';
 
 interface Props {
-  send: () => void,
+  sendMessage: () => void,
   message: string,
   setMessage: React.Dispatch<React.SetStateAction<string>>,
 }
 
 export default (props: Props): JSX.Element => {
-  const { send, message, setMessage } = props;
+  const { sendMessage, message, setMessage } = props;
 
   return (
     <Box
@@ -24,7 +24,7 @@ export default (props: Props): JSX.Element => {
         variant="outline"
         width="full"
         mb={4}
-        onClick={() => send()}
+        onClick={() => sendMessage()}
       >
         Send message
       </Button>

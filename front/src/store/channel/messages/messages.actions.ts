@@ -1,5 +1,11 @@
 import { Action } from 'redux';
 import { IMessage } from '../../../common/models/channel.model';
+import { apiActionsCreator } from '../../api/api.actions';
+
+/**
+ * Socket actions
+ */
+export const SEND_MESSAGE = '[CHANNEL-MESSAGES] SEND_MESSAGE';
 
 /**
  * Messages actions
@@ -50,3 +56,5 @@ export function addMessageAction(message: IMessage): messagesActionTypes {
     type: ADD_MESSAGE,
   };
 }
+
+export const sendMessageActions = apiActionsCreator(SEND_MESSAGE);

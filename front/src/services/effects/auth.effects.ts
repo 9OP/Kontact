@@ -14,17 +14,34 @@ export const signin = (
   email: string,
   password: string,
 ): AppThunk => async (dispatch) => {
-  const successCb = async () => {
+  const { request, success, failure } = signinActions;
+
+  dispatch(request());
+  try {
     const user = await httpService.signin(email, password);
+    dispatch(success());
     dispatch(setUserAction(user));
-  };
-
-  const failureCb = async () => {
+  } catch (err) {
+    dispatch(failure(err.message));
     dispatch(resetUserAction());
-  };
-
-  await effect(dispatch, signinActions, successCb, failureCb);
+  }
 };
+
+// export const signin = (
+//   email: string,
+//   password: string,
+// ): AppThunk => async (dispatch) => {
+//   const successCb = async () => {
+//     const user = await httpService.signin(email, password);
+//     dispatch(setUserAction(user));
+//   };
+
+//   const failureCb = async () => {
+//     dispatch(resetUserAction());
+//   };
+
+//   await effect(dispatch, signinActions, successCb, failureCb);
+// };
 
 export const signup = (
   name: string,
