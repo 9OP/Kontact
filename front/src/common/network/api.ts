@@ -91,6 +91,7 @@ async function backendHandler(response: Response): Promise<any> {
   if (!response.ok) {
     // discriminate type of errors
     // console.log(json);
+
     throw Error(json.description || response.statusText);
   }
   return json;

@@ -15,6 +15,6 @@ const JsonToMemberships = (json: any): IMembership[] => {
 };
 
 export const fetchMemberships = async (): Promise<IMembership[]> => {
-  const res = await back.get({ route: 'auth/whoami' });
-  return JsonToMemberships(res.channels);
+  const res = await back.get({ route: 'channel/memberships' });
+  return JsonToMemberships(res);
 };

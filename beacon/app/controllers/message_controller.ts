@@ -21,7 +21,6 @@ export const sendMessage = createEvent(
   SEND_MESSAGE,
   SEND_MESSAGE_VALIDATION,
   (socket: ExtSocket, payload: Message, ack: () => void): void => {
-    // throw new Error('Unauthorized');
     if (!socket.rooms.has(payload.channel)) {
       throw new Error('Unauthorized');
     }

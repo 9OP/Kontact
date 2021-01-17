@@ -1,13 +1,13 @@
 /* eslint-disable no-shadow */
 enum Access {
-  GUEST = '<guest>',
-  USER = '<user>',
-  ADMIN = '<admin>',
+  GUEST = 0,
+  USER = 1,
+  ADMIN = 2,
 }
 
 enum Role {
-  MEMBER = '<member>',
-  MASTER = '<master>',
+  MEMBER = 0,
+  MASTER = 1,
 }
 
 export interface IMembership {
@@ -18,5 +18,4 @@ export interface IMembership {
 export interface IUser {
   id: string,
   access: Access,
-  memberships: IMembership[],
 }
