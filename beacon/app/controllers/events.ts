@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Joi from 'joi';
 import { ExtSocket } from '../types';
@@ -25,15 +26,14 @@ export const bindEvent = (event: Event): SocketBinder => {
   const { name, func, validation } = event;
 
   return (socket: ExtSocket) => {
-    socket.on(name, (payload = {}) => {
+    socket.on(name, (payload = {}, cb = () => null) => {
       validation.validateAsync(payload)
         .then(
-          () => {
-            func(socket, payload);
-          },
+          () => func(socket, payload),
         )
         .catch(
-          (err: any) => socket.emit(`${name}:error`, { error: err }),
+          // (err: any) => socket.emit(`${name}:error`, { error: err }),
+          () => { cb(`${name}:error`); },
         );
     });
   };
