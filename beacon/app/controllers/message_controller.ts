@@ -20,7 +20,8 @@ interface Message {
 export const sendMessage = createEvent(
   SEND_MESSAGE,
   SEND_MESSAGE_VALIDATION,
-  (socket: ExtSocket, payload: Message): void => {
+  (socket: ExtSocket, payload: Message, ack: () => void): void => {
+    // throw new Error('Unauthorized');
     if (!socket.rooms.has(payload.channel)) {
       throw new Error('Unauthorized');
     }
@@ -32,5 +33,6 @@ export const sendMessage = createEvent(
 
     socket.to(payload.channel).emit(RECEIVE_MESSAGE, response); // to room
     socket.emit(RECEIVE_MESSAGE, response); // to sender
+    ack();
   },
 );

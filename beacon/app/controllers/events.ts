@@ -3,7 +3,7 @@
 import Joi from 'joi';
 import { ExtSocket } from '../types';
 
-type SocketEvent = (socket: ExtSocket, payload: any) => void;
+type SocketEvent = (socket: ExtSocket, payload: any, ack: () => void) => void;
 type SocketBinder = (socket: ExtSocket) => void;
 
 interface Event {
@@ -26,14 +26,14 @@ export const bindEvent = (event: Event): SocketBinder => {
   const { name, func, validation } = event;
 
   return (socket: ExtSocket) => {
-    socket.on(name, (payload = {}, cb = () => null) => {
+    socket.on(name, (payload = {}, ack = () => null) => {
       validation.validateAsync(payload)
         .then(
-          () => func(socket, payload),
+          () => func(socket, payload, ack),
         )
         .catch(
           // (err: any) => socket.emit(`${name}:error`, { error: err }),
-          () => { cb(`${name}:error`); },
+          () => { ack(`${name}:error`); },
         );
     });
   };
