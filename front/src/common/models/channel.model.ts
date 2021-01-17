@@ -9,6 +9,7 @@ export interface IMember {
 export interface IMessage {
   // id: string,
   authorId: string;
+  author?: IMember;
   // verified: boolean;
   content: string;
   date: Date;

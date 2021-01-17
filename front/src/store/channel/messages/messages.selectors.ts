@@ -1,12 +1,14 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable import/prefer-default-export */
 import { RootState } from '../..';
+import { selectMember } from '../channel.selectors';
 import { IMessage } from '../../../common/models/channel.model';
 
-// TODO: Create select member by id function
-
-// TODO: replace author id by author name
 export const selectMessages = (state: RootState): IMessage[] => {
   const { messages } = state.channel;
-  messages.sort((a, b) => new Date(b.date).getDate() - new Date(a.date).getDate());
+  messages.sort((a, b) => b.date.getDate() - a.date.getDate());
+  messages.forEach((message: IMessage) => {
+    message.author = selectMember(state, message.authorId);
+  });
   return messages;
 };

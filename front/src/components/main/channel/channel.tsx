@@ -2,11 +2,11 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { RootState } from '../../../store';
-import { selectMessages } from '../../../store/channel/messages/messages.selector';
+import { channelDataManager } from '../../../services';
 import ChannelView from './channel.view';
 
 const mapState = (state: RootState) => ({
-  messages: selectMessages(state),
+  messages: channelDataManager.selectMessages(state),
 });
 
 const mapDispatch = {};

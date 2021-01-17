@@ -1,5 +1,6 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { IMessage } from '../../../common/models/channel.model';
 
 interface Props {
@@ -9,23 +10,23 @@ interface Props {
 export default (props: Props): JSX.Element => {
   const { messages } = props;
 
+  const renderDate = (date: Date) => date.toLocaleString();
   const renderMessages = () => (
     messages.map((m, i) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg" key={i}>
-        {m.authorId}
-        {' '}
-        -
-        {' '}
-        {m.content}
+      <Box m="1rem" key={i}>
+        <Box p=".5em" width="25rem" borderWidth={1} borderRadius={4}>
+          <Text fontSize="sm" color="gray.600">{m.author?.name}</Text>
+          <Text fontSize="md">{m.content}</Text>
+        </Box>
+        <Text fontSize="xs" color="gray.600">{renderDate(m.date)}</Text>
       </Box>
+
     ))
   );
 
   return (
     <Box
       marginBottom="auto"
-      // padding="1rem"
       overflow="auto"
     >
       {(messages && messages.length) ? renderMessages() : null}
