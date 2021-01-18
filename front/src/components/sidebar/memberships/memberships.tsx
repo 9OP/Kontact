@@ -11,7 +11,8 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
-  fetchChannel: (cid: string) => dispatch(channelDataManager.fetchChannel(cid)),
+  fetchChannel: async (cid: string) => dispatch(channelDataManager.fetchChannel(cid)),
+  fetchMessages: async (cid: string) => dispatch(channelDataManager.fetchMessages(cid)),
 });
 
 const connector = connect(
@@ -24,12 +25,22 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const Memberships = (props: Props): JSX.Element => {
-  const { fetchChannel, channel, memberships } = props;
+  const {
+    fetchChannel, fetchMessages, channel, memberships,
+  } = props;
+
+  const fetch = async (cid: string) => {
+    // if (cid !== channel?.id || channel === null) {
+    //   fetch(cid);
+    // }
+    await fetchChannel(cid);
+    await fetchMessages(cid);
+  };
 
   return (
     <MembershipsView
       memberships={memberships}
-      fetchChannel={fetchChannel}
+      fetchChannel={fetch}
       channel={channel}
     />
   );

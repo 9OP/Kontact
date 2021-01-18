@@ -3,6 +3,7 @@ import { beaconEmitter, beaconHandler } from '../../../common/network/socket';
 
 export interface response {
   author: string,
+  channel: string,
   message: string,
 }
 
@@ -24,3 +25,6 @@ export interface response {
 
 export const receive = beaconHandler('message:receive');
 export const send = beaconEmitter('message:send');
+
+export const receiveBatch = beaconHandler('messages:receive');
+export const fetch = beaconEmitter('messages:fetch');

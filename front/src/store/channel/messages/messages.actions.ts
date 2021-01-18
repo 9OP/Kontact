@@ -1,11 +1,13 @@
 import { Action } from 'redux';
 import { IMessage } from '../../../common/models/channel.model';
 import { apiActionsCreator } from '../../api/api.actions';
+import { channelActionTypes } from '../channel.action-types';
 
 /**
  * Socket actions
  */
 export const SEND_MESSAGE = '[CHANNEL-MESSAGES] SEND_MESSAGE';
+export const FETCH_MESSAGES = '[CHANNEL-MESSAGES] FETCH_MESSAGES';
 
 /**
  * Messages actions
@@ -41,6 +43,7 @@ interface resetMessagesAction extends Action {
 }
 
 export type messagesActionTypes =
+  | channelActionTypes
   | addMessageAction
   | updateMessageAction
   | deleteMessageAction
@@ -57,4 +60,11 @@ export function addMessageAction(message: IMessage): messagesActionTypes {
   };
 }
 
+export function resetMessagesAction(): messagesActionTypes {
+  return {
+    type: RESET_MESSAGES,
+  };
+}
+
 export const sendMessageActions = apiActionsCreator(SEND_MESSAGE);
+export const fetchMessagesActions = apiActionsCreator(FETCH_MESSAGES);

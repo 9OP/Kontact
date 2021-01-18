@@ -4,6 +4,8 @@ import Joi from 'joi';
 import { createEvent } from './events';
 import { ExtSocket } from '../types';
 
+const DATABASE: { channel: string; author: string; message: string; }[] = [];
+
 const SEND_MESSAGE = 'message:send';
 const RECEIVE_MESSAGE = 'message:receive';
 
@@ -26,12 +28,39 @@ export const sendMessage = createEvent(
     }
 
     const response = {
+      channel: payload.channel,
       author: socket.user.id,
       message: payload.message,
     };
 
+    DATABASE.push(response);
+    // console.log(DATABASE);
+
     socket.to(payload.channel).emit(RECEIVE_MESSAGE, response); // to room
     socket.emit(RECEIVE_MESSAGE, response); // to sender
+    ack();
+  },
+);
+
+// Fetch from DATABASE
+
+const FETCH_MESSAGES = 'messages:fetch';
+const RECEIVE_MESSAGES = 'messages:receive';
+
+const FETCH_MESSAGES_VALIDATION = {
+  channel: Joi.string().required(), // channel-id
+};
+
+interface Channel {
+  channel: string
+}
+
+export const fetchMessages = createEvent(
+  FETCH_MESSAGES,
+  FETCH_MESSAGES_VALIDATION,
+  (socket: ExtSocket, payload: Channel, ack: () => void): void => {
+    const messages = DATABASE.filter((message: Message) => message.channel === payload.channel);
+    socket.emit(RECEIVE_MESSAGES, messages); // to sender
     ack();
   },
 );

@@ -1,5 +1,6 @@
 import { IMessage } from '../../../common/models/channel.model';
-import { messagesActionTypes, ADD_MESSAGE } from './messages.actions';
+import { RESET_CHANNEL } from '../channel.action-types';
+import { messagesActionTypes, ADD_MESSAGE, RESET_MESSAGES } from './messages.actions';
 
 type State = IMessage[]
 
@@ -11,6 +12,9 @@ export default function channelReducer(
   switch (action.type) {
     case ADD_MESSAGE:
       return [...state, action.payload];
+    case RESET_MESSAGES:
+    case RESET_CHANNEL:
+      return INITIAL_STATE;
 
     default:
       return state;
