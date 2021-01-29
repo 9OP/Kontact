@@ -4,6 +4,7 @@ import Joi from 'joi';
 import { createEvent } from './events';
 import { ExtSocket } from '../types';
 
+let ID_COUNTER = 0;
 const DATABASE: { channel: string; author: string; message: string; }[] = [];
 
 const SEND_MESSAGE = 'message:send';
@@ -28,11 +29,13 @@ export const sendMessage = createEvent(
     }
 
     const response = {
+      id: ID_COUNTER,
       channel: payload.channel,
       author: socket.user.id,
       message: payload.message,
     };
 
+    ID_COUNTER += 1;
     DATABASE.push(response);
     // console.log(DATABASE);
 

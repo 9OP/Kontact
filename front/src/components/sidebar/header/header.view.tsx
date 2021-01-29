@@ -6,10 +6,10 @@ import {
   Badge,
   Text,
 } from '@chakra-ui/react';
-import { IUser } from '../../../common/models/user.model';
+import { IAuth } from '../../../common/models';
 
 interface Props {
-  user: IUser;
+  user: IAuth;
 }
 
 export default (props: Props): JSX.Element => {

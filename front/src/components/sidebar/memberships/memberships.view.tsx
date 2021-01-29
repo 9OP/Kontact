@@ -4,28 +4,26 @@ import {
   List,
   ListItem,
 } from '@chakra-ui/react';
-import { IMembership } from '../../../common/models/membership.model';
 import { IChannel } from '../../../common/models/channel.model';
 
 interface Props {
-  memberships: IMembership[],
-  fetchChannel: (cid: string) => void,
-  channel: IChannel,
+  channels: IChannel[];
+  openChannel: (cid: string) => void
 }
 
 export default (props: Props): JSX.Element => {
-  const { memberships, fetchChannel, channel } = props;
+  const { channels, openChannel } = props;
 
   const renderChannels = () => (
-    memberships.map((m: IMembership) => (
+    channels.map((channel: IChannel) => (
       <ListItem
-        key={m.id}
+        key={channel.id}
         padding="1rem"
         _hover={{ cursor: 'pointer', backgroundColor: 'teal.100' }}
-        backgroundColor={m.id === channel?.id ? 'teal.200' : 'gray.100'}
-        onClick={() => fetchChannel(m.id)}
+        // backgroundColor={channel.id === channel?.id ? 'teal.200' : 'gray.100'}
+        onClick={() => openChannel(channel.id)}
       >
-        {`> ${m.name}`}
+        {`> ${channel.name}`}
       </ListItem>
     ))
   );
@@ -33,7 +31,7 @@ export default (props: Props): JSX.Element => {
   return (
     <Box marginBottom="auto">
       <List spacing={3} marginTop="3rem">
-        {(memberships && memberships.length) ? renderChannels() : null}
+        {(channels && channels.length) ? renderChannels() : null}
       </List>
     </Box>
 

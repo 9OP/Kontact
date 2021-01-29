@@ -1,13 +1,16 @@
-import { fetchChannel } from './effects/channel.effects';
+import { fetchChannels } from './effects/channel.effects';
 import { sendMessage, fetchMessages } from './effects/messages.effects';
-import { selectChannel, selectMember } from '../store/channel/channel.selectors';
-import { selectMessages } from '../store/channel/messages/messages.selectors';
+import { selectChannels } from '../store/entities/channels/channels.selectors';
+import { openChannelAction as openChannel } from '../store/ui/channel/actions';
+import { selectChannel, selectMessages } from '../store/ui/channel/selectors';
 
 export default {
   sendMessage,
   fetchMessages,
   selectMessages,
-  fetchChannel,
+  //
+  fetchChannels,
+  selectChannels,
+  openChannel,
   selectChannel,
-  selectMember,
 };

@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { IUser } from '../../common/models/user.model';
+import { IAuth } from '../../common/models';
 
 /**
  * Api actions
@@ -20,7 +20,7 @@ interface resetAuthAction extends Action {
 }
 
 interface setAuthAction extends Action {
-  payload: IUser;
+  payload: IAuth;
   type: typeof SET_USER;
 }
 

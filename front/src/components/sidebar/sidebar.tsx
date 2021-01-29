@@ -2,18 +2,17 @@ import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { DispThunk, RootState } from '../../store';
-import { authDataManager, membershipsDataManager, channelDataManager } from '../../services';
+import { authDataManager, channelDataManager } from '../../services';
 import SidebarView from './sidebar.view';
 
 const mapState = (state: RootState) => ({
   user: authDataManager.selectUser(state),
-  memberships: membershipsDataManager.selectMemberships(state),
+  // channels: channelDataManager.selectChannels(state),
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
   signout: () => dispatch(authDataManager.signout()),
-  fetchMemberships: () => dispatch(membershipsDataManager.fetchMemberships()),
-  fetchChannel: (cid: string) => dispatch(channelDataManager.fetchChannel(cid)),
+  fetchChannels: () => dispatch(channelDataManager.fetchChannels()),
 });
 
 const connector = connect(
@@ -29,11 +28,11 @@ const Sidebar = (props: Props): JSX.Element => {
   const {
     user,
     signout,
-    fetchMemberships,
+    fetchChannels,
   } = props;
 
   useEffect(() => {
-    fetchMemberships();
+    fetchChannels();
   }, []);
 
   return (

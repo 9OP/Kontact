@@ -1,9 +1,9 @@
-import { IUser } from '../../common/models/user.model';
+import { IAuth } from '../../common/models';
 import { authActionTypes, SET_USER, RESET_USER } from './auth.action-types';
 
-const INITIAL_STATE: IUser = null as unknown as IUser;
+const INITIAL_STATE: IAuth = null as unknown as IAuth;
 
-export default function userReducer(state: IUser = INITIAL_STATE, action: authActionTypes): IUser {
+export default function userReducer(state: IAuth = INITIAL_STATE, action: authActionTypes): IAuth {
   switch (action.type) {
     case SET_USER:
       return { ...action.payload };

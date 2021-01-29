@@ -1,6 +1,5 @@
 import React from 'react';
 import { Flex } from '@chakra-ui/react';
-
 import Header from './header/header';
 import Channel from './channel/channel';
 import Message from './message/message';

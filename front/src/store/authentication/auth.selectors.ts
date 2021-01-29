@@ -1,5 +1,5 @@
 import { RootState } from '..';
-import { IUser } from '../../common/models/user.model';
+import { IAuth } from '../../common/models';
 import { apiSelectorsCreator } from '../api/api.selectors';
 import {
   SIGNIN,
@@ -19,4 +19,4 @@ export const signoutSelectors = apiSelectorsCreator(SIGNOUT);
 /**
  * Auth selectors
  */
-export const selectUser = (state: RootState): IUser => state.auth;
+export const selectUser = (state: RootState): IAuth => state.auth;

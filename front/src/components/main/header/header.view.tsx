@@ -23,7 +23,7 @@ export default (props: Props): JSX.Element => {
           <Badge ml="1" colorScheme="green">
             Members:
             {' '}
-            {channel.members.length}
+            {/* {channel.members.length} */}
           </Badge>
         </Text>
         <Text fontSize="sm">

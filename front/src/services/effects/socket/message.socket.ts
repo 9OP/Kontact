@@ -2,9 +2,10 @@
 import { beaconEmitter, beaconHandler } from '../../../common/network/socket';
 
 export interface response {
-  author: string,
-  channel: string,
-  message: string,
+  id: string;
+  author: string;
+  channel: string;
+  message: string;
 }
 
 // beacon.on('connect_error', (err: any) => {

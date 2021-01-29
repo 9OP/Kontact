@@ -1,4 +1,4 @@
-import { IUser } from '../../common/models/user.model';
+import { IAuth } from '../../common/models';
 import { apiActionsCreator } from '../api/api.actions';
 import {
   SIGNIN,
@@ -27,7 +27,7 @@ export function resetUserAction(): authActionTypes {
   };
 }
 
-export function setUserAction(user: IUser): authActionTypes {
+export function setUserAction(user: IAuth): authActionTypes {
   return {
     payload: user,
     type: SET_USER,

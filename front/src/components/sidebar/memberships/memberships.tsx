@@ -1,18 +1,19 @@
+/* eslint-disable arrow-body-style */
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-
 import { RootState, DispThunk } from '../../../store';
+import { channelDataManager } from '../../../services';
 import MembershipsView from './memberships.view';
-import { membershipsDataManager, channelDataManager } from '../../../services';
 
 const mapState = (state: RootState) => ({
-  memberships: membershipsDataManager.selectMemberships(state),
-  channel: channelDataManager.selectChannel(state),
+  channels: channelDataManager.selectChannels(state),
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
-  fetchChannel: async (cid: string) => dispatch(channelDataManager.fetchChannel(cid)),
-  fetchMessages: async (cid: string) => dispatch(channelDataManager.fetchMessages(cid)),
+  // fetchChannels: async (cid: string) => dispatch(channelDataManager.fetchChannels()),
+  // fetchMessages: async (cid: string) => dispatch(channelDataManager.fetchMessages(cid)),
+  // fetchMembers
+  openChannel: (cid: string) => dispatch(channelDataManager.openChannel(cid)),
 });
 
 const connector = connect(
@@ -25,23 +26,20 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const Memberships = (props: Props): JSX.Element => {
-  const {
-    fetchChannel, fetchMessages, channel, memberships,
-  } = props;
+  const { channels, openChannel } = props;
 
-  const fetch = async (cid: string) => {
-    // if (cid !== channel?.id || channel === null) {
-    //   fetch(cid);
-    // }
-    await fetchChannel(cid);
-    await fetchMessages(cid);
-  };
+  // const fetch = async (cid: string) => {
+  //   // if (cid !== channel?.id || channel === null) {
+  //   //   fetch(cid);
+  //   // }
+  //   await fetchChannel(cid);
+  //   await fetchMessages(cid);
+  // };
 
   return (
     <MembershipsView
-      memberships={memberships}
-      fetchChannel={fetch}
-      channel={channel}
+      channels={channels}
+      openChannel={openChannel}
     />
   );
 };

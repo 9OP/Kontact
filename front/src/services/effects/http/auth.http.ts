@@ -1,10 +1,10 @@
 import { back } from '../../../common/network/api';
 import { beacon } from '../../../common/network/socket';
 import { getToken, saveToken, clearToken } from '../../../common/local_storage';
-import { IUser } from '../../../common/models/user.model';
+import { IAuth } from '../../../common/models';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const JsonToUser = (json: any): IUser => ({
+const JsonToUser = (json: any): IAuth => ({
   id: json.id,
   email: json.email,
   name: json.name,
@@ -29,7 +29,7 @@ const key = async (): Promise<string> => {
   return res.key;
 };
 
-export const signin = async (email: string, password: string): Promise<IUser> => {
+export const signin = async (email: string, password: string): Promise<IAuth> => {
   await new Promise((r) => setTimeout(r, 400));
   const res = await back.post({
     route: 'auth/signin',
@@ -41,7 +41,7 @@ export const signin = async (email: string, password: string): Promise<IUser> =>
   return JsonToUser(res);
 };
 
-export const signup = async (email: string, password: string, name: string): Promise<IUser> => {
+export const signup = async (email: string, password: string, name: string): Promise<IAuth> => {
   const res = await back.post({
     route: 'auth/signup',
     payload: { email, password, name },
@@ -54,7 +54,7 @@ export const signout = async (): Promise<void> => {
   disconnect();
 };
 
-export const whoami = async (): Promise<IUser> => {
+export const whoami = async (): Promise<IAuth> => {
   if (!back.authorization) {
     const token = getToken(await key());
     connect(token);

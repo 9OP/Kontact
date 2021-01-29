@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-
-import { RootState } from '../../../store';
+import { DispThunk, RootState } from '../../../store';
 import { channelDataManager } from '../../../services';
 import ChannelView from './channel.view';
 
@@ -9,7 +8,9 @@ const mapState = (state: RootState) => ({
   messages: channelDataManager.selectMessages(state),
 });
 
-const mapDispatch = {};
+const mapDispatch = (dispatch: DispThunk) => ({
+  // fetchMembers: (cid: string) => (dispatch(membersDataManager.fetchMembers(cid))),
+});
 
 const connector = connect(
   mapState,

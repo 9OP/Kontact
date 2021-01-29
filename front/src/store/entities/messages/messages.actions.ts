@@ -1,7 +1,6 @@
 import { Action } from 'redux';
-import { IMessage } from '../../../common/models/channel.model';
+import { IMessage } from '../../../common/models';
 import { apiActionsCreator } from '../../api/api.actions';
-import { channelActionTypes } from '../channel.action-types';
 
 /**
  * Socket actions
@@ -43,7 +42,6 @@ interface resetMessagesAction extends Action {
 }
 
 export type messagesActionTypes =
-  | channelActionTypes
   | addMessageAction
   | updateMessageAction
   | deleteMessageAction

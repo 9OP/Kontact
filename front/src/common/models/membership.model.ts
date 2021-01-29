@@ -1,6 +1,7 @@
 export interface IMembership {
   id: string;
-  name: string;
+  channelId: string;
+  memberId: string;
+  role: string;
+  joinedAt: Date;
 }
-
-// members count ? joined at ?

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flex } from '@chakra-ui/react';
-import { IUser } from '../../common/models/user.model';
+import { IAuth } from '../../common/models';
 
 import HeaderView from './header/header.view';
 import Memberships from './memberships/memberships';
@@ -8,7 +8,7 @@ import FooterView from './footer/footer.view';
 
 interface Props {
   signout: () => void;
-  user: IUser;
+  user: IAuth;
 }
 
 export default (props: Props): JSX.Element => {

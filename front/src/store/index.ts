@@ -10,23 +10,22 @@ import {
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 // Reducers
-import authReducer from './authentication/auth.reducer';
-import membershipsReducer from './memberships/memberships.reducer';
-import channelReducer from './channel/channel.reducer';
-import messagesReducer from './channel/messages/messages.reducer';
 import apiReducer from './api/api.reducer';
+import authReducer from './authentication/auth.reducer';
+import entitiesReducer from './entities';
+import uiReducer from './ui';
 
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+  trace: true, // (action) => { return ‘trace as string’; }
+  traceLimit: 10,
+}) || compose;
 const middlewares = [thunk];
 export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
 export const rootReducer = combineReducers({
   auth: authReducer,
-  memberships: membershipsReducer,
-  channel: combineReducers({
-    info: channelReducer,
-    messages: messagesReducer,
-  }),
+  entities: entitiesReducer,
+  ui: uiReducer,
   api: apiReducer,
 });
 

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
-import { IMessage } from '../../../common/models/channel.model';
+import { IMessage } from '../../../common/models';
 
 interface Props {
   messages: IMessage[]
@@ -15,7 +15,7 @@ export default (props: Props): JSX.Element => {
     messages.map((m, i) => (
       <Box m="1rem" key={i}>
         <Box p=".5em" width="25rem" borderWidth={1} borderRadius={4}>
-          <Text fontSize="sm" color="gray.600">{m.author?.name}</Text>
+          <Text fontSize="sm" color="gray.600">{m.authorId}</Text>
           <Text fontSize="md">{m.content}</Text>
         </Box>
         <Text fontSize="xs" color="gray.600">{renderDate(m.date)}</Text>

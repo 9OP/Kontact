@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-
 import { RootState } from '../../store';
-import { selectChannel } from '../../store/channel/channel.selectors';
+import { channelDataManager } from '../../services';
 
 import MainView from './main.view';
 
 const mapState = (state: RootState) => ({
-  channel: selectChannel(state),
+  channel: channelDataManager.selectChannel(state),
 });
 
 const mapDispatch = {};
