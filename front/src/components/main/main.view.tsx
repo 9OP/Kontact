@@ -3,6 +3,7 @@ import { Flex } from '@chakra-ui/react';
 import Header from './header/header';
 import Channel from './channel/channel';
 import Message from './message/message';
+import Members from './members/members';
 
 interface Props {
   channelLoaded: boolean
@@ -19,12 +20,19 @@ export default (props: Props): JSX.Element => {
       { (channelLoaded)
         ? (
           <Flex
-            flexDirection="column"
+            flexDirection="row"
             width="100%"
           >
-            <Header />
-            <Channel />
-            <Message />
+
+            <Flex
+              flexDirection="column"
+              width="100%"
+            >
+              <Header />
+              <Channel />
+              <Message />
+            </Flex>
+            <Members />
           </Flex>
         )
         : null }
