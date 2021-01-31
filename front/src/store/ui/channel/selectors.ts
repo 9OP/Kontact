@@ -10,10 +10,16 @@ export const selectChannel = (state: RootState): IChannel => {
   return state.entities.channels[cid];
 };
 
-export const selectMessages = (state: RootState): IMessage[] => {
+export const selectMessages = (state: RootState): {data: IMessage, author: IMember}[] => {
   const cid = state.ui.channel;
-  const messages = Object.values(state.entities.messages);
-  return messages.filter((message: IMessage) => message.channelId === cid);
+  const messages = Object.values(state.entities.messages)
+    .filter((message: IMessage) => message.channelId === cid);
+  return messages.map((message: IMessage) => {
+    return {
+      data: message,
+      author: state.entities.members[message.authorId],
+    };
+  });
 };
 
 export const selectMembers = (state: RootState): IMember[] => {

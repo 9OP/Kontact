@@ -25,7 +25,7 @@ export default (props: Props): JSX.Element => {
       height="100vh"
       overflow="auto"
       // borderRight="1px solid gray"
-      bgGradient="linear(to-t, rgba(0, 148, 255, 0.22), rgba(254, 212, 255, 0.15))"
+      bgGradient="linear(to-t, rgba(181, 212, 232, 1), rgba(229, 225, 224, 1))"
     >
       {/* <HeaderView user={user} /> */}
       <Memberships />

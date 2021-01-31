@@ -19,6 +19,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
   trace: true, // (action) => { return ‘trace as string’; }
   traceLimit: 10,
 }) || compose;
+// const composeEnhancers = compose;
 const middlewares = [thunk];
 export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 

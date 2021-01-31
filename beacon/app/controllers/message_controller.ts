@@ -63,7 +63,7 @@ export const fetchMessages = createEvent(
   FETCH_MESSAGES_VALIDATION,
   (socket: ExtSocket, payload: Channel, ack: () => void): void => {
     const messages = DATABASE.filter((message: Message) => message.channel === payload.channel);
-    socket.emit(RECEIVE_MESSAGES, messages); // to sender
+    socket.emit(RECEIVE_MESSAGES, messages.slice(Math.max(messages.length - 5, 1))); // to sender
     ack();
   },
 );

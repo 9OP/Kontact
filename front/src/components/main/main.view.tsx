@@ -32,7 +32,7 @@ export default (props: Props): JSX.Element => {
               <Channel />
               <Message />
             </Flex>
-            <Members />
+            {/* <Members /> */}
           </Flex>
         )
         : null }

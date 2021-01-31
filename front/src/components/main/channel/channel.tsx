@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { DispThunk, RootState } from '../../../store';
 import { channelDataManager } from '../../../services';
 import ChannelView from './channel.view';
 
 const mapState = (state: RootState) => ({
+  channel: channelDataManager.selectChannel(state),
   messages: channelDataManager.selectMessages(state),
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
-  // fetchMembers: (cid: string) => (dispatch(membersDataManager.fetchMembers(cid))),
+  fetchMessages: (cid: string) => dispatch(channelDataManager.fetchMessages(cid)),
 });
 
 const connector = connect(
@@ -22,7 +23,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const Channel = (props: Props): JSX.Element => {
-  const { messages } = props;
+  const {
+    messages, channel, fetchMessages,
+  } = props;
+
+  useEffect(() => {
+    fetchMessages(channel.id);
+  }, [channel]);
 
   return (
     <ChannelView

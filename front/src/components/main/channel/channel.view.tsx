@@ -1,14 +1,20 @@
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Box, Text } from '@chakra-ui/react';
-import { IMessage } from '../../../common/models';
+import { IMessage, IMember } from '../../../common/models';
 
 interface Props {
-  messages: IMessage[]
+  messages: {data: IMessage, author: IMember}[]
 }
 
 export default (props: Props): JSX.Element => {
   const { messages } = props;
+
+  const chatRef = useCallback((node) => {
+    if (node !== null) {
+      node.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   const renderDate = (date: Date) => {
     const hours = (`0${date.getHours()}`).slice(-2);
@@ -17,10 +23,9 @@ export default (props: Props): JSX.Element => {
   };
 
   const renderMessages = () => (
-    messages.map((message: IMessage) => (
+    messages.map((message: {data: IMessage, author: IMember}) => (
       <Box
-        m="1rem"
-        key={message.id}
+        key={message.data.id}
         marginBottom="2rem"
         borderBottom="1px solid"
         borderColor="gray.100"
@@ -30,21 +35,20 @@ export default (props: Props): JSX.Element => {
             fontSize="xs"
             color="gray.400"
           >
-            {renderDate(message.date)}
+            {renderDate(message.data.date)}
           </Text>
           <Text
             fontSize="md"
             fontWeight="bold"
             color="gray.600"
           >
-            Author
+            {message?.author?.name}
           </Text>
           <Text
             fontSize="sm"
             color="gray.500"
           >
-            {message.content}
-
+            {message.data.content}
           </Text>
         </Box>
       </Box>
@@ -54,11 +58,14 @@ export default (props: Props): JSX.Element => {
 
   return (
     <Box
+      className="scroller"
       marginBottom="auto"
       overflow="auto"
-      marginLeft="2rem"
+      marginLeft="3rem"
+      paddingRight="3rem"
     >
       {(messages && messages.length) ? renderMessages() : null}
+      <Box ref={chatRef} />
     </Box>
   );
 };
