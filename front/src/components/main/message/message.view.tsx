@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Button,
   Textarea,
 } from '@chakra-ui/react';
 
@@ -14,26 +13,34 @@ interface Props {
 export default (props: Props): JSX.Element => {
   const { sendMessage, message, setMessage } = props;
 
+  const send = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  };
+
   return (
     <Box
-      padding="1rem"
-      borderTop="1px solid gray"
+      paddingLeft="5rem"
+      paddingRight="5rem"
+      paddingBottom="3rem"
     >
-      <Button
-        colorScheme="blue"
-        variant="outline"
-        width="full"
-        mb={4}
-        onClick={() => sendMessage()}
-      >
-        Send message
-      </Button>
       <Textarea
         placeholder=".... "
+        _focus={{
+          outline: 'none',
+          borderColor: 'gray.300',
+        }}
+        _hover={{
+          borderColor: 'gray.300',
+        }}
+        borderColor="gray.100"
+        borderRadius="10px"
         size="sm"
         resize="none"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={send}
       />
     </Box>
 

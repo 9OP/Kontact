@@ -7,6 +7,7 @@ import MembershipsView from './memberships.view';
 
 const mapState = (state: RootState) => ({
   channels: channelDataManager.selectChannels(state),
+  openedChannel: channelDataManager.selectChannel(state),
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
@@ -26,7 +27,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const Memberships = (props: Props): JSX.Element => {
-  const { channels, openChannel } = props;
+  const { channels, openChannel, openedChannel } = props;
 
   // const fetch = async (cid: string) => {
   //   // if (cid !== channel?.id || channel === null) {
@@ -39,6 +40,7 @@ const Memberships = (props: Props): JSX.Element => {
   return (
     <MembershipsView
       channels={channels}
+      openedChannel={openedChannel}
       openChannel={openChannel}
     />
   );

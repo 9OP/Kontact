@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Badge } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 
 import { IChannel } from '../../../common/models/channel.model';
 
@@ -14,24 +14,18 @@ export default (props: Props): JSX.Element => {
     <Box
       height="60px"
       minHeight="60px"
-      padding=".5rem"
-      borderBottom="1px solid gray"
+      paddingLeft="2rem"
+      paddingTop="1rem"
+      borderBottom="1px solid"
+      borderColor="gray.300"
     >
-      <Box ml="3">
-        <Text fontWeight="bold">
-          {channel.name}
-          <Badge ml="1" colorScheme="green">
-            Members:
-            {' '}
-            {/* {channel.members.length} */}
-          </Badge>
-        </Text>
-        <Text fontSize="sm">
-          Created at:
-          {' '}
-          {channel.createdAt.toDateString()}
-        </Text>
-      </Box>
+      <Text
+        fontWeight="bold"
+        fontSize="md"
+        color="gray.600"
+      >
+        {channel.name}
+      </Text>
     </Box>
   );
 };

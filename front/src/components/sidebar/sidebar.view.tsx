@@ -19,16 +19,17 @@ export default (props: Props): JSX.Element => {
 
   return (
     <Flex
-      as="nav"
-      flexDirection="column"
+      // as="nav"
+      direction="column"
       width="17rem"
       height="100vh"
       overflow="auto"
-      borderRight="1px solid gray"
+      // borderRight="1px solid gray"
+      bgGradient="linear(to-t, rgba(0, 148, 255, 0.22), rgba(254, 212, 255, 0.15))"
     >
-      <HeaderView user={user} />
+      {/* <HeaderView user={user} /> */}
       <Memberships />
-      <FooterView signout={signout} />
+      {/* <FooterView signout={signout} /> */}
     </Flex>
   );
 };
