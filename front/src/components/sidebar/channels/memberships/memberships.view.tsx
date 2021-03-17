@@ -1,14 +1,10 @@
 import React from 'react';
 import {
-  Box,
   List,
   ListItem,
   Text,
-  IconButton,
-  HStack,
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
-import { IChannel } from '../../../common/models/channel.model';
+import { IChannel } from '../../../../common/models/channel.model';
 
 interface Props {
   channels: IChannel[];
@@ -45,28 +41,8 @@ export default (props: Props): JSX.Element => {
   );
 
   return (
-    <Box marginBottom="auto" marginTop="2rem">
-      <HStack marginBottom="1rem">
-        <Text
-          letterSpacing=".1rem"
-          fontWeight="bold"
-          color="gray.700"
-          fontSize="xl"
-          marginLeft="2rem"
-        >
-          CHANNELS
-        </Text>
-        <IconButton
-          size="sm"
-          aria-label="Create channel"
-          icon={<AddIcon />}
-        />
-      </HStack>
-
-      <List>
-        {(channels && channels.length) ? renderChannels() : null}
-      </List>
-    </Box>
-
+    <List>
+      {(channels && channels.length) ? renderChannels() : null}
+    </List>
   );
 };

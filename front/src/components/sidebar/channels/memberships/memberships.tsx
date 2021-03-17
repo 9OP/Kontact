@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { RootState, DispThunk } from '../../../store';
-import { channelDataManager } from '../../../services';
+import { RootState, DispThunk } from '../../../../store';
+import { channelDataManager } from '../../../../services';
 import MembershipsView from './memberships.view';
 
 const mapState = (state: RootState) => ({

@@ -2,12 +2,14 @@
 import { back } from '../../../common/network/api';
 import { IMembership, IMember, IChannel } from '../../../common/models';
 
+const JsonToChannel = (json: any): IChannel => ({
+  id: json.id,
+  name: json.name,
+  createdAt: new Date(json.createdAt),
+});
+
 const JsonToChannels = (json: any): IChannel[] => json.map(
-  (channel: IChannel) => ({
-    id: channel.id,
-    name: channel.name,
-    createdAt: new Date(channel.createdAt),
-  }),
+  (channel: IChannel) => JsonToChannel(channel),
 );
 
 const JsonToMembers = (json: any[]): IMember[] => json.map(
@@ -15,8 +17,6 @@ const JsonToMembers = (json: any[]): IMember[] => json.map(
     id: member.id,
     name: member.name,
     email: member.email,
-    // role: member.role,
-    // joinedAt: new Date(member.joinedAt),
   }),
 );
 
@@ -42,4 +42,13 @@ export const fetchMembers = async (cid: string): Promise<{
   const members = JsonToMembers(res.members);
   const memberships = JsonToMemberships(cid, res.members);
   return { members, memberships };
+};
+
+export const createChannel = async (name: string): Promise<IChannel> => {
+  const res = await back.post({
+    route: 'channel',
+    payload: { name },
+  });
+
+  return JsonToChannel(res);
 };

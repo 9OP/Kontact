@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex } from '@chakra-ui/react';
 
-import Memberships from './memberships/memberships';
+import Channels from './channels/channels';
 import Footer from './footer/footer';
 
 export default (): JSX.Element => (
@@ -14,7 +14,7 @@ export default (): JSX.Element => (
     borderRadius={8}
     boxShadow="lg"
   >
-    <Memberships />
+    <Channels />
     <Footer />
   </Flex>
 );

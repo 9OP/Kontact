@@ -4,12 +4,6 @@ import { channelsActionTypes, SET_CHANNELS } from './channels.actions';
 
 type State = NormalizedState<IChannel>
 
-// create uiReducer with selectedChannel key
-
-// interface State extends NormalizedState<IChannel> {
-//   selected: string;
-// }
-
 const INITIAL_STATE = {} as State;
 
 export default function channelsReducer(state = INITIAL_STATE, action: channelsActionTypes): State {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { RootState, DispThunk } from '../../../store';
-import { channelDataManager } from '../../../services';
+import { messagesDataManager, channelDataManager } from '../../../services';
 import MessageView from './message.view';
 
 const mapState = (state: RootState) => ({
@@ -10,7 +10,7 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: DispThunk) => ({
-  send: (cid: string, mess: string) => dispatch(channelDataManager.sendMessage(cid, mess)),
+  send: (cid: string, mess: string) => dispatch(messagesDataManager.sendMessage(cid, mess)),
 });
 
 const connector = connect(
