@@ -5,7 +5,7 @@ import Main from '../main';
 import SideBar from '../sidebar';
 
 export default (): JSX.Element => (
-  <Flex direction="row">
+  <Flex direction="row" padding="1rem" height="100vh">
     <SideBar />
     <Main />
   </Flex>

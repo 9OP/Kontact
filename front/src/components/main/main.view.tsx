@@ -3,7 +3,6 @@ import { Flex } from '@chakra-ui/react';
 import Header from './header/header';
 import Channel from './channel/channel';
 import Message from './message/message';
-import Members from './members/members';
 
 interface Props {
   channelLoaded: boolean
@@ -14,7 +13,6 @@ export default (props: Props): JSX.Element => {
 
   return (
     <Flex
-      height="100vh"
       flex="1 0 auto"
     >
       { (channelLoaded)
@@ -32,7 +30,6 @@ export default (props: Props): JSX.Element => {
               <Channel />
               <Message />
             </Flex>
-            {/* <Members /> */}
           </Flex>
         )
         : null }

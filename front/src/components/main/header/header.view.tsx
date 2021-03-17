@@ -12,12 +12,11 @@ export default (props: Props): JSX.Element => {
 
   return (
     <Box
-      height="5rem"
       minHeight="5rem"
-      paddingLeft="2rem"
-      paddingTop="1rem"
-      borderBottom="1px solid"
-      borderColor="gray.300"
+      padding=".8rem"
+      borderWidth={1}
+      borderRadius={8}
+      boxShadow="lg"
     >
       <Text
         letterSpacing=".25rem"

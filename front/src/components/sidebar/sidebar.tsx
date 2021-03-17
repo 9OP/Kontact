@@ -25,21 +25,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const Sidebar = (props: Props): JSX.Element => {
-  const {
-    user,
-    signout,
-    fetchChannels,
-  } = props;
+  const { fetchChannels } = props;
 
   useEffect(() => {
     fetchChannels();
   }, []);
 
   return (
-    <SidebarView
-      user={user}
-      signout={signout}
-    />
+    <SidebarView />
   );
 };
 

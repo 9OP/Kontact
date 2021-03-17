@@ -4,7 +4,10 @@ import {
   List,
   ListItem,
   Text,
+  IconButton,
+  HStack,
 } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
 import { IChannel } from '../../../common/models/channel.model';
 
 interface Props {
@@ -21,10 +24,10 @@ export default (props: Props): JSX.Element => {
       <ListItem
         key={channel.id}
         _hover={{
-          bg: 'rgba(146, 101, 128, 0.05)',
+          bg: 'gray.100',
         }}
-        bg={openedChannel?.id === channel.id ? 'rgba(146, 101, 128, 0.07)' : ''}
-        borderLeft={openedChannel?.id === channel.id ? '4px solid' : ''}
+        bg={openedChannel?.id === channel.id ? 'gray.100' : ''}
+        borderLeft={openedChannel?.id === channel.id ? '3px solid' : ''}
         borderColor="rgba(146, 101, 128, 0.4)"
         padding="1rem"
         paddingLeft="2rem"
@@ -42,17 +45,24 @@ export default (props: Props): JSX.Element => {
   );
 
   return (
-    <Box marginBottom="auto" marginTop="5rem">
-      <Text
-        letterSpacing=".1rem"
-        fontWeight="bold"
-        color="gray.700"
-        fontSize="sm"
-        marginBottom="1rem"
-        marginLeft="2rem"
-      >
-        GROUPS
-      </Text>
+    <Box marginBottom="auto" marginTop="2rem">
+      <HStack marginBottom="1rem">
+        <Text
+          letterSpacing=".1rem"
+          fontWeight="bold"
+          color="gray.700"
+          fontSize="xl"
+          marginLeft="2rem"
+        >
+          CHANNELS
+        </Text>
+        <IconButton
+          size="sm"
+          aria-label="Create channel"
+          icon={<AddIcon />}
+        />
+      </HStack>
+
       <List>
         {(channels && channels.length) ? renderChannels() : null}
       </List>
