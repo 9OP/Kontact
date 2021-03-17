@@ -35,4 +35,4 @@ const createApp = (listener: http.Server): void => {
 // Create app
 const httpServer = http.createServer();
 createApp(httpServer);
-httpServer.listen(4000);
+httpServer.listen(4000, '0.0.0.0');

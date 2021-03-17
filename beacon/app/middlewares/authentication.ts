@@ -5,7 +5,7 @@ import { Socket } from 'socket.io';
 import { IUser, IMembership } from '../models/user.model';
 import { ExtSocket } from '../types';
 
-const BACKEND_API = 'http://localhost:5000'; // process.env.BACKEND_API
+const BACKEND_API = 'http://back:5000'; // process.env.BACKEND_API
 const back = axios.create({ baseURL: BACKEND_API, timeout: 2000 });
 
 const JSONtoIMembership = (data: any): IMembership[] => {
