@@ -6,6 +6,7 @@ import {
   createChannelActions,
 } from '../../store/entities/channels/channels.actions';
 import * as httpService from './http/channel.http';
+import * as user from './socket/user.socket';
 
 export const fetchChannels = (): AppThunk => async (dispatch) => {
   const { request, success, failure } = fetchChannelsActions;
@@ -26,6 +27,7 @@ export const createChannel = (name: string): AppThunk => async (dispatch) => {
   dispatch(request());
   try {
     const channel = await httpService.createChannel(name);
+    await user.reloadBeacon({});
     dispatch(setChannelsAction([channel]));
     dispatch(success());
   } catch (err) {

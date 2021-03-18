@@ -27,22 +27,6 @@ export const signin = (
   }
 };
 
-// export const signin = (
-//   email: string,
-//   password: string,
-// ): AppThunk => async (dispatch) => {
-//   const successCb = async () => {
-//     const user = await httpService.signin(email, password);
-//     dispatch(setUserAction(user));
-//   };
-
-//   const failureCb = async () => {
-//     dispatch(resetUserAction());
-//   };
-
-//   await effect(dispatch, signinActions, successCb, failureCb);
-// };
-
 export const signup = (
   name: string,
   email: string,

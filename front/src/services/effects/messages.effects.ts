@@ -19,7 +19,6 @@ export const sendMessage = (
 };
 
 message.receive((data: message.response) => {
-  // const state = store.getState();
   store.dispatch(addMessageAction({
     id: data.id,
     authorId: data.author,

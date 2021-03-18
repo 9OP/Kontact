@@ -54,7 +54,7 @@ class Socket {
     }
   }
 
-  public emit(event: string, payload: any, ack?: Function) {
+  public emit<T>(event: string, payload: T, ack?: Function) {
     if (this.socket) {
       this.socket.emit(event, payload, ack);
     } else {
@@ -63,7 +63,7 @@ class Socket {
   }
 }
 
-type callback = (data?: any) => void;
+type callback =(data?: any) => void;
 
 const eventHandlerCreator = (socket: Socket) => {
   return (event: string) => {
