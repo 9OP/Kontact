@@ -18,6 +18,7 @@ export default (props: Props): JSX.Element => {
       padding="1rem"
     >
       <IconButton
+        colorScheme="orange"
         aria-label="Signout"
         icon={<CloseIcon />}
         onClick={() => signout()}

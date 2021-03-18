@@ -1,6 +1,6 @@
-import { IAuth } from './auth.model';
+import { IAuth, EAccess } from './auth.model';
 import { IMember } from './member.model';
-import { IMembership } from './membership.model';
+import { IMembership, ERole } from './membership.model';
 import { IChannel } from './channel.model';
 import { IMessage } from './message.model';
 
@@ -22,4 +22,9 @@ export type {
   IChannel,
   IMember,
   IMessage,
+};
+
+export {
+  EAccess,
+  ERole,
 };

@@ -1,57 +1,46 @@
 import React, { useState } from 'react';
 import {
-  Text, Box, HStack, IconButton, useDisclosure, Button,
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton,
-  ModalBody, ModalFooter, Input,
+  Text, Box, HStack, IconButton, useDisclosure, Input,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
+import ModalCreator from '../../../modal';
 
-interface modalProps {
+interface ModalProps {
   isOpen: boolean,
   onClose: () => void,
   createChannel: (name: string) => void
 }
 
-function CreateChannelModal(props: modalProps) {
+const CreateChannelModal = (props: ModalProps):JSX.Element => {
   const { isOpen, onClose, createChannel } = props;
   const [name, setName] = useState('');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
 
   const onSubmit = () => {
     createChannel(name);
     onClose();
+    setName('');
   };
 
   return (
-
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create channel</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Text mb="8px">
-            Channel name:
-          </Text>
-          <Input
-            value={name}
-            onChange={handleChange}
-            placeholder="Here is a sample placeholder"
-            size="sm"
-          />
-        </ModalBody>
-
-        <ModalFooter>
-          <Button variant="ghost" mr={3} onClick={onClose}>
-            Cancel
-          </Button>
-          <Button colorScheme="teal" variant="outline" onClick={onSubmit}>Create</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-
+    <ModalCreator
+      isOpen={isOpen}
+      onClose={onClose}
+      header="Create channel"
+      action="Create"
+      onSubmit={onSubmit}
+      body={(
+        <Input
+          value={name}
+          onChange={handleChange}
+          placeholder="Channel name"
+          size="sm"
+        />
+      )}
+    />
   );
-}
+};
 
 interface Props {
   createChannel: (name: string) => void
@@ -75,6 +64,8 @@ export default (props: Props): JSX.Element => {
             CHANNELS
           </Text>
           <IconButton
+            colorScheme="teal"
+            variant="outline"
             size="sm"
             aria-label="Create channel"
             onClick={onOpen}
@@ -83,7 +74,11 @@ export default (props: Props): JSX.Element => {
         </HStack>
       </Box>
 
-      <CreateChannelModal isOpen={isOpen} onClose={onClose} createChannel={createChannel} />
+      <CreateChannelModal
+        isOpen={isOpen}
+        onClose={onClose}
+        createChannel={createChannel}
+      />
     </>
   );
 };

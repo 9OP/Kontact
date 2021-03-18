@@ -52,3 +52,7 @@ export const createChannel = async (name: string): Promise<IChannel> => {
 
   return JsonToChannel(res);
 };
+
+export const deleteChannel = async (cid: string): Promise<void> => {
+  await back.delete({ route: `channel/${cid}` });
+};

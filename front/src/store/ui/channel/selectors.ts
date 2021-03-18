@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import { RootState } from '../..';
 import {
-  IChannel, IMember, IMembership, IMessage,
+  IChannel, IMember, IMembership, ERole, IMessage,
 } from '../../../common/models';
 
 export const selectChannel = (state: RootState): IChannel => {
@@ -29,4 +29,10 @@ export const selectMembers = (state: RootState): IMember[] => {
   const membersId = memberships.filter((membership: IMembership) => membership.channelId === cid)
     .map((membership: IMembership) => membership.memberId);
   return members.filter((member: IMember) => membersId.includes(member.id));
+};
+
+export const selectRole = (state: RootState): ERole => {
+  const cid = state.ui.channel;
+  const uid = state.auth.id;
+  return state.entities.memberships[`${cid}.${uid}`]?.role || 0;
 };

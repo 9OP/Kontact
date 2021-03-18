@@ -4,6 +4,8 @@ import {
   setChannelsAction,
   fetchChannelsActions,
   createChannelActions,
+  deleteChannelActions,
+  removeChannelAction,
 } from '../../store/entities/channels/channels.actions';
 import * as httpService from './http/channel.http';
 import * as user from './socket/user.socket';
@@ -29,6 +31,19 @@ export const createChannel = (name: string): AppThunk => async (dispatch) => {
     const channel = await httpService.createChannel(name);
     await user.reloadBeacon({});
     dispatch(setChannelsAction([channel]));
+    dispatch(success());
+  } catch (err) {
+    dispatch(failure(err.message));
+  }
+};
+
+export const deleteChannel = (cid: string): AppThunk => async (dispatch) => {
+  const { request, success, failure } = deleteChannelActions;
+
+  dispatch(request());
+  try {
+    await httpService.deleteChannel(cid);
+    dispatch(removeChannelAction(cid));
     dispatch(success());
   } catch (err) {
     dispatch(failure(err.message));
