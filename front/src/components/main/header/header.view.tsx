@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  Box, Text, IconButton, HStack, Button, Alert, AlertIcon, useDisclosure,
+  Box, Text, IconButton, HStack, Alert, AlertIcon, useDisclosure,
 } from '@chakra-ui/react';
-import { DeleteIcon, SmallAddIcon } from '@chakra-ui/icons';
+import { DeleteIcon } from '@chakra-ui/icons';
 import { IChannel, ERole } from '../../../common/models';
 import ModalCreator from '../../modal';
 
@@ -76,27 +76,6 @@ export default (props: Props): JSX.Element => {
             aria-label="Delete channel"
             icon={<DeleteIcon />}
             onClick={onOpen}
-          />
-        ) : null}
-      </HStack>
-
-      <HStack>
-        <Button
-          letterSpacing=".15rem"
-          size="xs"
-          colorScheme="blue"
-          variant="outline"
-        >
-          Members
-        </Button>
-
-        { isMaster ? (
-          <IconButton
-            size="xs"
-            variant="outline"
-            colorScheme="teal"
-            aria-label="Add member"
-            icon={<SmallAddIcon />}
           />
         ) : null}
       </HStack>

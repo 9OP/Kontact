@@ -61,7 +61,6 @@ export default (props: Props): JSX.Element => {
       className="scroller"
       marginBottom="auto"
       overflow="auto"
-      marginLeft="3rem"
       paddingRight="3rem"
     >
       {(messages && messages.length) ? renderMessages() : null}

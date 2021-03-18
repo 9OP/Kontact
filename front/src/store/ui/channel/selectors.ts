@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import { RootState } from '../..';
 import {
-  IChannel, IMember, IMembership, ERole, IMessage,
+  IChannel, IMember, ERole, IMessage,
 } from '../../../common/models';
 
 export const selectChannel = (state: RootState): IChannel => {
@@ -22,13 +22,22 @@ export const selectMessages = (state: RootState): {data: IMessage, author: IMemb
   });
 };
 
-export const selectMembers = (state: RootState): IMember[] => {
+export const selectMembers = (state: RootState): {member: IMember, role: ERole}[] => {
+  const uid = state.auth.id;
   const cid = state.ui.channel;
-  const memberships = Object.values(state.entities.memberships);
-  const members = Object.values(state.entities.members);
-  const membersId = memberships.filter((membership: IMembership) => membership.channelId === cid)
-    .map((membership: IMembership) => membership.memberId);
-  return members.filter((member: IMember) => membersId.includes(member.id));
+  const membersId = Object.values(state.entities.memberships)
+    .filter(({ channelId }) => channelId === cid)
+    .map(({ memberId }) => memberId);
+
+  return Object.values(state.entities.members)
+    .sort((a) => (a.id === uid ? -1 : 1))
+    .filter(({ id }) => membersId.includes(id))
+    .map((member: IMember) => {
+      return {
+        member,
+        role: state.entities.memberships[`${cid}.${member.id}`]?.role || 0,
+      };
+    });
 };
 
 export const selectRole = (state: RootState): ERole => {

@@ -19,6 +19,7 @@ export default (props: Props): JSX.Element => {
     >
       <IconButton
         colorScheme="orange"
+        variant="outline"
         aria-label="Signout"
         icon={<CloseIcon />}
         onClick={() => signout()}

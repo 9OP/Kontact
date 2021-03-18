@@ -22,9 +22,9 @@ export default (props: Props): JSX.Element => {
 
   return (
     <Box
-      marginLeft="3rem"
+      marginLeft="2rem"
       marginRight="3rem"
-      marginBottom="3rem"
+      paddingBottom="3rem"
     >
       <Textarea
         placeholder="Type a message... "

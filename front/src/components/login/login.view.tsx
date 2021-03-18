@@ -12,7 +12,6 @@ import {
   InputRightElement,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import ThemeToggler from '../theme_toggler';
 
 interface Props {
   signin: (event: React.FormEvent<HTMLFormElement>) => void,
@@ -34,10 +33,7 @@ export default (props: Props): JSX.Element => {
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
-    <Box>
-      <Box textAlign="right" py={4} mr={12}>
-        <ThemeToggler />
-      </Box>
+    <Box paddingTop="4rem">
       <Flex width="full" align="center" justifyContent="center">
         <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
 
