@@ -1,44 +1,70 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
-  Box, Text, IconButton, HStack, Alert, AlertIcon, useDisclosure,
+  Box,
+  Text,
+  IconButton,
+  HStack,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  Button,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { IChannel, ERole } from '../../../common/models';
-import ModalCreator from '../../modal';
 
-interface ModalProps {
+interface AlertProps {
   isOpen: boolean,
   onClose: () => void,
   channel: IChannel,
   deleteChannel: (cid: string) => void,
 }
 
-const DeleteChannelModal = (props: ModalProps):JSX.Element => {
+function DeleteChannelAlert(props: AlertProps) {
   const {
     isOpen, onClose, channel, deleteChannel,
   } = props;
+  const cancelRef = useRef(null);
 
-  const onSubmit = () => {
+  const del = () => {
     deleteChannel(channel.id);
     onClose();
   };
 
   return (
-    <ModalCreator
+
+    <AlertDialog
       isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
       onClose={onClose}
-      header={`Delete channel: ${channel.name}`}
-      action="Delete"
-      onSubmit={onSubmit}
-      body={(
-        <Alert status="warning">
-          <AlertIcon />
-          Are you sure?
-        </Alert>
-      )}
-    />
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            {`Delete ${channel.name}`}
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            Are you sure? You can&#39;t undo this action afterwards.
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button colorScheme="red" onClick={del} ml={3}>
+              Delete
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+
   );
-};
+}
 
 interface Props {
   channel: IChannel;
@@ -82,12 +108,13 @@ export default (props: Props): JSX.Element => {
         ) : null}
       </HStack>
 
-      <DeleteChannelModal
+      <DeleteChannelAlert
         isOpen={isOpen}
         onClose={onClose}
         channel={channel}
         deleteChannel={deleteChannel}
       />
+
     </Box>
   );
 };

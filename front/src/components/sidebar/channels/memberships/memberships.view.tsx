@@ -21,12 +21,13 @@ export default (props: Props): JSX.Element => {
         key={channel.id}
         _hover={{
           bg: 'gray.100',
+          cursor: 'pointer',
         }}
         bg={openedChannel?.id === channel.id ? 'gray.100' : ''}
         borderLeft={openedChannel?.id === channel.id ? '3px solid' : ''}
         borderColor="rgba(146, 101, 128, 0.4)"
         padding="1rem"
-        paddingLeft="2rem"
+        paddingLeft={openedChannel?.id === channel.id ? 'calc(2rem - 3px)' : '2rem'}
         onClick={() => openChannel(channel.id)}
       >
         <Text
