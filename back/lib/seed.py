@@ -1,31 +1,16 @@
-import os
-from app.models.database import db
 from app.models import User, Channel, Membership
 from faker import Faker
 from random import randint
+from .create_db import create_db
 
 faker = Faker()
-
-
-def clear_db():
-    print(db.engine)
-    value = input("-> clear db? (y/n) ").lower()
-    if value == "y" and os.environ.get("FLASK_ENV") == "development":
-        db.drop_all()
-        db.create_all()
-        db.session.commit()
-        print("> Database cleared")
-    else:
-        print("> Database not cleared")
-
-    return value == "y"
 
 
 def seed():
     """
     Seed database
     """
-    if not clear_db():
+    if not create_db()():
         return
 
     users, channels = [], []

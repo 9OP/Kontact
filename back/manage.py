@@ -16,12 +16,9 @@ def seed():
     lib.seed()
 
 
-# @cli.command("create_db")
-# def create_db():
-#     if os.environ["FLASK_ENV"] == "development":
-#         db.drop_all()
-#         db.create_all()
-#         db.session.commit()
+@cli.command("create_db")
+def create_db():
+    lib.create_db()
 
 
 if __name__ == "__main__":
