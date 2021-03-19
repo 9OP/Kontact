@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Text,
@@ -8,36 +8,47 @@ import {
   IconButton,
   HStack,
   VStack,
-  useDisclosure,
+  Menu,
+  MenuButton,
+  Button,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  MenuGroup,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { ERole, IMember } from '../../../common/models';
-import ModalCreator from '../../modal';
 
-interface ModalProps {
-  isOpen: boolean,
-  onClose: () => void,
-  member: IMember,
+interface menuProps {
+  member: IMember;
+  children: React.ReactNode;
 }
 
-const MemberModal = (props: ModalProps) => {
-  const {
-    isOpen, onClose, member,
-  } = props;
-
-  const onSubmit = () => {
-    onClose();
-  };
+const MemberMenu = (props: menuProps): JSX.Element => {
+  const { member, children } = props;
 
   return (
-    <ModalCreator
-      isOpen={isOpen}
-      onClose={onClose}
-      header={member.name}
-      action="Save"
-      onSubmit={onSubmit}
-      body={<Text />}
-    />
+    <Menu>
+      <MenuButton>
+        {children}
+      </MenuButton>
+      <MenuList>
+        <MenuGroup title="Profile">
+          <MenuItem>Key</MenuItem>
+          <MenuItem>Info</MenuItem>
+        </MenuGroup>
+        <MenuDivider />
+        <MenuGroup title="Danger">
+          <MenuItem>Role</MenuItem>
+          <MenuItem>
+            <Text color="red">
+              Yeet
+            </Text>
+          </MenuItem>
+        </MenuGroup>
+
+      </MenuList>
+    </Menu>
   );
 };
 
@@ -46,47 +57,46 @@ interface Props {
 }
 
 export default (props: Props): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [member, setMember] = useState<IMember>({} as IMember);
   const { members } = props;
-
-  const openModal = (member: IMember) => {
-    setMember(member);
-    onOpen();
-  };
 
   const renderMembers = () => (
     members.map(({ member, role }) => (
-      <ListItem
-        key={member.id}
-        _hover={{ cursor: 'pointer', color: 'blue.600' }}
-        color="gray.600"
-        onClick={() => openModal(member)}
-      >
-        <HStack>
-          <Text fontWeight="bold" color="inherit">
-            {member.name}
-          </Text>
-          { role === ERole.Master ? (
-            <Badge variant="solid" colorScheme="teal" fontSize="xs">
-              Master
-            </Badge>
-          ) : null}
-        </HStack>
+      <ListItem key={member.id} color="gray.600">
+        <MemberMenu member={member}>
+          <HStack>
+            <Text fontWeight="bold" fontSize="sm">
+              {member.name}
+            </Text>
+            { role === ERole.Master ? (
+              <Badge variant="solid" colorScheme="teal" fontSize="xs">
+                Master
+              </Badge>
+            ) : null}
+          </HStack>
+        </MemberMenu>
       </ListItem>
     ))
   );
 
   return (
     <Box
-      overflow="auto"
-      width="20rem"
+      minWidth="17rem"
       padding="1rem"
+      paddingTop="0"
+      overflow="auto"
       borderWidth={1}
       borderRadius={8}
       boxShadow="lg"
     >
-      <VStack marginBottom="2rem" alignItems="inherit">
+      <VStack
+        position="sticky"
+        top="0"
+        paddingTop="1rem"
+        paddingBottom=".5rem"
+        boxShadow="0px 10px 10px 5px white"
+        backgroundColor="white"
+        alignItems="inherit"
+      >
         <HStack justifyContent="space-between">
           <Text
             letterSpacing=".1rem"
@@ -105,23 +115,13 @@ export default (props: Props): JSX.Element => {
           />
         </HStack>
         <Text color="gray.500" fontSize="xs">
-          {members.length}
-          {' '}
-          /
-          {' '}
-          {members.length}
+          {`${members.length}/${members.length}`}
         </Text>
       </VStack>
 
-      <List spacing={8} marginBottom="2rem">
-        {(members && members.length) ? renderMembers() : null}
+      <List spacing={8} marginY="2rem">
+        {members ? renderMembers() : null}
       </List>
-
-      {/* <MemberModal
-        isOpen={isOpen}
-        onClose={onClose}
-        member={member}
-      /> */}
     </Box>
 
   );

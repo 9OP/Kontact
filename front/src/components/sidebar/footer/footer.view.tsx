@@ -2,8 +2,9 @@ import React from 'react';
 import {
   Box,
   IconButton,
+  Icon,
 } from '@chakra-ui/react';
-import { CloseIcon } from '@chakra-ui/icons';
+import { FiLogOut } from 'react-icons/fi';
 
 interface Props {
   signout: () => void;
@@ -21,7 +22,7 @@ export default (props: Props): JSX.Element => {
         colorScheme="orange"
         variant="outline"
         aria-label="Signout"
-        icon={<CloseIcon />}
+        icon={<Icon as={FiLogOut} />}
         onClick={() => signout()}
       />
 

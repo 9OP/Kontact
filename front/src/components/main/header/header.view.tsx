@@ -60,17 +60,19 @@ export default (props: Props): JSX.Element => {
       boxShadow="lg"
     >
       <HStack justifyContent="space-between">
-        <HStack>
-          <Text
-            letterSpacing=".15rem"
-            fontSize="xl"
-            color="gray.600"
-          >
-            {channel.name}
-          </Text>
-        </HStack>
+
+        <Text
+          letterSpacing=".15rem"
+          fontWeight="bold"
+          fontSize="2xl"
+          color="gray.700"
+        >
+          {channel.name}
+        </Text>
+
         { isMaster ? (
           <IconButton
+            size="sm"
             color="red.500"
             variant="outline"
             aria-label="Delete channel"

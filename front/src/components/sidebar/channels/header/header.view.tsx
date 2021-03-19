@@ -52,7 +52,14 @@ export default (props: Props): JSX.Element => {
 
   return (
     <>
-      <Box marginBottom="auto" marginTop="2rem">
+      <Box
+        marginBottom="auto"
+        position="sticky"
+        top="0"
+        paddingTop="1rem"
+        boxShadow="0px 10px 10px 5px white"
+        backgroundColor="white"
+      >
         <HStack marginBottom="1rem">
           <Text
             letterSpacing=".1rem"
@@ -66,7 +73,7 @@ export default (props: Props): JSX.Element => {
           <IconButton
             colorScheme="teal"
             variant="outline"
-            size="sm"
+            size="xs"
             aria-label="Create channel"
             onClick={onOpen}
             icon={<AddIcon />}

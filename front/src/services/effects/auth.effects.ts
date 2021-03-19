@@ -61,7 +61,6 @@ export const signout = (): AppThunk => async (dispatch) => {
   const successCb = async () => {
     await httpService.signout();
     window.location.reload(); // reset Redux store
-    dispatch(resetUserAction());
   };
 
   const failureCb = async () => {
