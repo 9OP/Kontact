@@ -4,6 +4,7 @@ import { apiActionsCreator } from '../../api/api.actions';
 
 // API actions
 export const FETCH_MEMBERS = '[API] FETCH_MEMBERS';
+export const DELETE_MEMBER = '[API] DELETE_MEMBER';
 
 // Members actions
 export const SET_MEMBERS = '[MEMBERS] SET_MEMBERS';
@@ -18,6 +19,7 @@ interface setMembersAction extends Action {
 export type membersActionTypes = setMembersAction;
 
 export const fetchMembersActions = apiActionsCreator(FETCH_MEMBERS);
+export const deleteMemberActions = apiActionsCreator(DELETE_MEMBER);
 
 export function setMembersAction(members: IMember[]): membersActionTypes {
   return {

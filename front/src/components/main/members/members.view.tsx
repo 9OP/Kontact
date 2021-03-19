@@ -10,7 +10,6 @@ import {
   VStack,
   Menu,
   MenuButton,
-  Button,
   MenuList,
   MenuItem,
   MenuDivider,
@@ -21,11 +20,12 @@ import { ERole, IMember } from '../../../common/models';
 
 interface menuProps {
   member: IMember;
+  deleteMember: (uid: string) =>void;
   children: React.ReactNode;
 }
 
 const MemberMenu = (props: menuProps): JSX.Element => {
-  const { member, children } = props;
+  const { member, deleteMember, children } = props;
 
   return (
     <Menu>
@@ -40,7 +40,7 @@ const MemberMenu = (props: menuProps): JSX.Element => {
         <MenuDivider />
         <MenuGroup title="Danger">
           <MenuItem>Role</MenuItem>
-          <MenuItem>
+          <MenuItem onClick={() => deleteMember(member.id)}>
             <Text color="red">
               Yeet
             </Text>
@@ -53,16 +53,17 @@ const MemberMenu = (props: menuProps): JSX.Element => {
 };
 
 interface Props {
-  members: {member: IMember, role: ERole}[]
+  members: {member: IMember, role: ERole}[],
+  deleteMember: (uid: string) =>void;
 }
 
 export default (props: Props): JSX.Element => {
-  const { members } = props;
+  const { members, deleteMember } = props;
 
   const renderMembers = () => (
     members.map(({ member, role }) => (
       <ListItem key={member.id} color="gray.600">
-        <MemberMenu member={member}>
+        <MemberMenu member={member} deleteMember={deleteMember}>
           <HStack>
             <Text fontWeight="bold" fontSize="sm">
               {member.name}

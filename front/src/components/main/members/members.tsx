@@ -11,6 +11,7 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: DispThunk) => ({
   fetchMembers: (cid: string) => dispatch(membersDataManager.fetchMembers(cid)),
+  deleteMember: (cid: string, uid: string) => dispatch(membersDataManager.deleteMember(cid, uid)),
 });
 
 const connector = connect(
@@ -23,15 +24,22 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const Message = (props: Props): JSX.Element => {
-  const { channel, fetchMembers, members } = props;
+  const {
+    channel, fetchMembers, deleteMember, members,
+  } = props;
 
   useEffect(() => {
     fetchMembers(channel.id);
   }, []);
 
+  const delMember = (uid: string) => {
+    deleteMember(channel.id, uid);
+  };
+
   return (
     <MembersView
       members={members}
+      deleteMember={delMember}
     />
   );
 };

@@ -56,3 +56,7 @@ export const createChannel = async (name: string): Promise<IChannel> => {
 export const deleteChannel = async (cid: string): Promise<void> => {
   await back.delete({ route: `channel/${cid}` });
 };
+
+export const deleteMember = async (cid: string, uid: string): Promise<void> => {
+  await back.delete({ route: `channel/${cid}/membership/${uid}` });
+};
