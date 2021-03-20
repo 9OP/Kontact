@@ -10,7 +10,7 @@ def seed():
     """
     Seed database
     """
-    if not create_db()():
+    if not create_db():
         return
 
     users, channels = [], []

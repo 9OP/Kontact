@@ -17,7 +17,7 @@ export default (props: Props): JSX.Element => {
     <Box
       marginTop="auto"
       padding="1rem"
-      boxShadow="0px -5px 15px 4px white"
+      boxShadow="0px -5px 10px 2px white"
     >
       <IconButton
         colorScheme="orange"

@@ -29,11 +29,12 @@ const Message = (props: Props): JSX.Element => {
     fetchMembers(channel.id);
   }, []);
 
-  const delMember = (uid: string) => {
-    deleteMember(channel.id, uid);
-  };
-
-  return <MembersView members={members} deleteMember={delMember} />;
+  return (
+    <MembersView
+      members={members}
+      deleteMember={(uid: string) => deleteMember(channel.id, uid)}
+    />
+  );
 };
 
 export default connector(Message);

@@ -1,83 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Text,
-  Badge,
-  List,
-  ListItem,
   IconButton,
   HStack,
   VStack,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  MenuGroup,
+  useDisclosure,
+  List,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import { ERole, IMember } from '../../../../common/models';
-
-interface menuProps {
-  member: IMember;
-  deleteMember: (uid: string) =>void;
-  children: React.ReactNode;
-}
-
-const MemberMenu = (props: menuProps): JSX.Element => {
-  const { member, deleteMember, children } = props;
-
-  return (
-    <Menu>
-      <MenuButton>
-        {children}
-      </MenuButton>
-      <MenuList>
-        <MenuGroup title="Profile">
-          <MenuItem>Key</MenuItem>
-          <MenuItem>Info</MenuItem>
-        </MenuGroup>
-        <MenuDivider />
-        <MenuGroup title="Danger">
-          <MenuItem>Role</MenuItem>
-          <MenuItem onClick={() => deleteMember(member.id)}>
-            <Text color="red">
-              Yeet
-            </Text>
-          </MenuItem>
-        </MenuGroup>
-
-      </MenuList>
-    </Menu>
-  );
-};
+import ItemView from './item/item.view';
+import InfoView from './info/info.view';
+import { IMember } from '../../../../common/models';
 
 interface Props {
-  members: {member: IMember, role: ERole}[],
-  deleteMember: (uid: string) =>void;
+  members: IMember[];
+  deleteMember: (uid: string) => void;
 }
 
 export default (props: Props): JSX.Element => {
   const { members, deleteMember } = props;
+  const [memberInfo, setMemberInfo] = useState<IMember>({} as IMember);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const renderMembers = () => (
-    members.map(({ member, role }) => (
-      <ListItem key={member.id} color="gray.600">
-        <MemberMenu member={member} deleteMember={deleteMember}>
-          <HStack>
-            <Text fontWeight="bold" fontSize="sm">
-              {member.name}
-            </Text>
-            { role === ERole.Master ? (
-              <Badge variant="solid" colorScheme="teal" fontSize="xs">
-                Master
-              </Badge>
-            ) : null}
-          </HStack>
-        </MemberMenu>
-      </ListItem>
-    ))
-  );
+  const openInfo = (member: IMember) => {
+    setMemberInfo(member);
+    onOpen();
+  };
+
+  const renderMembers = () => members.map((member: IMember) => (
+    <ItemView
+      key={member.id}
+      member={member}
+      deleteMember={() => deleteMember(member.id)}
+      openInfo={() => openInfo(member)}
+    />
+  ));
 
   return (
     <Box
@@ -123,7 +81,8 @@ export default (props: Props): JSX.Element => {
       <List spacing={8} marginY="2rem">
         {members ? renderMembers() : null}
       </List>
-    </Box>
 
+      <InfoView isOpen={isOpen} onClose={onClose} member={memberInfo} />
+    </Box>
   );
 };

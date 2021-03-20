@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-case-declarations */
 import { IChannel } from '../../../common/models';
+import { RESET_USER } from '../../authentication/auth.action-types';
 import {
   channelsActionTypes,
   FETCH_CHANNELS,
@@ -56,6 +57,9 @@ export default function channelsReducer(state = INITIAL_STATE, action: channelsA
 
     case OPEN_CHANNEL:
       return { ...state, opened: action.payload };
+
+    case RESET_USER:
+      return INITIAL_STATE;
 
     default:
       return state;

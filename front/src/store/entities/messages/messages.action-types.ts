@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { IMessage } from '../../../common/models';
+import { authActionTypes } from '../../authentication/auth.action-types';
 
 export const RECEIVE_MESSAGES = '[messages] receive_messages';
 
@@ -8,4 +9,4 @@ interface receiveMessages extends Action {
   payload: IMessage[];
 }
 
-export type messagesActionTypes = receiveMessages;
+export type messagesActionTypes = authActionTypes | receiveMessages;

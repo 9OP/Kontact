@@ -1,5 +1,5 @@
 import { fetchMembers, deleteMember } from './effects/members.effects';
-import { selectMembers } from '../store/entities/memberships/memberships.selectors';
+import { selectMembers } from '../store/entities/members/memberships.selectors';
 
 export default {
   // actions

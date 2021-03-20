@@ -4,6 +4,7 @@ import {
   resetUserAction,
 } from '../../store/authentication/auth.actions';
 import { authHttpService } from './http';
+import { toast, emit } from '../../components/toast';
 
 export const signin = (email: string, password: string): AppThunk => async (
   dispatch,
@@ -26,10 +27,7 @@ export const whoami = (): AppThunk => async (dispatch) => {
 };
 
 export const signout = (): AppThunk => async (dispatch) => {
-  try {
-    await authHttpService.signout();
-    window.location.reload();
-  } catch (err) {
-    dispatch(resetUserAction());
-  }
+  await authHttpService.signout();
+  emit(toast.auth_signout());
+  dispatch(resetUserAction());
 };

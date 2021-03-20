@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { IChannel } from '../../../common/models';
+import { authActionTypes } from '../../authentication/auth.action-types';
 
 export const FETCH_CHANNELS = '[channels] fetch_channels';
 export const CREATE_CHANNEL = '[channels] create_channel';
@@ -33,6 +34,7 @@ interface openChannel extends Action {
 }
 
 export type channelsActionTypes =
+  | authActionTypes
   | fetchChannels
   | createChannel
   | updateChannel

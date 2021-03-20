@@ -8,7 +8,7 @@ import {
 import { IChannel } from '../../common/models';
 import { channelsHttpService } from './http';
 import * as user from './socket/user.socket';
-import { toast, emit, Events } from '../../components/toast';
+import { toast, emit } from '../../components/toast';
 
 export const fetchChannels = (): AppThunk => async (dispatch) => {
   try {
@@ -24,6 +24,7 @@ export const createChannel = (name: string): AppThunk => async (dispatch) => {
     const channel = await channelsHttpService.createChannel(name);
     await user.reloadBeacon({});
     dispatch(createChannelAction(channel));
+    emit(toast.channel_created(channel));
   } catch (err) {
     // dispatch(failure(err.message));
   }
@@ -33,7 +34,7 @@ export const deleteChannel = (cid: string): AppThunk => async (dispatch) => {
   try {
     await channelsHttpService.deleteChannel(cid);
     dispatch(deleteChannelAction(cid));
-    emit(toast[Events.CHANNEL_DELETED]({} as IChannel));
+    emit(toast.channel_deleted({} as IChannel));
   } catch (err) {
     // dispatch(failure(err.message));
   }
