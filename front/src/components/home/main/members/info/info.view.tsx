@@ -1,26 +1,59 @@
 import React from 'react';
 import {
-  Button,
+  Text,
+  Badge,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  Input,
+  HStack,
+  FormControl,
+  FormLabel,
+  Switch,
+  FormHelperText,
 } from '@chakra-ui/react';
-import { IMember } from '../../../../../common/models';
+import { ERole, IMember } from '../../../../../common/models';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  isMaster: boolean;
   member: IMember;
+  update: (role: ERole) => void;
 }
 
 export default (props: Props): JSX.Element => {
-  const { isOpen, onClose, member } = props;
+  const {
+    isOpen, onClose, isMaster, member, update,
+  } = props;
   const btnRef = React.useRef(null);
+
+  const changeRole = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    update(member.role === ERole.Member ? ERole.Master : ERole.Member);
+  };
+
+  const renderRole = (): JSX.Element => {
+    const Master = (
+      <Badge variant="solid" colorScheme="teal" fontSize="xs">
+        Master
+      </Badge>
+    );
+    const Member = (
+      <Badge variant="solid" colorScheme="blue" fontSize="xs">
+        Member
+      </Badge>
+    );
+
+    switch (member.role) {
+      case ERole.Master:
+        return Master;
+      default:
+        return Member;
+    }
+  };
 
   return (
     <Drawer
@@ -32,18 +65,44 @@ export default (props: Props): JSX.Element => {
       <DrawerOverlay>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>{member.name}</DrawerHeader>
+          <DrawerHeader>
+            <HStack>
+              <Text fontSize="md" fontWeight="bold" color="gray.800">
+                {member.name}
+              </Text>
+              {renderRole()}
+            </HStack>
+            <Text fontSize="sm" color="gray.600">
+              {member.email}
+            </Text>
+            <Text fontSize="xs" color="gray.600">
+              {`Joined: ${member.joinedAt?.toDateString()}`}
+            </Text>
+          </DrawerHeader>
 
           <DrawerBody>
-            <Input placeholder="Type here..." />
+            <FormControl
+              display="flex"
+              alignItems="center"
+              isDisabled={!isMaster}
+            >
+              <FormLabel htmlFor="channel-role" mb="0">
+                Channel master
+              </FormLabel>
+              <Switch
+                id="channel-role"
+                colorScheme="teal"
+                isDisabled={!isMaster}
+                isChecked={member.role === ERole.Master}
+                onChange={changeRole}
+              />
+            </FormControl>
+            {!isMaster ? (
+              <FormHelperText>
+                You need Master role
+              </FormHelperText>
+            ) : null}
           </DrawerBody>
-
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button color="blue">Save</Button>
-          </DrawerFooter>
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>

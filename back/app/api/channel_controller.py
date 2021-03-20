@@ -14,6 +14,14 @@ CHANNEL_SCHEMA = {
     }
 }
 
+MEMBER_SCHEMA = {
+    "role": {
+        "type": "integer",
+        "is_role": True,
+        "required": False,
+    }
+}
+
 
 @authentication
 @require(access=Access.USER)
@@ -80,5 +88,10 @@ def del_member(cid, uid):
     return render(f"Member {user.name} deleted from channel {channel.name}")
 
 
-# def update_member(cid, uid):
-#     pass
+@authentication
+@require(role=Role.MASTER)
+def update_member(cid, uid):
+    params = validator(request.json, MEMBER_SCHEMA)
+    membership = Membership.find_one(user_id=uid, channel_id=cid)
+    membership.update(role=params["role"])
+    return render(membership.summary("user"))

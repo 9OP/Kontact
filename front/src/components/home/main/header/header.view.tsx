@@ -20,7 +20,7 @@ interface AlertProps {
   isOpen: boolean;
   onClose: () => void;
   channel: IChannel;
-  deleteChannel: (cid: string) => void;
+  deleteChannel: () => void;
 }
 
 function DeleteChannelAlert(props: AlertProps) {
@@ -30,7 +30,7 @@ function DeleteChannelAlert(props: AlertProps) {
   const cancelRef = useRef(null);
 
   const del = () => {
-    deleteChannel(channel.id);
+    deleteChannel();
     onClose();
   };
 
@@ -67,7 +67,7 @@ function DeleteChannelAlert(props: AlertProps) {
 interface Props {
   channel: IChannel;
   role: ERole;
-  deleteChannel: (cid: string) => void;
+  deleteChannel: () => void;
 }
 
 export default (props: Props): JSX.Element => {

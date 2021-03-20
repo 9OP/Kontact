@@ -1,10 +1,10 @@
 from sqlalchemy.orm import backref
 from sqlalchemy.dialects.postgresql import UUID
 from app.models.database import db, Support
-from enum import Enum
+from enum import IntEnum
 
 
-class Role(Enum):
+class Role(IntEnum):
     MEMBER = 0
     MASTER = 1
 

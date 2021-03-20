@@ -3,13 +3,13 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.dialects.postgresql import UUID
 from werkzeug.security import safe_str_cmp
 from app.models.database import db, Support
-from enum import Enum
+from enum import IntEnum
 import uuid
 import hashlib
 import bcrypt
 
 
-class Access(Enum):
+class Access(IntEnum):
     GUEST = 0
     USER = 1
     ADMIN = 2

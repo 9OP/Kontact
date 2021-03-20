@@ -9,31 +9,33 @@ import {
   List,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import ItemView from './item/item.view';
-import InfoView from './info/info.view';
 import { IMember } from '../../../../common/models';
+import ItemView from './item/item.view';
+import Info from './info/info';
 
 interface Props {
+  isMaster: boolean;
   members: IMember[];
-  deleteMember: (uid: string) => void;
+  deleteMember: (member: IMember) => void;
 }
 
 export default (props: Props): JSX.Element => {
-  const { members, deleteMember } = props;
-  const [memberInfo, setMemberInfo] = useState<IMember>({} as IMember);
+  const { isMaster, members, deleteMember } = props;
+  const [memberId, setMemberId] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const openInfo = (member: IMember) => {
-    setMemberInfo(member);
+  const openInfo = (uid: string) => {
+    setMemberId(uid);
     onOpen();
   };
 
   const renderMembers = () => members.map((member: IMember) => (
     <ItemView
       key={member.id}
+      isMaster={isMaster}
       member={member}
-      deleteMember={() => deleteMember(member.id)}
-      openInfo={() => openInfo(member)}
+      deleteMember={() => deleteMember(member)}
+      openInfo={() => openInfo(member.id)}
     />
   ));
 
@@ -65,13 +67,15 @@ export default (props: Props): JSX.Element => {
           >
             MEMBERS
           </Text>
-          <IconButton
-            size="xs"
-            colorScheme="blue"
-            variant="outline"
-            aria-label="Add member"
-            icon={<AddIcon />}
-          />
+          { isMaster ? (
+            <IconButton
+              size="xs"
+              colorScheme="blue"
+              variant="outline"
+              aria-label="Add member"
+              icon={<AddIcon />}
+            />
+          ) : null}
         </HStack>
         <Text color="gray.500" fontSize="xs">
           {`${members.length}/${members.length}`}
@@ -82,7 +86,7 @@ export default (props: Props): JSX.Element => {
         {members ? renderMembers() : null}
       </List>
 
-      <InfoView isOpen={isOpen} onClose={onClose} member={memberInfo} />
+      <Info isOpen={isOpen} onClose={onClose} memberId={memberId} />
     </Box>
   );
 };

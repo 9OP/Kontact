@@ -2,13 +2,13 @@
 import { AppThunk } from '../../store';
 import {
   fetchMembersAction,
-  createMemberAction,
+  // createMemberAction,
   deleteMemberAction,
   updateMemberAction,
 } from '../../store/entities/members/memberships.actions';
 import { membersHttpService } from './http';
 import { toast, emit } from '../../components/toast';
-import { IMember } from '../../common/models';
+import { ERole, IChannel, IMember } from '../../common/models';
 
 export const fetchMembers = (cid: string): AppThunk => async (dispatch) => {
   try {
@@ -19,24 +19,27 @@ export const fetchMembers = (cid: string): AppThunk => async (dispatch) => {
   }
 };
 
-// export const createMember = (cid: string, uid: string): AppThunk => async (
-//   dispatch
-// ) => {
-//   try {
-//     await membersHttpService.createMember(cid, uid);
-//     dispatch(createMemberAction(`${cid}.${uid}`));
-//   } catch (err) {
-//     // dispatch(failure(err.message));
-//   }
-// };
-
-export const deleteMember = (cid: string, uid: string): AppThunk => async (
-  dispatch,
-) => {
+export const deleteMember = (
+  channel: IChannel,
+  member: IMember,
+): AppThunk => async (dispatch) => {
   try {
-    await membersHttpService.deleteMember(cid, uid);
-    dispatch(deleteMemberAction(uid));
-    emit(toast.member_deleted({} as IMember));
+    await membersHttpService.deleteMember(channel.id, member.id);
+    dispatch(deleteMemberAction(member.id));
+    emit(toast.member_deleted(member));
+  } catch (err) {
+    // dispatch(failure(err.message));
+  }
+};
+
+export const updateMember = (
+  cid: string,
+  uid: string,
+  role: ERole,
+): AppThunk => async (dispatch) => {
+  try {
+    const member = await membersHttpService.updateMember(cid, uid, role);
+    dispatch(updateMemberAction(member));
   } catch (err) {
     // dispatch(failure(err.message));
   }

@@ -14,13 +14,16 @@ import {
 import { ERole, IMember } from '../../../../../common/models';
 
 interface Props {
+  isMaster: boolean;
   member: IMember;
   deleteMember: () => void;
   openInfo: () => void;
 }
 
 export default (props: Props): JSX.Element => {
-  const { member, deleteMember, openInfo } = props;
+  const {
+    isMaster, member, deleteMember, openInfo,
+  } = props;
 
   const MemberMenu = (p: { children: React.ReactNode }): JSX.Element => (
     <Menu>
@@ -29,12 +32,17 @@ export default (props: Props): JSX.Element => {
         <MenuGroup title="Member">
           <MenuItem onClick={openInfo}>Info</MenuItem>
         </MenuGroup>
-        <MenuDivider />
-        <MenuGroup title="Danger">
-          <MenuItem onClick={deleteMember}>
-            <Text color="red">Yeet</Text>
-          </MenuItem>
-        </MenuGroup>
+
+        {isMaster ? (
+          <>
+            <MenuDivider />
+            <MenuGroup title="Danger">
+              <MenuItem onClick={deleteMember}>
+                <Text color="red">Yeet</Text>
+              </MenuItem>
+            </MenuGroup>
+          </>
+        ) : null}
       </MenuList>
     </Menu>
   );

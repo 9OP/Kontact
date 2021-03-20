@@ -30,11 +30,11 @@ export const createChannel = (name: string): AppThunk => async (dispatch) => {
   }
 };
 
-export const deleteChannel = (cid: string): AppThunk => async (dispatch) => {
+export const deleteChannel = (channel: IChannel): AppThunk => async (dispatch) => {
   try {
-    await channelsHttpService.deleteChannel(cid);
-    dispatch(deleteChannelAction(cid));
-    emit(toast.channel_deleted({} as IChannel));
+    await channelsHttpService.deleteChannel(channel.id);
+    dispatch(deleteChannelAction(channel.id));
+    emit(toast.channel_deleted(channel));
   } catch (err) {
     // dispatch(failure(err.message));
   }
