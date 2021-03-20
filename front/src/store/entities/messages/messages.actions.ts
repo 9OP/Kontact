@@ -1,68 +1,12 @@
-import { Action } from 'redux';
+/* eslint-disable import/prefer-default-export */
 import { IMessage } from '../../../common/models';
-import { apiActionsCreator } from '../../api/api.actions';
+import { messagesActionTypes, RECEIVE_MESSAGES } from './messages.action-types';
 
-/**
- * Socket actions
- */
-export const SEND_MESSAGE = '[CHANNEL-MESSAGES] SEND_MESSAGE';
-export const FETCH_MESSAGES = '[CHANNEL-MESSAGES] FETCH_MESSAGES';
-
-/**
- * Messages actions
- */
-export const ADD_MESSAGE = '[CHANNEL-MESSAGES] ADD_MESSAGE';
-export const UPDATE_MESSAGE = '[CHANNEL-MESSAGES] UPDATE_MESSAGE';
-export const DELETE_MESSAGE = '[CHANNEL-MESSAGES] DELETE_MESSAGE';
-export const SET_MESSAGES = '[CHANNEL-MESSAGES] SET_MESSAGES';
-export const RESET_MESSAGES = '[CHANNEL-MESSAGES] RESET_MESSAGES';
-
-interface addMessageAction extends Action {
-  payload: IMessage;
-  type: typeof ADD_MESSAGE;
-}
-
-interface updateMessageAction extends Action {
-  payload: Partial<IMessage>; // requires messageId
-  type: typeof UPDATE_MESSAGE;
-}
-
-interface deleteMessageAction extends Action {
-  payload: string; // messageId
-  type: typeof DELETE_MESSAGE;
-}
-
-interface setMessagesAction extends Action {
-  payload: IMessage[];
-  type: typeof SET_MESSAGES;
-}
-
-interface resetMessagesAction extends Action {
-  type: typeof RESET_MESSAGES;
-}
-
-export type messagesActionTypes =
-  | addMessageAction
-  | updateMessageAction
-  | deleteMessageAction
-  | setMessagesAction
-  | resetMessagesAction;
-
-/**
- * Messages actions
- */
-export function addMessageAction(message: IMessage): messagesActionTypes {
+export function receiveMessagesAction(
+  messages: IMessage[],
+): messagesActionTypes {
   return {
-    payload: message,
-    type: ADD_MESSAGE,
+    type: RECEIVE_MESSAGES,
+    payload: messages,
   };
 }
-
-export function resetMessagesAction(): messagesActionTypes {
-  return {
-    type: RESET_MESSAGES,
-  };
-}
-
-export const sendMessageActions = apiActionsCreator(SEND_MESSAGE);
-export const fetchMessagesActions = apiActionsCreator(FETCH_MESSAGES);

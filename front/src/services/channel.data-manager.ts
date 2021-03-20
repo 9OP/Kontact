@@ -1,24 +1,21 @@
-import { fetchChannels, createChannel, deleteChannel } from './effects/channel.effects';
-import { selectChannels } from '../store/entities/channels/channels.selectors';
-import { openChannelAction as openChannel } from '../store/ui/channel/actions';
-import { selectChannel, selectRole } from '../store/ui/channel/selectors';
-
-export {
+import {
   fetchChannels,
   createChannel,
   deleteChannel,
+} from './effects/channel.effects';
+import {
   selectChannels,
-  openChannel,
-  selectChannel,
-  selectRole,
-};
+  selectOpenedChannel,
+} from '../store/entities/channels/channels.selectors';
+import { openChannelAction as openChannel } from '../store/entities/channels/channels.actions';
 
 export default {
+  // actions
   fetchChannels,
   createChannel,
   deleteChannel,
-  selectChannels,
   openChannel,
-  selectChannel,
-  selectRole,
+  // selectors
+  selectChannels,
+  selectOpenedChannel,
 };

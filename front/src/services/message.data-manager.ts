@@ -1,14 +1,9 @@
-import { sendMessage, fetchMessages } from './effects/messages.effects';
-import { selectMessages } from '../store/ui/channel/selectors';
-
-export {
-  sendMessage,
-  fetchMessages,
-  selectMessages,
-};
+import { sendMessage } from './effects/messages.effects';
+import { selectMessages } from '../store/entities/messages/messages.selectors';
 
 export default {
+  // actions
   sendMessage,
-  fetchMessages,
+  // selectors
   selectMessages,
 };

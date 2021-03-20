@@ -9,10 +9,3 @@ export {
   membersDataManager,
   messagesDataManager,
 };
-
-export default {
-  authDataManager,
-  channelDataManager,
-  membersDataManager,
-  messagesDataManager,
-};

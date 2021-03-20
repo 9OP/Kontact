@@ -7,43 +7,38 @@ import {
   FormLabel,
   Input,
   Button,
-  Spinner,
   InputGroup,
   InputRightElement,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 interface Props {
-  signin: (event: React.FormEvent<HTMLFormElement>) => void,
-  setEmail: React.Dispatch<React.SetStateAction<string>>,
-  setPassword: React.Dispatch<React.SetStateAction<string>>,
-  error: string,
-  isLoading: boolean,
+  signin: (event: React.FormEvent<HTMLFormElement>) => void;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default (props: Props): JSX.Element => {
-  const {
-    signin,
-    setEmail,
-    setPassword,
-    error,
-    isLoading,
-  } = props;
+  const { signin, setEmail, setPassword } = props;
   const [showPassword, setShowPassword] = useState(false);
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
     <Box paddingTop="4rem">
       <Flex width="full" align="center" justifyContent="center">
-        <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
-
+        <Box
+          p={8}
+          maxWidth="500px"
+          borderWidth={1}
+          borderRadius={8}
+          boxShadow="lg"
+        >
           <Box textAlign="center">
             <Heading>Login</Heading>
           </Box>
 
           <Box my={4} textAlign="left">
             <form onSubmit={signin}>
-
               <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input
@@ -63,22 +58,27 @@ export default (props: Props): JSX.Element => {
                     onChange={(event) => setPassword(event.currentTarget.value)}
                   />
                   <InputRightElement width="3rem">
-                    <Button h="1.5rem" size="sm" onClick={handlePasswordVisibility}>
+                    <Button
+                      h="1.5rem"
+                      size="sm"
+                      onClick={handlePasswordVisibility}
+                    >
                       {showPassword ? <ViewOffIcon /> : <ViewIcon />}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
-              <Button colorScheme="teal" variant="outline" type="submit" width="full" mt={4}>
-                {isLoading ? (
-                  <Spinner size="md" thickness="2px" speed="0.65s" colorScheme="teal" />
-                ) : (
-                  'Sign In'
-                )}
+              <Button
+                colorScheme="teal"
+                variant="outline"
+                type="submit"
+                width="full"
+                mt={4}
+              >
+                Sign In
               </Button>
             </form>
           </Box>
-          {error}
         </Box>
       </Flex>
     </Box>

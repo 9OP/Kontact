@@ -1,42 +1,44 @@
-import { Action } from 'redux';
 import { IChannel } from '../../../common/models';
-import { apiActionsCreator } from '../../api/api.actions';
+import {
+  channelsActionTypes,
+  FETCH_CHANNELS,
+  CREATE_CHANNEL,
+  UPDATE_CHANNEL,
+  DELETE_CHANNEL,
+  OPEN_CHANNEL,
+} from './channels.action-types';
 
-// API actions
-export const FETCH_CHANNELS = '[API] FETCH_CHANNELS';
-export const CREATE_CHANNEL = '[API] CREATE_CHANNEL';
-export const DELETE_CHANNEL = '[API] DELETE_CHANNEL';
-
-// Channels actions
-export const SET_CHANNELS = '[CHANNELS] SET_CHANNELS';
-export const REMOVE_CHANNEL = '[CHANNELS] REMOVE_CHANNEL';
-
-interface setChannelsAction extends Action {
-  payload: IChannel[];
-  type: typeof SET_CHANNELS;
-}
-
-interface removeChannelAction extends Action {
-  payload: string;
-  type: typeof REMOVE_CHANNEL;
-}
-
-export type channelsActionTypes = setChannelsAction | removeChannelAction;
-
-export const fetchChannelsActions = apiActionsCreator(FETCH_CHANNELS);
-export const createChannelActions = apiActionsCreator(CREATE_CHANNEL);
-export const deleteChannelActions = apiActionsCreator(DELETE_CHANNEL);
-
-export function setChannelsAction(channels: IChannel[]): channelsActionTypes {
+export function fetchChannelsAction(channels: IChannel[]): channelsActionTypes {
   return {
+    type: FETCH_CHANNELS,
     payload: channels,
-    type: SET_CHANNELS,
   };
 }
 
-export function removeChannelAction(cid: string): channelsActionTypes {
+export function createChannelAction(channel: IChannel): channelsActionTypes {
   return {
+    type: CREATE_CHANNEL,
+    payload: channel,
+  };
+}
+
+export function updateChannelAction(channel: IChannel): channelsActionTypes {
+  return {
+    type: UPDATE_CHANNEL,
+    payload: channel,
+  };
+}
+
+export function deleteChannelAction(cid: string): channelsActionTypes {
+  return {
+    type: DELETE_CHANNEL,
     payload: cid,
-    type: REMOVE_CHANNEL,
+  };
+}
+
+export function openChannelAction(cid: string): channelsActionTypes {
+  return {
+    type: OPEN_CHANNEL,
+    payload: cid,
   };
 }

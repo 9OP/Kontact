@@ -1,25 +1,12 @@
-import {
-  signin,
-  signup,
-  signout,
-  whoami,
-} from './effects/auth.effects';
-import {
-  selectUser,
-  signinSelectors,
-  signupSelectors,
-  signoutSelectors,
-  whoamiSelectors,
-} from '../store/authentication/auth.selectors';
+import { signin, signout, whoami } from './effects/auth.effects';
+import { selectUser, selectRole } from '../store/authentication/auth.selectors';
 
 export default {
+  // actions
   signin,
-  signup,
   signout,
   whoami,
+  // selectors
   selectUser,
-  signinSelectors,
-  signupSelectors,
-  signoutSelectors,
-  whoamiSelectors,
+  selectRole,
 };

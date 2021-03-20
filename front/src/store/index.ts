@@ -10,10 +10,8 @@ import {
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 // Reducers
-import apiReducer from './api/api.reducer';
 import authReducer from './authentication/auth.reducer';
 import entitiesReducer from './entities';
-import uiReducer from './ui';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
   trace: true, // (action) => { return ‘trace as string’; }
@@ -24,10 +22,8 @@ const middlewares = [thunk];
 export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
 export const rootReducer = combineReducers({
-  auth: authReducer,
+  authentication: authReducer,
   entities: entitiesReducer,
-  ui: uiReducer,
-  api: apiReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

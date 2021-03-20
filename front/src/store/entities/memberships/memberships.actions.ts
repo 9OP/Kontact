@@ -1,27 +1,38 @@
-import { Action } from 'redux';
 import { IMembership } from '../../../common/models';
-// import { apiActionsCreator } from '../api/api.actions';
+import {
+  membershipsActionTypes,
+  FETCH_MEMBERSHIPS,
+  CREATE_MEMBER,
+  UPDATE_MEMBER,
+  DELETE_MEMBER,
+} from './memberships.action-types';
 
-// API actions
-// ADD_MEMBER
-// UPDATE_MEMBER
-// DELETE_MEMBER
-
-// Memberships actions
-export const SET_MEMBERSHIPS = '[MEMBERSHIPS] SET_MEMBERSHIPS';
-
-interface setMembershipsAction extends Action {
-  payload: IMembership[];
-  type: typeof SET_MEMBERSHIPS;
-}
-
-export type membershipsActionTypes = setMembershipsAction;
-
-export function setMembershipsAction(
+export function fetchMembershipsAction(
   memberships: IMembership[],
 ): membershipsActionTypes {
   return {
+    type: FETCH_MEMBERSHIPS,
     payload: memberships,
-    type: SET_MEMBERSHIPS,
+  };
+}
+
+export function createMemberAction(membership: IMembership): membershipsActionTypes {
+  return {
+    type: CREATE_MEMBER,
+    payload: membership,
+  };
+}
+
+export function updateMemberAction(membership: IMembership): membershipsActionTypes {
+  return {
+    type: UPDATE_MEMBER,
+    payload: membership,
+  };
+}
+
+export function deleteMemberAction(uid: string): membershipsActionTypes {
+  return {
+    type: DELETE_MEMBER,
+    payload: uid,
   };
 }

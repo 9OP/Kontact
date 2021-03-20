@@ -1,7 +1,12 @@
 import React from 'react';
 import {
-  Button, ModalBody, ModalFooter, ModalCloseButton,
-  Modal, ModalOverlay, ModalContent, ModalHeader,
+  Button,
+  ModalBody,
+  ModalFooter,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
 } from '@chakra-ui/react';
 
 interface Props {
@@ -23,16 +28,16 @@ export default (props: Props): JSX.Element => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{header}</ModalHeader>
-        <ModalCloseButton />
+
         <ModalBody>
           {body}
         </ModalBody>
 
         <ModalFooter>
-          <Button variant="ghost" mr={3} onClick={onClose}>
+          <Button mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="teal" variant="outline" onClick={onSubmit}>{action}</Button>
+          <Button colorScheme="teal" variant="solid" onClick={onSubmit}>{action}</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

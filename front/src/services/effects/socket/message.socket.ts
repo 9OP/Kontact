@@ -26,6 +26,3 @@ export interface response {
 
 export const receive = beaconHandler('message:receive');
 export const send = beaconEmitter('message:send');
-
-export const receiveBatch = beaconHandler('messages:receive');
-export const fetch = beaconEmitter('messages:fetch');
