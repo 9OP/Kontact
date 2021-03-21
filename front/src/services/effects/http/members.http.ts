@@ -17,8 +17,9 @@ export const fetchMembers = async (cid: string): Promise<IMember[]> => {
   return JsonToMembers(res.members);
 };
 
-export const createMember = async (cid: string, uid: string): Promise<void> => {
-  await back.post({ route: `channel/${cid}/membership/${uid}` });
+export const createMember = async (cid: string, uid: string): Promise<IMember> => {
+  const res = await back.post({ route: `channel/${cid}/membership/${uid}` });
+  return JsonToMember(res);
 };
 
 export const deleteMember = async (cid: string, uid: string): Promise<void> => {

@@ -7,7 +7,7 @@ import {
   authDataManager,
 } from '../../../../services';
 import MembersView from './members.view';
-import { ERole, IChannel, IMember } from '../../../../common/models';
+import { ERole, IMember } from '../../../../common/models';
 
 const mapState = (state: RootState) => ({
   channel: channelDataManager.selectOpenedChannel(state),
@@ -17,8 +17,8 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: DispThunk) => ({
   fetchMembers: (cid: string) => dispatch(membersDataManager.fetchMembers(cid)),
-  deleteMember: (channel: IChannel, member: IMember) => {
-    dispatch(membersDataManager.deleteMember(channel, member));
+  deleteMember: (cid: string, uid: string) => {
+    dispatch(membersDataManager.deleteMember(cid, uid));
   },
   updateMember: (cid: string, uid: string, role: ERole) => {
     dispatch(membersDataManager.updateMember(cid, uid, role));
@@ -46,7 +46,7 @@ const Message = (props: Props): JSX.Element => {
     <MembersView
       isMaster={isMaster}
       members={members}
-      deleteMember={(member: IMember) => deleteMember(channel, member)}
+      deleteMember={(member: IMember) => deleteMember(channel.id, member.id)}
     />
   );
 };

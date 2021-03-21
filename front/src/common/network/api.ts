@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
+import { emit, toast } from '../../components/toast';
+import { store } from '../../store';
+import { resetUserAction } from '../../store/authentication/auth.actions';
+import LES from '../localStorage';
 
 type headersType = { [key: string]: string };
 type handlerType = (res: Response) => Promise<any>;
@@ -48,7 +52,7 @@ class Api {
       },
       body: JSON.stringify(param.payload),
       credentials: 'include',
-    }).then(this.handler);
+    }).then(this.handler.bind(this));
   }
 
   async post(param: paramsType): Promise<any> {
@@ -86,13 +90,20 @@ class Api {
 const BACKEND = process.env.REACT_APP_BASE_URL as string;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function backendHandler(response: Response): Promise<any> {
+async function backendHandler(this: Api, response: Response): Promise<any> {
   const json = await response.json();
   if (!response.ok) {
-    // discriminate type of errors
-    // console.log(json);
+    switch (json.app_code) {
+      case 421: // UNAUTHORIZED - token expired
+        LES.clear();
+        this.authorization = null;
+        store.dispatch(resetUserAction());
+        emit(toast.auth_token_expired());
+        break;
 
-    throw Error(json.description || response.statusText);
+      default:
+        throw Error(json.description || response.statusText);
+    }
   }
   return json;
 }

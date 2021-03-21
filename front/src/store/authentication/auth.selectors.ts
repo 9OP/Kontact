@@ -4,6 +4,8 @@ import { IAuth, ERole } from '../../common/models';
 
 export const selectUser = (state: RootState): IAuth => state.authentication;
 
+export const isAuthenticated = (state: RootState): boolean => !(state.authentication === null);
+
 export const selectRole = (state: RootState): ERole => {
   const uid = selectUser(state).id;
   return state.entities.members?.byId?.[uid]?.role || ERole.Member;

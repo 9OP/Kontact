@@ -3,27 +3,25 @@ import React, { useEffect } from 'react';
 import { RouteProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Guard from './guard';
-import { selectUser } from '../../store/authentication/auth.selectors';
+import { isAuthenticated } from '../../store/authentication/auth.selectors';
 import * as authEffect from '../../services/effects/auth.effects';
 import { LOGIN_PATH } from '../constants';
 
 export default (props: RouteProps): JSX.Element => {
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
-
-  const isAuthenticated = !(user === null);
+  const authenticated = useSelector(isAuthenticated);
 
   useEffect(() => {
-    if (user === null) {
+    if (!authenticated) {
       dispatch(authEffect.whoami());
     }
-  }, [user]);
+  }, [authenticated]);
 
   return (
     <Guard
       {...props}
       fallbackPath={LOGIN_PATH}
-      isAllowed={isAuthenticated}
+      isAllowed={authenticated}
     />
   );
 };

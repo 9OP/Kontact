@@ -72,6 +72,9 @@ export default (props: Props): JSX.Element => {
               </Text>
               {renderRole()}
             </HStack>
+            <Text fontSize="xs" color="gray.500">
+              {`#${member.id?.slice(0, 5)}`}
+            </Text>
             <Text fontSize="sm" color="gray.600">
               {member.email}
             </Text>

@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Text,
-  IconButton,
-  HStack,
-  VStack,
   useDisclosure,
   List,
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
 import { IMember } from '../../../../common/models';
-import ItemView from './item/item.view';
+import Header from './header/header.view';
+import Item from './item/item.view';
 import Info from './info/info';
 
 interface Props {
@@ -30,7 +26,7 @@ export default (props: Props): JSX.Element => {
   };
 
   const renderMembers = () => members.map((member: IMember) => (
-    <ItemView
+    <Item
       key={member.id}
       isMaster={isMaster}
       member={member}
@@ -49,38 +45,7 @@ export default (props: Props): JSX.Element => {
       borderRadius={8}
       boxShadow="lg"
     >
-      <VStack
-        position="sticky"
-        top="0"
-        paddingTop="1rem"
-        paddingBottom=".5rem"
-        boxShadow="0px 10px 10px 5px white"
-        backgroundColor="white"
-        alignItems="inherit"
-      >
-        <HStack justifyContent="space-between">
-          <Text
-            letterSpacing=".1rem"
-            fontWeight="bold"
-            color="gray.700"
-            fontSize="md"
-          >
-            MEMBERS
-          </Text>
-          { isMaster ? (
-            <IconButton
-              size="xs"
-              colorScheme="blue"
-              variant="outline"
-              aria-label="Add member"
-              icon={<AddIcon />}
-            />
-          ) : null}
-        </HStack>
-        <Text color="gray.500" fontSize="xs">
-          {`${members.length}/${members.length}`}
-        </Text>
-      </VStack>
+      <Header isMaster={isMaster} />
 
       <List spacing={8} marginY="2rem">
         {members ? renderMembers() : null}

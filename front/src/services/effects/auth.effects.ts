@@ -1,17 +1,13 @@
 import { AppThunk } from '../../store';
-import {
-  setUserAction,
-  resetUserAction,
-} from '../../store/authentication/auth.actions';
+import { setUserAction, resetUserAction } from '../../store/authentication/auth.actions';
 import { authHttpService } from './http';
 import { toast, emit } from '../../components/toast';
 
-export const signin = (email: string, password: string): AppThunk => async (
-  dispatch,
-) => {
+export const signin = (email: string, password: string): AppThunk => async (dispatch) => {
   try {
     const user = await authHttpService.signin(email, password);
     dispatch(setUserAction(user));
+    emit(toast.auth_signin(user));
   } catch (err) {
     dispatch(resetUserAction());
   }
