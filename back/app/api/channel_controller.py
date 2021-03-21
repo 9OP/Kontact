@@ -53,9 +53,10 @@ def show(cid):
 @authentication
 @require(role=Role.MASTER)
 def destroy(cid):
-    channel = Channel.find_one(id=cid)
-    channel.destroy()
-    return render(f"Channel {channel.name} deleted")
+    channel = Channel.find(id=cid)
+    if channel:
+        channel.destroy()
+    return render(f"Channel <{cid}> deleted")
 
 
 @authentication
