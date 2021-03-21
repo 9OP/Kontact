@@ -66,8 +66,13 @@ def memberships():
     return render([m.summary("channel") for m in memberships])
 
 
-# def update(cid):
-#     pass
+@authentication
+@require(role=Role.MASTER)
+def update(cid):
+    params = validator(request.json, CHANNEL_SCHEMA)
+    channel = Channel.find(id=cid)
+    channel.update(name=params["name"])
+    return render(channel.summary())
 
 
 @authentication

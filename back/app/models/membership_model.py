@@ -20,15 +20,20 @@ class Membership(db.Model, Support):
 
     user = db.relationship(
         "User",
+        lazy=False,
         backref=backref(
             "user_memberships",
+            lazy=False,
             cascade="all, delete-orphan",
         ),
     )
+
     channel = db.relationship(
         "Channel",
+        lazy=False,
         backref=backref(
             "channel_memberships",
+            lazy=False,
             cascade="all, delete-orphan",
         ),
     )

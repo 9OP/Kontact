@@ -23,7 +23,6 @@ class User(db.Model, Support):
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     access = db.Column(db.Integer, nullable=False, default=Access.USER.value)
-
     tokens = db.relationship("UserToken", backref="user", lazy=True)
     channels = association_proxy("user_memberships", "channel")
 

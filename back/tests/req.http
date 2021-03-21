@@ -93,6 +93,15 @@ POST {{host}}/channel/{{cid}}/membership/{{uid}}
 Content-Type: {{contentType}}
 Authorization: Bearer {{token}}
 
+### Update channel name
+PUT {{host}}/channel/{{cid}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+    "name": "modified-channel"
+}
+
 ### Get a channel members
 GET {{host}}/channel/{{cid}}
 Authorization: Bearer {{token}}

@@ -1,3 +1,4 @@
+from sqlalchemy.orm import backref
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.dialects.postgresql import UUID
