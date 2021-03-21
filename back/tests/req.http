@@ -5,7 +5,7 @@
 
 
 
-### Signup
+### Signup - User
 POST {{host}}/auth/signup
 Content-Type: {{contentType}}
 
@@ -16,7 +16,17 @@ Content-Type: {{contentType}}
 }
 
 
-### Signin
+### Signin - Admin
+# @name login
+POST {{host}}/auth/signin
+Content-Type: {{contentType}}
+
+{
+    "email": "admin@mail.com",
+    "password": "Abc123*"
+}
+
+### Signin - User
 # @name login
 POST {{host}}/auth/signin
 Content-Type: {{contentType}}
@@ -53,7 +63,6 @@ GET {{host}}/user
 Authorization: Bearer {{token}}
 
 ### Create channel
-# @name channel
 POST {{host}}/channel
 Content-Type: {{contentType}}
 Authorization: Bearer {{token}}
@@ -62,17 +71,25 @@ Authorization: Bearer {{token}}
     "name": "Channel-0"
 }
 
-###
-@cid = {{channel.response.body.id}}
+
 
 ### Get all channels
+# @name channel
 GET {{host}}/channel
+# Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+###
+@cid = {{channel.response.body.0.id}}
+
+### Get all user memberships
+GET {{host}}/channel/memberships
 # Content-Type: {{contentType}}
 Authorization: Bearer {{token}}
 
 
 ### Add user to channel
-POST {{host}}/channel/{{cid}}/membership/1
+POST {{host}}/channel/{{cid}}/membership/{{uid}}
 Content-Type: {{contentType}}
 Authorization: Bearer {{token}}
 
@@ -86,4 +103,8 @@ Authorization: Bearer {{token}}
 
 ### Destroy member
 DELETE {{host}}/channel/{{cid}}/membership/{{uid}}
+Authorization: Bearer {{token}}
+
+### Search users
+GET {{host}}/user/search?name=mi
 Authorization: Bearer {{token}}

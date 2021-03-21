@@ -39,6 +39,8 @@ auth_api.route("/signin", methods=["POST"])(auth.signin)
 auth_api.route("/signout", methods=["POST"])(auth.signout)
 auth_api.route("/whoami", methods=["GET"])(auth.whoami)
 auth_api.route("/key", methods=["GET"])(auth.key)
+# auth_api.route("/change_password", methods=["POST"])(change_password)
+# auth_api.route("/forgot_password", methods=["POST"])(forgot_password)
 
 
 # [User] blueprint
@@ -47,8 +49,7 @@ import app.api.user_controller as user
 user_api = Blueprint("user_api", __name__, url_prefix="/user")
 user_api.route("", methods=["GET"])(user.index)
 user_api.route("/<uid>", methods=["GET"])(user.show)
-# user_api.route("/change_password", methods=["POST"])(change_password)
-# user_api.route("/forgot_password", methods=["POST"])(forgot_password)
+user_api.route("/search", methods=["GET"])(user.search)
 
 
 # [Channel] blueprint
@@ -62,5 +63,5 @@ channel_api.route("/<cid>", methods=["DELETE"])(channel.destroy)
 channel_api.route("/memberships", methods=["GET"])(channel.memberships)
 # channel_api.route("/<cid>", methods=["PUT"])(channel.update)
 channel_api.route("/<cid>/membership/<uid>", methods=["POST"])(channel.add_member)
-channel_api.route("/<cid>/membership/<uid>", methods=["DELETE"])(channel.del_member)
+channel_api.route("/<cid>/membership/<uid>", methods=["DELETE"])(channel.delete_member)
 channel_api.route("/<cid>/membership/<uid>", methods=["PUT"])(channel.update_member)

@@ -87,3 +87,8 @@ class Support(TimestampMixin):
             return cls.__find(**kwargs).one()
         except sql_exc.SQLAlchemyError:  # Found none or multiple
             raise apr.NotFound(cls.__tablename__)
+
+    @classmethod
+    def search(cls, **kwargs):
+        filters = [getattr(cls, col).ilike(f"%{val}%") for col, val in kwargs.items()]
+        return cls.query.filter(*filters).all()

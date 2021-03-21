@@ -74,18 +74,17 @@ def memberships():
 def add_member(cid, uid):
     channel = Channel.find_one(id=cid)
     user = User.find_one(id=uid)
-    Membership.create(user=user, channel=channel)
-    return render(f"{user.name} added to {channel.name}", code=201)
+    membership = Membership.create(user=user, channel=channel)
+    return render(membership.summary("user"), code=201)
 
 
 @authentication
 @require(role=Role.MASTER)
-def del_member(cid, uid):
-    channel = Channel.find_one(id=cid)
-    user = User.find_one(id=uid)
-    membership = Membership.find_one(user_id=user.id, channel_id=channel.id)
-    membership.destroy()
-    return render(f"Member {user.name} deleted from channel {channel.name}")
+def delete_member(cid, uid):
+    membership = Membership.find(user_id=uid, channel_id=cid)
+    if membership:
+        membership.destroy()
+    return render(f"Membership <{cid}, {uid}> deleted.")
 
 
 @authentication
