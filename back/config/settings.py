@@ -31,7 +31,7 @@ class DevConfig(Config):
 
 class TestConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_DATABASE_URI = "postgresql://tester:secret@db:5432/kontact_test"
+    SQLALCHEMY_DATABASE_URI = "postgresql://tester:secret@localhost:5432/kontact_test"
 
 
 conf = {

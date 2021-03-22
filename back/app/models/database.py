@@ -52,9 +52,9 @@ class Support(TimestampMixin):
             raise apr.AlreadyExists(cls.__tablename__)
 
     def update(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
         try:
+            for k, v in kwargs.items():
+                setattr(self, k, v)
             db.session.commit()
             return self
         except sql_exc.IntegrityError:

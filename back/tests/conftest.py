@@ -1,4 +1,5 @@
 import pytest
+import tests.factories as factory
 from app import create_app
 from app.models.database import db
 from app.models import (
@@ -29,7 +30,7 @@ def initdb(app):
     db.session.commit()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function", autouse=True)
 def cleandb(initdb):
     db.drop_all()
     db.create_all()
@@ -87,3 +88,28 @@ def make_membership(initdb):
 
     yield _make_membership
     # teardown
+
+
+@pytest.fixture
+def _user(make_user):
+    user_data = factory.user()
+    return make_user(**user_data), user_data
+
+
+@pytest.fixture
+def _token(make_user, make_token):
+    user = make_user(**factory.user())
+    return make_token(user_id=user.id), user
+
+
+@pytest.fixture
+def _channel(make_channel):
+    channel_data = factory.channel()
+    return make_channel(**channel_data), channel_data
+
+
+@pytest.fixture
+def _membership(make_membership, make_channel, make_user):
+    user = make_user(**factory.user())
+    channel = make_channel(**factory.channel())
+    return make_membership(user_id=user.id, channel_id=channel.id), user, channel

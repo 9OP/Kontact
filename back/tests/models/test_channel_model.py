@@ -1,84 +1,86 @@
 import pytest
 import app.api_responses as api_res
-from app.models.membership_model import Role
-from tests.conftest import Channel, Membership
-from tests.factories import channel_factory, user_factory
+from sqlalchemy.exc import IntegrityError
 
 
-@pytest.mark.usefixtures("cleandb")
-class ChannelModelSuite:
-    @pytest.fixture(autouse=True)
-    def setup(self, make_channel, make_user, make_membership):
-        self.make_user = make_user
-        self.make_channel = make_channel
-        self.make_membership = make_membership
+def test_define(_channel):
+    """
+    GIVEN a Channel model
+    WHEN a Channel is fetched
+    THEN attrs are correct
+    """
+    channel, channel_data = _channel
+    assert channel.name == channel_data["name"]
 
-    def test_define(self):
-        """
-        GIVEN a Channel model
-        WHEN a Channel is fetched
-        THEN attrs are correct
-        """
-        channel_data = channel_factory()
-        channel = self.make_channel(**channel_data)
-        assert channel.name == channel_data["name"]
 
-    def test_repr(self):
-        """
-        GIVEN a channel instance
-        WHEN repr
-        THEN returns channel name
-        """
-        channel_data = channel_factory()
-        channel = self.make_channel(**channel_data)
-        assert channel.__repr__() == f"<channel: {channel_data['name']}>"
+def test_repr(_channel):
+    """
+    GIVEN a channel instance
+    WHEN repr
+    THEN returns channel name
+    """
+    channel, channel_data = _channel
+    assert channel.__repr__() == f"<channel: {channel_data['name']}>"
 
-    def test_summary(self):
-        """
-        GIVEN a channel instance
-        WHEN is summarized
-        THEN returns id, name, created_at and members
-        """
-        user = self.make_user(**user_factory())
-        channel = self.make_channel(**channel_factory())
-        membership = self.make_membership(user_id=user.id, channel_id=channel.id)
-        assert channel.summary() == {
-            "id": channel.id,
-            "name": channel.name,
-            "created_at": channel.created_at,
-            "members": [
-                {
-                    "id": user.id,
-                    "email": user.email,
-                    "role": Role(membership.role).name,
-                    "name": user.name,
-                    "joined_at": membership.created_at,
-                }
-            ],
-        }
 
-    def test_short(self):
-        """
-        GIVEN a channel instance
-        WHEN is short summarized
-        THEN returns id, name, created_at and members_count
-        """
-        channel = self.make_channel(**channel_factory())
-        assert channel.short() == {
-            "id": channel.id,
-            "name": channel.name,
-            "created_at": channel.created_at,
-            "members_count": channel.members_count,
-        }
+def test_summary_verbose(_membership):
+    """
+    GIVEN a channel instance
+    WHEN is summarized with verbose True
+    THEN returns id, name, created_at, members_count and members
+    """
+    membership, user, channel = _membership
+    assert channel.summary(verbose=True) == {
+        "id": channel.id,
+        "name": channel.name,
+        "created_at": channel.created_at,
+        "members_count": channel.members_count,
+        "members": [
+            {
+                "id": user.id,
+                "email": user.email,
+                "role": membership.role,
+                "name": user.name,
+                "joined_at": membership.created_at,
+            }
+        ],
+    }
 
-    def test_members_count(self):
-        """
-        GIVEN a channel instance
-        WHEN add new members
-        THEN members_count increment
-        """
-        user = self.make_user(**user_factory())
-        channel = self.make_channel(**channel_factory())
-        assert channel.members_count == 0
-        self.make_membership(user_id=user.id, channel_id=channel.id)
-        assert channel.members_count == 1
+
+def test_summary(_channel):
+    """
+    GIVEN a channel instance
+    WHEN is summarized with verbose False
+    THEN returns id, name, created_at and members_count
+    """
+    channel, _ = _channel
+    assert channel.summary(verbose=False) == {
+        "id": channel.id,
+        "name": channel.name,
+        "created_at": channel.created_at,
+        "members_count": channel.members_count,
+    }
+
+
+def test_members_count(_user, _channel, make_membership):
+    """
+    GIVEN a channel instance
+    WHEN add new members
+    THEN members_count increment
+    """
+    user, _ = _user
+    channel, _ = _channel
+    assert channel.members_count == 0
+    make_membership(user_id=user.id, channel_id=channel.id)
+    assert channel.members_count == 1
+
+
+def test_channel_uniqueness(_channel, make_channel):
+    """
+    GIVEN a channel instance
+    WHEN creating a new channel with existing name
+    THEN raise IntegrityError
+    """
+    _, channel_data = _channel
+    with pytest.raises(IntegrityError):
+        make_channel(**channel_data)
