@@ -17,7 +17,12 @@ def create_app(settings_override=None):
     app.json_encoder = JSON_Improved
     db.init_app(app)
     Migrate(app, db)
-    CORS(app, supports_credentials=True)
+    CORS(
+        app,
+        supports_credentials=True,
+        origins="http://localhost:3000",
+        # vary_header=False,
+    )
     Talisman(app, force_https=False)
 
     with app.app_context():

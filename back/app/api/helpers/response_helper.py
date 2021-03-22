@@ -1,5 +1,6 @@
 from flask import request, json, jsonify
 import app.api_responses as apr
+import re
 
 
 def handler(exc):
@@ -23,3 +24,9 @@ def render(data=None, code=200, cookie=None):
 def expect_mimetype(mimetype="application/json", methods=["POST", "PUT"]):
     if request.headers.get("Content-Type") != mimetype and request.method in methods:
         raise apr.ApiError(description=f"Expect {mimetype} mimetype.")
+
+
+def expect_referer():
+    referer = request.headers.get("Referer", "")
+    if not re.search(r"https?://(localhost:3000).*", referer):
+        raise apr.AuthError(description="Private API.")

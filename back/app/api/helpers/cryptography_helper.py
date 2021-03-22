@@ -1,36 +1,27 @@
-import base64
-import os
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from config.settings import Config
-import app.api_responses as apr
+from base64 import b64encode, b64decode
+from os import urandom
 
 
-def key(salt: bytes) -> bytes:
-    password = Config.SECRET_KEY.encode()
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-    )
-    return base64.urlsafe_b64encode(kdf.derive(password))
+def bxor(b1: bytes, b2: bytes) -> bytes:
+    return bytes([a ^ b for a, b in zip(b1, b2)])
 
 
-def encrypt(message: str) -> str:
-    salt = base64.b16encode(os.urandom(16))
-    try:
-        encrypted = Fernet(key(salt)).encrypt(message.encode())
-    except:
-        raise apr.AuthError(description="Cannot encrypt csrf cookie.")
-    return f"{salt.decode()}.{encrypted.decode()}"
+def to_base64(x: bytes) -> str:
+    return b64encode(x).decode()
 
 
-def decrypt(message: str) -> str:
-    salt, token = message.split(".", 1)
-    try:
-        decrypted = Fernet(key(salt.encode())).decrypt(token.encode())
-    except:
-        raise apr.AuthError(description="Csrf cookie is invalid.")
-    return decrypted.decode()
+def from_base64(s: str) -> bytes:
+    return b64decode(s.encode())
+
+
+def key_gen(ln=16) -> str:
+    return b64encode(urandom(ln)).decode()
+
+
+def enc(token: bytes) -> tuple[str, str]:
+    secret = urandom(len(token))
+    return to_base64(bxor(token, secret)), to_base64(secret)
+
+
+def dec(enc_token: str, secret: str) -> bytes:
+    return bxor(from_base64(enc_token), from_base64(secret))

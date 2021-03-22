@@ -29,7 +29,7 @@ class UserToken(db.Model, Support):
             payload,
             Config.SECRET_KEY,
             algorithm="HS512",
-        ).decode("utf-8")
+        )
 
     @classmethod
     def decode(cls, token):

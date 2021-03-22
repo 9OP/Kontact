@@ -1,9 +1,6 @@
-from os import urandom
-from base64 import b64encode
-
 from flask import request, g, session
 from app.models import User, UserToken
-from app.api.helpers import validator, render
+from app.api.helpers import validator, render, enc, key_gen
 from app.api.middlewares import authentication
 import app.api_responses as apr
 
@@ -59,16 +56,21 @@ def signin():
     if not user or not user.check_password(params["password"]):
         raise apr.LoginFailed()
 
-    token = UserToken.create(user_id=user.id)
+    token = UserToken.create(user_id=user.id).encode()
+    enc_token, secret = enc(token)
+
     user_data = user.summary()
-    user_data["token"] = token.encode()
-    session["local_storage_key"] = b64encode(urandom(16)).decode()
+    user_data["token"] = enc_token
+    session["token_secret"] = secret
+    session["local_storage_key"] = key_gen()
     return render(user_data)
 
 
 @authentication
 def signout():
     g.auth_token.revoke()
+    session.pop("token_secret", None)
+    session.pop("local_storage_key", None)
     return render("Signout successfully.")
 
 
