@@ -59,6 +59,7 @@ Authorization: Bearer {{token}}
 ### Signout user
 POST {{host}}/auth/signout
 Content-Type: {{contentType}}
+Referer: {{origin}}
 Authorization: Bearer {{token}}
 
 ### Get all users

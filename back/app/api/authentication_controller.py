@@ -1,7 +1,7 @@
 from flask import request, g, session
 from app.models import User, UserToken
-from app.api.helpers import validator, render, enc, key_gen
-from app.api.middlewares import authentication
+from app.api.helpers import validator, render, key_gen
+from app.api.middlewares import gate
 import app.api_responses as apr
 
 _EMAIL_SCHEMA = {
@@ -57,29 +57,26 @@ def signin():
         raise apr.LoginFailed()
 
     token = UserToken.create(user_id=user.id).encode()
-    enc_token, secret = enc(token)
-
     user_data = user.summary()
-    user_data["token"] = enc_token
-    session["token_secret"] = secret
-    session["local_storage_key"] = key_gen()
+    user_data["token"] = token
+    session["user_id"] = user.id
+    session["les_key"] = key_gen()
     return render(user_data)
 
 
-@authentication
+@gate()
 def signout():
     g.auth_token.revoke()
-    session.pop("token_secret", None)
-    session.pop("local_storage_key", None)
+    session.clear()
     return render("Signout successfully.")
 
 
-@authentication
+@gate(delegation=True)
 def whoami():
     user_data = g.current_user.summary()
     return render(user_data)
 
 
 def key():
-    key = session.get("local_storage_key")
+    key = session.get("les_key")
     return render({"key": key})
