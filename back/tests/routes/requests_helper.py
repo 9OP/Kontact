@@ -4,6 +4,41 @@ import datetime
 from flask import json
 from tests.conftest import UserToken
 
+base_headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+}
+
+
+def payload(data={}, headers={}):
+    return {
+        "headers": {**base_headers, **headers},
+        "data": json.dumps(data),
+    }
+
+
+def expect_success(response, expected={}, code=200):
+    def fmt(x):
+        return json.loads(json.dumps(x))
+
+    data = json.loads(response.data)
+    assert response.status_code == code
+
+    if isinstance(expected, dict):
+        expected = fmt(expected)
+        assert expected.items() <= data.items()
+
+    if isinstance(expected, list):
+        expected = [fmt(exp) for exp in expected]
+        assert len(data) == len(expected)
+        assert all([a == b for a, b in zip(data, expected)])
+
+
+def expect_failure(response, expected={}, code=400):
+    data = json.loads(response.data)
+    assert response.status_code == code
+    assert expected.items() <= data.items()
+
 
 class RequestsHelper:
     headers = {}
@@ -43,29 +78,6 @@ class RequestsHelper:
 
         self.mock = monkeypatch.setattr
         self.headers = {}
-
-    @staticmethod
-    def expect_success(response, expected={}, code=200):
-        def fmt(x):
-            return json.loads(json.dumps(x))
-
-        data = json.loads(response.data)
-        assert response.status_code == code
-
-        if isinstance(expected, dict):
-            expected = fmt(expected)
-            assert expected.items() <= data.items()
-
-        if isinstance(expected, list):
-            expected = [fmt(exp) for exp in expected]
-            assert len(data) == len(expected)
-            assert all([a == b for a, b in zip(data, expected)])
-
-    @staticmethod
-    def expect_failure(response, expected={}, code=400):
-        data = json.loads(response.data)
-        assert response.status_code == code
-        assert expected.items() <= data.items()
 
     def login(self, user_id):
         token = UserToken.create(user_id=user_id)

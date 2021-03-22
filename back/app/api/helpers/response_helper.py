@@ -1,4 +1,4 @@
-from flask import request, json, jsonify
+from flask import request, json, jsonify, current_app
 import app.api_responses as apr
 import re
 
@@ -28,5 +28,6 @@ def expect_mimetype(mimetype="application/json", methods=["POST", "PUT"]):
 
 def expect_referer():
     referer = request.headers.get("Referer", "")
-    if not re.search(r"https?://(localhost:3000).*", referer):
+    policy = current_app.config.get("REFERER")
+    if not re.search(r"{ref}.*".format(ref=policy), referer):
         raise apr.AuthError(description="Private API.")

@@ -16,7 +16,7 @@ def gate(**gkwargs):
 
             for rule, control in control_switcher.items():
                 if rule in gkwargs.keys():
-                    control(rule=gkwargs[rule], **kwargs)
+                    control(**{rule: gkwargs[rule]}, **kwargs)
 
             return func(*args, **kwargs)
 

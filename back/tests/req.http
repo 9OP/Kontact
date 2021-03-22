@@ -66,11 +66,13 @@ Authorization: Bearer {{token}}
 GET {{host}}/user
 # Content-Type: {{contentType}}
 Authorization: Bearer {{token}}
+Referer: {{origin}}
 
 ### Create channel
 POST {{host}}/channel
 Content-Type: {{contentType}}
 Authorization: Bearer {{token}}
+Referer: {{origin}}
 
 {
     "name": "Channel-0"

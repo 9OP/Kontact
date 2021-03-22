@@ -20,8 +20,7 @@ def create_app(settings_override=None):
     CORS(
         app,
         supports_credentials=True,
-        origins="http://localhost:3000",
-        # vary_header=False,
+        origins=app.config.get("CORS_ORIGINS"),
     )
     Talisman(app, force_https=False)
 
