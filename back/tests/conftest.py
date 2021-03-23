@@ -10,7 +10,7 @@ from app.models import (
 )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def app():
     app = create_app("testing")
     with app.app_context():
@@ -22,7 +22,7 @@ def client(app):
     return app.test_client()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def initdb(app):
     db.init_app(app)
     db.drop_all()
