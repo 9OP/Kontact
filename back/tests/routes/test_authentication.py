@@ -1,200 +1,186 @@
 import pytest
-from app.models.user_model import Access
+import app.api_responses as apr
+from app.models import Access
 from tests.routes.requests_helper import (
-    RequestsHelper,
     expect_failure,
     expect_success,
     payload,
+    mock_token,
+    loggin_user,
 )
-from tests.conftest import UserToken
-from tests.factories import user_factory
-import json
 
 
-def stub_encode(*args, **kwargs):
-    return "mocked_token"
+class TestAuthSignup:
+    def test_signup(self, client):
+        """
+        GIVEN a user input
+        WHEN POST /auth/signup
+        THEN returns user + 201
+        """
+        user_data = {
+            "name": "martin",
+            "email": "MARTIN@mail.com",
+            "password": "Abc123*",
+        }
+        response = client.post("/auth/signup", **payload(user_data))
+        expect_success(
+            response,
+            {
+                "name": user_data["name"],
+                "email": user_data["email"].lower(),
+                "access": Access.USER,
+                "channels_count": 0,
+            },
+            code=201,
+        )
 
+    def test_fail_already_registered(self, client, _user):
+        """
+        GIVEN a user already registered
+        WHEN POST /auth/signup
+        THEN return 410
+        """
+        user, user_data = _user
+        response = client.post("/auth/signup", **payload(user_data))
+        expect_failure(response, {"app_code": 410}, code=400)
 
-# Generic controller test
-def test_fail_route(client):
-    """
-    GIVEN
-    WHEN call undefined route
-    THEN returns 405
-    """
-    response = client.get("/auth/signup")
-    expect_failure(response, {"app_code": 1000}, code=405)
-
-
-def test_signup(client):
-    """
-    GIVEN a user input
-    WHEN POST /auth/signup
-    THEN returns user + 201
-    """
-    user = {"name": "martin", "email": "martin@mail.com", "password": "Abc123*"}
-    response = client.post("/auth/signup", **payload(user))
-    expect_success(
-        response,
+    @pytest.mark.parametrize(
+        "case, user_data",
         {
-            "name": user["name"],
-            "email": user["email"],
-        },
-        code=201,
+            "no_params": {},
+            "missing_email_password": {"name": "Bob"},
+            "missing_password": {"name": "Bob", "email": "bob@mail.com"},
+            "missing_email": {"name": "Bob", "password": "Abc123*"},
+            "missing_name": {"email": "bob@mail.com", "password": "Abc123*"},
+            "missing_name_password": {"email": "bob@mail.com"},
+            "missing_name_email": {"password": "Abc123*"},
+            "weak_password": {
+                "name": "Bob",
+                "email": "bob@mail.com",
+                "password": "123",
+            },
+            "invalid_email": {
+                "name": "Bob",
+                "email": "notmail",
+                "password": "Abc123*",
+            },
+        }.items(),
     )
+    def test_fail_invalid_parameter(self, client, case, user_data):
+        """
+        GIVEN wrong inputs
+        WHEN POST /auth/signup
+        THEN return 411, 400
+        """
+        response = client.post("/auth/signup", **payload(user_data))
+        expect_failure(response, {"app_code": 411}, code=400)
 
 
-# @pytest.mark.usefixtures("cleandb")
-# class AuthenticationRequestsSuite(RequestsHelper):
-#     @pytest.fixture()
-#     def user(self, make_user):
-#         data = user_factory()
-#         user = make_user(**data)
-#         self.user_data = {
-#             "id": user.id,
-#             "name": user.name,
-#             "email": user.email,
-#             "access": Access(user.access).name,
-#         }
-#         self.args = {
-#             "email": data["email"],
-#             "password": data["password"],
-#             "name": data["name"],
-#         }
+class TestAuthSignin:
+    def test_signin(self, client, _user, mock_token):  # noqa: F811
+        """
+        GIVEN a user credentials
+        WHEN POST /auth/signin
+        THEN returns user + token + set session user_id
+        """
+        user, user_data = _user
+        response = client.post("/auth/signin", **payload(user_data))
+        expect_success(
+            response,
+            {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "access": user.access,
+                "token": "mocked_token",
+            },
+            code=200,
+        )
+        with client.session_transaction() as session:
+            assert session["user_id"] == user.id
 
-#     # Generic controller test
-#     def test_fail_route(self):
-#         """
-#         GIVEN
-#         WHEN call undefined route
-#         THEN returns 405
-#         """
-#         response = self.get("/auth/signup")
-#         RequestsHelper.expect_failure(response, {"app_code": 1000}, code=405)
+    @pytest.mark.parametrize(
+        "case, user_data",
+        {
+            "wrong_password": {"email": "bob@mail.com", "password": "*****"},
+            "wrong_email": {"email": "alice@mail.com", "password": "Abc123*"},
+        }.items(),
+    )
+    def test_fail_credentials(self, client, make_user, case, user_data):
+        """
+        GIVEN a user failed credentials
+        WHEN POST /auth/signin
+        THEN returns 419, 401
+        """
+        make_user(name="Bob", email="bob@mail.com", password="Abc123*")
+        response = client.post("/auth/signin", **payload(user_data))
+        expect_failure(response, {"app_code": 419}, code=401)
 
-#     # Generic controller test
-#     def test_fail_mimetypes(self, user):
-#         """
-#         GIVEN wrong mimetypes
-#         WHEN POST request
-#         THEN returns 400
-#         """
-#         self.base_headers = {}  # This removes Content-Type: application/json
-#         response = self.post("/auth/signin", self.args)
-#         RequestsHelper.expect_failure(response, {"app_code": 400})
+    @pytest.mark.parametrize(
+        "case, user_data",
+        {
+            "no_params": {},
+            "missing_email": {"password": "Abc123*"},
+            "missing_password": {"email": "bob@mail.com"},
+        }.items(),
+    )
+    def test_missing_credentials(self, client, make_user, case, user_data):
+        """
+        GIVEN incomplete credentials
+        WHEN POST /auth/signin
+        THEN returns 411, 400
+        """
+        make_user(name="Bob", email="bob@mail.com", password="Abc123*")
+        response = client.post("/auth/signin", **payload(user_data))
+        expect_failure(response, {"app_code": 411}, code=400)
 
-#     def test_signup(self):
-#         """
-#         GIVEN a user input
-#         WHEN POST /auth/signup
-#         THEN returns user + 201
-#         """
-#         user = user_factory()
-#         response = self.post("/auth/signup", user)
-#         RequestsHelper.expect_success(
-#             response,
-#             {
-#                 "name": user["name"],
-#                 "email": user["email"],
-#             },
-#             code=201,
-#         )
 
-#     def test_signup_fail_already_registered(self, user):
-#         """
-#         GIVEN a user already registered
-#         WHEN POST /auth/signup
-#         THEN returns 400
-#         """
-#         response = self.post("/auth/signup", self.args)
-#         RequestsHelper.expect_failure(response, {"app_code": 410})
+class TestAuthWhoami:  # test if delegation works
+    def test_whoami(self, client, loggin_user):  # noqa: F811
+        """
+        GIVEN a signed in user
+        WHEN GET /auth/whoami
+        THEN returns user data
+        """
+        user, token, _ = loggin_user
 
-#     def test_signup_fail_email_validation(self, user):
-#         """
-#         GIVEN wrong email
-#         WHEN POST /auth/signup
-#         THEN returns 400
-#         """
-#         args = {**self.args, "email": "notamail"}
-#         response = self.post("/auth/signup", args)
-#         RequestsHelper.expect_failure(response, {"app_code": 411})
+        response = client.get("/auth/whoami", **payload(token=token))
+        expect_success(
+            response,
+            {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "access": user.access,
+            },
+            code=200,
+        )
 
-#     def test_signup_fail_password_validation(self, user):
-#         """
-#         GIVEN weak password
-#         WHEN POST /auth/signup
-#         THEN returns 400
-#         """
-#         args = {**self.args, "password": "weak"}
-#         response = self.post("/auth/signup", args)
-#         RequestsHelper.expect_failure(response, {"app_code": 411})
 
-#     def test_signin(self, user):
-#         """
-#         GIVEN a registered user
-#         WHEN OST /auth/signin
-#         THEN returns authentication token
-#         """
-#         self.mock(UserToken, "encode", stub_encode)
-#         response = self.post("/auth/signin", self.args)
-#         RequestsHelper.expect_success(
-#             response, {**self.user_data, "token": "mocked_token"}
-#         )
+class TestAuthSignout:
+    def test_signout(self, client, loggin_user):  # noqa: F811
+        """
+        GIVEN a signed in user
+        WHEN GET /auth/signout
+        THEN signout user
+        """
+        user, token, _ = loggin_user
 
-#     def test_signin_fail_credentials(self, user):
-#         """
-#         GIVEN a registered user
-#         WHEN POST /auth/signin with wrong password
-#         THEN returns 401
-#         """
-#         response = self.post("/auth/signin", {**self.args, "password": "blublu"})
-#         RequestsHelper.expect_failure(response, {"app_code": 419}, code=401)
+        response = client.post("/auth/signout", **payload(token=token))
+        expect_success(response, code=200)
 
-#     def test_signout(self, user):
-#         """
-#         GIVEN a user registered
-#         WHEN POST /auth/signout
-#         THEN invalidate token + 200
-#         """
-#         token = self.login(self.user_data["id"])
-#         response = self.post("/auth/signout")
-#         RequestsHelper.expect_success(response, {"app_code": 200})
-#         assert token.revoked_at is not None
+        response = client.get("/auth/whoami", **payload(token=token))
+        expect_failure(response, {"app_code": 421}, code=401)
 
-#     # def test_signout_without_token(self):
-#     #     """
-#     #     GIVEN no user / no token
-#     #     WHEN POST /auth/signout
-#     #     THEN 200
-#     #     """
-#     #     response = self.post("/auth/signout")
-#     #     RequestsHelper.expect_success(response, {"app_code": 200})
 
-#     def test_whoami(self, user):
-#         """
-#         GIVEN a user registered
-#         WHEN POST /auth/whoami
-#         THEN return user info
-#         """
-#         self.login(self.user_data["id"])
-#         response = self.get("/auth/whoami")
-#         RequestsHelper.expect_success(response, self.user_data)
+class TestAuthKey:
+    def test_key(self, client, loggin_user):  # noqa: F811
+        """
+        GIVEN a signed in user
+        WHEN GET /auth/key
+        THEN return session les_key
+        """
+        user, token, session = loggin_user
 
-#     def test_authentication_missing_token(self):
-#         """
-#         GIVEN
-#         WHEN POST /auth/whoami without token
-#         THEN returns 401
-#         """
-#         response = self.get("/auth/whoami")
-#         RequestsHelper.expect_failure(response, {"app_code": 401}, code=401)
-
-#     def test_authentication_empty_token(self):
-#         """
-#         GIVEN
-#         WHEN POST /auth/whoami with none token
-#         THEN return 401
-#         """
-#         self.headers = {"Authorization": None}
-#         response = self.get("/auth/whoami")
-#         RequestsHelper.expect_failure(response, {"app_code": 420}, code=401)
+        response = client.get("/auth/key", **payload(token=token))
+        expect_success(response, {"key": session.get("les_key")}, code=200)

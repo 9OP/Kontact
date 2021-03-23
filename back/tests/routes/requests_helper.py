@@ -10,11 +10,32 @@ base_headers = {
 }
 
 
-def payload(data={}, headers={}):
+def payload(data={}, headers={}, token=""):
     return {
-        "headers": {**base_headers, **headers},
+        "headers": {
+            **base_headers,
+            **headers,
+            "Authorization": f"Bearer {token}",
+        },
         "data": json.dumps(data),
     }
+
+
+@pytest.fixture
+def mock_token(monkeypatch):
+    def mock(*args, **kwargs):
+        return "mocked_token"
+
+    monkeypatch.setattr(UserToken, "encode", mock)
+
+
+@pytest.fixture
+def loggin_user(client, _user):
+    user, user_data = _user
+    response = client.post("/auth/signin", **payload(user_data))
+    token = json.loads(response.data).get("token")
+    with client.session_transaction() as sess:  # next requests under same session
+        yield user, token, sess
 
 
 def expect_success(response, expected={}, code=200):
@@ -38,48 +59,3 @@ def expect_failure(response, expected={}, code=400):
     data = json.loads(response.data)
     assert response.status_code == code
     assert expected.items() <= data.items()
-
-
-class RequestsHelper:
-    headers = {}
-    base_headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-    }
-
-    @pytest.fixture(autouse=True)
-    def setup_method(self, client, monkeypatch):
-        def post(route, data={}):
-            payload = {
-                "data": json.dumps(data),
-                "headers": {**self.base_headers, **self.headers},
-            }
-            return client.post(route, **payload)
-
-        def get(route):
-            payload = {"headers": {**self.base_headers, **self.headers}}
-            return client.get(route, **payload)
-
-        def put(route, data={}):
-            payload = {
-                "data": json.dumps(data),
-                "headers": {**self.base_headers, **self.headers},
-            }
-            return client.put(route, **payload)
-
-        def delete(route):
-            payload = {"headers": {**self.base_headers, **self.headers}}
-            return client.delete(route, **payload)
-
-        self.post = post
-        self.get = get
-        self.put = put
-        self.delete = delete
-
-        self.mock = monkeypatch.setattr
-        self.headers = {}
-
-    def login(self, user_id):
-        token = UserToken.create(user_id=user_id)
-        self.headers["Authorization"] = f"Bearer {token.encode()}"
-        return token
