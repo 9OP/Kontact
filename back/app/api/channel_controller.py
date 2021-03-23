@@ -9,6 +9,7 @@ CHANNEL_SCHEMA = {
         "type": "string",
         "required": True,
         "empty": False,
+        "coerce": str.strip,
     }
 }
 
@@ -50,7 +51,7 @@ def destroy(cid):
     channel = Channel.find(id=cid)
     if channel:
         channel.destroy()
-    return render(f"Channel <{cid}> deleted")
+    return render(f"Channel <{cid}> deleted.")
 
 
 @gate(access=Access.USER, delegation=True)

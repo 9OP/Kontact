@@ -1,6 +1,6 @@
 import pytest
 import app.api_responses as apr
-from app.models import Access
+from app.models import Access, User
 from tests.routes.requests_helper import (
     expect_failure,
     expect_success,
@@ -18,21 +18,13 @@ class TestAuthSignup:
         THEN returns user + 201
         """
         user_data = {
-            "name": "martin",
+            "name": "   martin   ",
             "email": "MARTIN@mail.com",
             "password": "Abc123*",
         }
         response = client.post("/auth/signup", **payload(user_data))
-        expect_success(
-            response,
-            {
-                "name": user_data["name"],
-                "email": user_data["email"].lower(),
-                "access": Access.USER,
-                "channels_count": 0,
-            },
-            code=201,
-        )
+        user = User.find(email=user_data["email"].lower())
+        expect_success(response, user.summary(), code=201)
 
     def test_fail_already_registered(self, client, _user):
         """
@@ -85,17 +77,7 @@ class TestAuthSignin:
         """
         user, user_data = _user
         response = client.post("/auth/signin", **payload(user_data))
-        expect_success(
-            response,
-            {
-                "id": user.id,
-                "name": user.name,
-                "email": user.email,
-                "access": user.access,
-                "token": "mocked_token",
-            },
-            code=200,
-        )
+        expect_success(response, {**user.summary(), "token": "mocked_token"}, code=200)
         with client.session_transaction() as session:
             assert session["user_id"] == user.id
 
@@ -145,16 +127,7 @@ class TestAuthWhoami:  # test if delegation works
         user, token, _ = loggin_user
 
         response = client.get("/auth/whoami", **payload(token=token))
-        expect_success(
-            response,
-            {
-                "id": user.id,
-                "name": user.name,
-                "email": user.email,
-                "access": user.access,
-            },
-            code=200,
-        )
+        expect_success(response, user.summary(), code=200)
 
 
 class TestAuthSignout:
@@ -167,7 +140,11 @@ class TestAuthSignout:
         user, token, _ = loggin_user
 
         response = client.post("/auth/signout", **payload(token=token))
-        expect_success(response, code=200)
+        expect_success(
+            response,
+            {"app_code": 200, "description": "Signout successfully."},
+            code=200,
+        )
 
         response = client.get("/auth/whoami", **payload(token=token))
         expect_failure(response, {"app_code": 421}, code=401)

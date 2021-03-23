@@ -1,166 +1,263 @@
-# import pytest
-# from flask import json
-# from app.models.user_model import Access
-# from app.models.membership_model import Role
-# from tests.routes.requests_helper import RequestsHelper
-# from tests.factories import channel_factory, user_factory
-# from tests.conftest import Channel
+import pytest
+import uuid
+import app.api_responses as apr
+from app.models import Access, Role, Channel, Membership
+from tests.routes.requests_helper import (
+    expect_failure,
+    expect_success,
+    payload,
+    mock_token,
+    loggin_user,
+)
 
 
-# @pytest.mark.usefixtures("cleandb")
-# class ChannelRequestsSuite(RequestsHelper):
-#     @pytest.fixture()
-#     def _guest(self, make_user):
-#         self.guest = make_user(**user_factory(), access=Access.GUEST.value)
+class TestChannelNew:
+    def test_new(self, client, loggin_user):  # noqa: F811
+        """
+        GIVEN a signed in user
+        WHEN POST /channel
+        THEN returns channel
+        """
+        user, token, _ = loggin_user
+        channel_data = {"name": "SuperChannel"}
 
-#     @pytest.fixture()
-#     def _user(self, make_user):
-#         self.user = make_user(**user_factory())  # access=Access.User.value
+        response = client.post("/channel", **payload(channel_data, token=token))
+        channel = Channel.find(name=channel_data["name"])
+        membership = Membership.find(user_id=user.id, channel_id=channel.id)
 
-#     @pytest.fixture()
-#     def _admin(self, make_user):
-#         self.admin = make_user(**user_factory(), access=Access.ADMIN.value)
+        expect_success(response, channel.summary(), code=201)
+        assert membership.role == Role.MASTER
 
-#     @pytest.fixture()
-#     def _channel(self, make_channel):
-#         self.channel = make_channel(**channel_factory())
+    @pytest.mark.parametrize(
+        "case, channel_data",
+        {
+            "no_params": {},
+            "none_name": {"name": None},
+            "empty_name": {"name": ""},
+            "blank_name": {"name": "  "},
+        }.items(),
+    )
+    def test_fail_invalid_parameter(
+        self, client, loggin_user, case, channel_data  # noqa: F811
+    ):
+        """
+        GIVEN a signed user
+        WHEN POST /channel with invalid
+        THEN returns 411, 400
+        """
+        user, token, _ = loggin_user
 
-#     @pytest.fixture()
-#     def _member(self, _channel, make_user, make_membership):
-#         self.member = make_user(**user_factory())
-#         make_membership(user_id=self.member.id, channel_id=self.channel.id)
+        response = client.post("/channel", **payload(channel_data, token=token))
+        expect_failure(response, {"app_code": 411}, code=400)
 
-#     @pytest.fixture()
-#     def _master(self, _channel, make_user, make_membership):
-#         self.master = make_user(**user_factory())
-#         make_membership(
-#             user_id=self.master.id, channel_id=self.channel.id, role=Role.MASTER.value
-#         )
+    def test_fail_already_exists(self, client, loggin_user):  # noqa: F811
+        """
+        GIVEN a signed user
+        WHEN POST /channel with existing name
+        THEN returns 410, 400
+        """
+        user, token, _ = loggin_user
+        channel_data = {"name": "SuperChannel"}
 
-#     def test_new(self, _user):
-#         """
-#         GIVEN a channel input
-#         WHEN POST /channel as user
-#         THEN returns channel + 201
-#         """
-#         self.login(self.user.id)
-#         channel = channel_factory()
-#         response = self.post("/channel", channel)
-#         RequestsHelper.expect_success(
-#             response,
-#             Channel.find(name=channel["name"]).summary(),
-#             code=201,
-#         )
+        client.post("/channel", **payload(channel_data, token=token))
+        response = client.post("/channel", **payload(channel_data, token=token))
 
-#     def test_index(self, _user, _channel, make_channel):
-#         """
-#         GIVEN multiple channel instances
-#         WHEN GET /channel as user
-#         THEN returns all channel
-#         """
-#         self.login(self.user.id)
-#         chan = make_channel(**channel_factory())
-#         response = self.get("/channel")
-#         RequestsHelper.expect_success(
-#             response,
-#             [
-#                 self.channel.short(),
-#                 chan.short(),
-#             ],
-#         )
+        expect_failure(response, {"app_code": 410}, code=400)
 
-#     def test_show(self, _member):
-#         """
-#         GIVEN a channel instance
-#         WHEN GET /channel/<channel_id> as member
-#         THEN returns channel summary
-#         """
-#         self.login(self.member.id)
-#         response = self.get(f"/channel/{self.channel.id}")
-#         RequestsHelper.expect_success(response, self.channel.summary())
 
-#     def test_destroy(self, _master):
-#         """
-#         GIVEN a channel instance
-#         WHEN DELETE /channel/<channel_id> as master
-#         THEN delete channel
-#         """
-#         self.login(self.master.id)
-#         response = self.delete(f"/channel/{self.channel.id}")
-#         RequestsHelper.expect_success(response)
+class TestChannelIndex:
+    def test_index(self, client, loggin_user, make_channel):  # noqa: F811
+        """
+        GIVEN a signed in admin
+        WHEN GET /channel
+        THEN returns channels
+        """
+        user, token, _ = loggin_user
+        user.update(access=Access.ADMIN)
+        channel_1 = make_channel(name="channel_1")
+        channel_2 = make_channel(name="channel_2")
+        channel_3 = make_channel(name="channel_3")
 
-#     def test_add_member(self, _master, _user):
-#         """
-#         GIVEN a channel instance
-#         WHEN POST /channel/<cid>/membership/<uid> as master
-#         THEN add member
-#         """
-#         self.login(self.master.id)
-#         response = self.post(f"/channel/{self.channel.id}/membership/{self.user.id}")
-#         RequestsHelper.expect_success(response, code=201)
+        response = client.get("/channel", **payload(token=token))
+        expect_success(
+            response,
+            [channel_1.summary(), channel_2.summary(), channel_3.summary()],
+            code=200,
+        )
 
-#     def test_add_member_fail_already_member(self, _master, _member):
-#         """
-#         GIVEN a channel instance and uid already in cid
-#         WHEN POST /channel/<cid>/membership/<uid> as master
-#         THEN expect failure
-#         """
-#         self.login(self.master.id)
-#         response = self.post(f"/channel/{self.channel.id}/membership/{self.member.id}")
-#         RequestsHelper.expect_failure(response)
+    def test_fail_access(self, client, loggin_user):  # noqa: F811
+        """
+        GIVEN a signed in user
+        WHEN GET /channel
+        THEN returns 403
+        """
+        user, token, _ = loggin_user
 
-#     def test_del_member(self, _master, _member):
-#         """
-#         GIVEN a channel instance and uid already in cid
-#         WHEN POST /channel/<cid>/membership/<uid> as master
-#         THEN expect failure
-#         """
-#         self.login(self.master.id)
-#         assert self.member.channels[0].id == self.channel.id
-#         response = self.delete(
-#             f"/channel/{self.channel.id}/membership/{self.member.id}"
-#         )
-#         RequestsHelper.expect_success(response)
-#         assert self.member.channels == []
+        response = client.get("/channel", **payload(token=token))
+        expect_failure(response, {"app_code": 403}, code=403)
 
-#     # TEST AUTHORIZATIONS
 
-#     def test_fail_not_user(self, _guest):
-#         """
-#         GIVEN a channel instance and guest
-#         WHEN call user access required route
-#         THEN expect failure
-#         """
-#         self.login(self.guest.id)
-#         response = self.get("/channel")
-#         RequestsHelper.expect_failure(response, code=403)
+class TestChannelShow:
+    def test_show(self, client, loggin_user, make_channel):  # noqa: F811
+        """
+        GIVEN a signed in admin
+        WHEN GET /channel/<channel_id>
+        THEN returns channel
+        """
+        user, token, _ = loggin_user
+        user.update(access=Access.ADMIN)
+        channel = make_channel(name="SuperChannel")
 
-#     def test_fail_not_member(self, _user, _channel):
-#         """
-#         GIVEN a channel instance and not member
-#         WHEN call member role required route
-#         THEN expect failure
-#         """
-#         self.login(self.user.id)
-#         response = self.get(f"/channel/{self.channel.id}")
-#         RequestsHelper.expect_failure(response, code=403)
+        response = client.get(f"/channel/{channel.id}", **payload(token=token))
+        expect_success(response, channel.summary(verbose=True), code=200)
 
-#     def test_fail_not_master(self, _member):
-#         """
-#         GIVEN a channel instance and not master
-#         WHEN call master role required route
-#         THEN expect failure
-#         """
-#         self.login(self.member.id)
-#         response = self.delete(f"/channel/{self.channel.id}")
-#         RequestsHelper.expect_failure(response, code=403)
+    def test_show_access(
+        self, client, loggin_user, make_channel, make_membership  # noqa: F811
+    ):
+        """
+        GIVEN a signed in member
+        WHEN GET /channel/<channel_id>
+        THEN returns channel
+        """
+        user, token, _ = loggin_user
+        user.update(access=Access.ADMIN)
+        channel = make_channel(name="SuperChannel")
+        make_membership(user_id=user.id, channel_id=channel.id)
 
-#     def test_admin_is_master(self, _admin, _channel):
-#         """
-#         GIVEN a channel instance and admin
-#         WHEN call master role required route
-#         THEN expect success
-#         """
-#         self.login(self.admin.id)
-#         response = self.delete(f"/channel/{self.channel.id}")
-#         RequestsHelper.expect_success(response)
+        response = client.get(f"/channel/{channel.id}", **payload(token=token))
+        expect_success(response, channel.summary(verbose=True), code=200)
+
+    def test_fail_access(self, client, loggin_user, make_channel):  # noqa: F811
+        """
+        GIVEN a signed in user, not member,
+        WHEN GET /channel/<channel_id>
+        THEN returns 403
+        """
+        user, token, _ = loggin_user
+        channel = make_channel(name="SuperChannel")
+
+        response = client.get(f"/channel/{channel.id}", **payload(token=token))
+        expect_failure(response, {"app_code": 403}, code=403)
+
+
+class TestChannelDestroy:
+    def test_destroy(self, client, loggin_user, make_channel):  # noqa: F811
+        """
+        GIVEN a signed in admin
+        WHEN DELETE /channel/<channel_id>
+        THEN delete channel
+        """
+        user, token, _ = loggin_user
+        user.update(access=Access.ADMIN)
+        channel = make_channel(name="SuperChannel")
+
+        response = client.delete(f"/channel/{channel.id}", **payload(token=token))
+        expect_success(
+            response,
+            {"app_code": 200, "description": f"Channel <{channel.id}> deleted."},
+            code=200,
+        )
+        assert Channel.find(id=channel.id) is None
+
+    def test_fail_access(self, client, loggin_user, make_channel):  # noqa: F811
+        """
+        GIVEN a signed user, not admin
+        WHEN DELETE /channel/<channel_id>
+        THEN raise 403
+        """
+        user, token, _ = loggin_user
+        channel = make_channel(name="SuperChannel")
+
+        response = client.delete(f"/channel/{channel.id}", **payload(token=token))
+        expect_failure(response, {"app_code": 403}, code=403)
+
+    def test_destroy_idempotent(self, client, loggin_user):  # noqa: F811
+        """
+        GIVEN a signed in admin
+        WHEN DELETE /channel/<delete_channel_id>
+        THEN ok
+        """
+        user, token, _ = loggin_user
+        user.update(access=Access.ADMIN)
+        cid = str(uuid.uuid4())
+
+        response = client.delete(f"/channel/{cid}", **payload(token=token))
+        expect_success(
+            response,
+            {"app_code": 200, "description": f"Channel <{cid}> deleted."},
+            code=200,
+        )
+
+    def test_fail_access_member(
+        self, client, loggin_user, make_channel, make_membership  # noqa: F811
+    ):
+        """
+        GIVEN a signed member, not master
+        WHEN DELETE /channel/<channel_id>
+        THEN raise 403
+        """
+        user, token, _ = loggin_user
+        channel = make_channel(name="SuperChannel")
+        make_membership(user_id=user.id, channel_id=channel.id)
+
+        response = client.delete(f"/channel/{channel.id}", **payload(token=token))
+        expect_failure(response, {"app_code": 403}, code=403)
+
+    def test_access_master(
+        self, client, loggin_user, make_channel, make_membership  # noqa: F811
+    ):
+        """
+        GIVEN a signed member, not master
+        WHEN DELETE /channel/<channel_id>
+        THEN raise 403
+        """
+        user, token, _ = loggin_user
+        channel = make_channel(name="SuperChannel")
+        make_membership(user_id=user.id, channel_id=channel.id, role=Role.MASTER)
+
+        response = client.delete(f"/channel/{channel.id}", **payload(token=token))
+        expect_success(
+            response,
+            {"app_code": 200, "description": f"Channel <{channel.id}> deleted."},
+            code=200,
+        )
+
+
+class TestChannelMemberships:
+    def test_memberships(self):
+        pass
+
+
+class TestChannelUpdate:
+    def test_update(self):
+        pass
+
+    def test_fail_access(self):
+        pass
+
+
+class TestChannelAddMember:
+    def test_add_member(self):
+        pass
+
+    def test_fail_access(self):
+        pass
+
+
+class TestChannelDeleteMember:
+    def test_delete_member(self):
+        pass
+
+    def test_fail_access(self):
+        pass
+
+    def test_idempotent(self):
+        pass
+
+
+class TestChannelUpdateMember:
+    def test_update_member(self):
+        pass
+
+    def test_fail_access(self):
+        pass

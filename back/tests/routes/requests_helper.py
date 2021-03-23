@@ -47,12 +47,14 @@ def expect_success(response, expected={}, code=200):
 
     if isinstance(expected, dict):
         expected = fmt(expected)
-        assert expected.items() <= data.items()
+        # assert expected.items() <= data.items()
+        assert expected.items() == data.items()
 
     if isinstance(expected, list):
         expected = [fmt(exp) for exp in expected]
         assert len(data) == len(expected)
-        assert all([a == b for a, b in zip(data, expected)])
+        assert len([d for d in data if d not in expected]) == 0
+        assert len([d for d in expected if d not in data]) == 0
 
 
 def expect_failure(response, expected={}, code=400):
