@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+  back:
+    build:
+      context: ./back
+      dockerfile: back.dockerfile
+    entrypoint: "./entrypoint.sh"
+    command: "gunicorn -c python:config.gunicorn 'app:create_app()'"
+    volumes:
+      - ./back:/back
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+
+  beacon:
+    build:
+      context: ./beacon
+      dockerfile: beacon.dockerfile
+    command: "npm run start:dev"
+    environment:
+      NODE_ENV: "development"
+    volumes:
+      - ./beacon:/beacon
+    ports:
+      - "4000:4000"
+    depends_on:
+      - back
+
+  db:
+    build:
+      context: ./back
+      dockerfile: db.dockerfile
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:standalone
+    environment:
+      ADMINER_DESIGN: "mvt"
+    ports:
+      - "8082:8080"
+    links:
+      - db
+
+volumes:
+  db-data:

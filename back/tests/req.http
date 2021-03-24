@@ -1,0 +1,126 @@
+@hostname = 127.0.0.1
+@port = 5000
+@host = http://{{hostname}}:{{port}}
+@contentType = application/json
+@origin = http://localhost:3000
+
+
+### Signup - User
+POST {{host}}/auth/signup
+Content-Type: {{contentType}}
+Referer: {{origin}}
+
+{
+    "email": "Martin@mail.com",
+    "name": "Martin",
+    "password": "Abc123*"
+}
+
+
+### Signin - Admin
+# @name login
+POST {{host}}/auth/signin
+Content-Type: {{contentType}}
+Referer: {{origin}}
+
+{
+    "email": "admin@mail.com",
+    "password": "Abc123*"
+}
+
+### Signin - User
+# @name login
+POST {{host}}/auth/signin
+Content-Type: {{contentType}}
+Referer: {{origin}}
+
+{
+    "email": "Martin@mail.com",
+    "password": "Abc123*"
+}
+
+###
+@token = {{login.response.body.token}}
+@uid = {{login.response.body.id}}
+
+### Key
+GET {{host}}/auth/key
+Referer: {{origin}}
+
+### Whoami
+GET {{host}}/auth/whoami
+Authorization: Bearer {{token}}
+Referer: {{origin}}
+
+### Memberships
+GET {{host}}/channel/memberships
+Authorization: Bearer {{token}}
+
+### Signout user
+POST {{host}}/auth/signout
+Content-Type: {{contentType}}
+Referer: {{origin}}
+Authorization: Bearer {{token}}
+
+### Get all users
+GET {{host}}/user
+# Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+Referer: {{origin}}
+
+### Create channel
+POST {{host}}/channel
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+Referer: {{origin}}
+
+{
+    "name": "Channel-0"
+}
+
+
+
+### Get all channels
+# @name channel
+GET {{host}}/channel
+# Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+###
+@cid = {{channel.response.body.0.id}}
+
+### Get all user memberships
+GET {{host}}/channel/memberships
+# Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+
+### Add user to channel
+POST {{host}}/channel/{{cid}}/membership/{{uid}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+### Update channel name
+PUT {{host}}/channel/{{cid}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+    "name": "modified-channel"
+}
+
+### Get a channel members
+GET {{host}}/channel/{{cid}}
+Authorization: Bearer {{token}}
+
+### Destroy channel
+DELETE {{host}}/channel/{{cid}}
+Authorization: Bearer {{token}}
+
+### Destroy member
+DELETE {{host}}/channel/{{cid}}/membership/{{uid}}
+Authorization: Bearer {{token}}
+
+### Search users
+GET {{host}}/user/search?name=mi
+Authorization: Bearer {{token}}

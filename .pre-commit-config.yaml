@@ -1,0 +1,46 @@
+repos:
+  # Python / back pre-commit
+  - repo: https://github.com/psf/black
+    rev: stable
+    hooks:
+      - id: black
+        language_version: python3.9
+        files: ^back/
+        name: "[BACK] formatter - black"
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.8.4
+    hooks:
+      - id: flake8
+        args: ["--config", "./back/.flake8"]
+        files: ^back/
+        name: "[BACK] linting - flake8"
+
+  # Node / beacon pre-commit
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v7.14.0
+    hooks:
+      - id: eslint
+        files: ^beacon/.*ts$
+        types: [file]
+        name: "[BEACON] linting - eslint"
+
+  # React / fron pre-commit
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v7.14.0
+    hooks:
+      - id: eslint
+        files: ^front/.*ts(x)$
+        types: [file]
+        name: "[FRONT] linting - eslint"
+
+  # Generic pre-commit
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.3.0
+    hooks:
+      - id: fix-byte-order-marker
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
