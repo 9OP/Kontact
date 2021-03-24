@@ -14,5 +14,5 @@ Connect to the Postgres database:
 
 Backup / restore databases:
 
-- `` docker-compose exec -t db pg_dumpall -c -U postgres > dump_`date + %Y-%m-%d"_"%H:%M:%S`.sql  ``
-- `cat your_dump.sql | docker exec -i db psql -U postgres`
+- `` docker exec -t kontact_db_1 pg_dumpall -c -U developer > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql ``
+- `cat dump_***.sql | docker exec -i kontact_db_1 psql -d kontact_dev -U developer `

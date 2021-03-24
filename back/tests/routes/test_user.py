@@ -62,17 +62,6 @@ class TestUserShow:
         response = client.get(f"/user/{user.id}", **payload(token=token))
         expect_failure(response, {"app_code": 403}, code=403)
 
-    def test_fail_no_user(self, client, loggin_user, make_user):  # noqa: F811
-        """
-        GIVEN a user
-        WHEN GET /user/**
-        THEN returns 412, 400
-        """
-        user, token, _ = loggin_user
-        user.update(access=Access.ADMIN)
-        response = client.get("/user/123", **payload(token=token))
-        expect_failure(response, {"app_code": 412}, code=400)
-
 
 class TestUserSearch:
     def test_search(self, client, loggin_user, make_user):  # noqa: F811

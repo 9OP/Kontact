@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy import exc as sql_exc
+from sqlalchemy.orm import exc as sql_orm
 from sqlalchemy.inspection import inspect
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
@@ -66,32 +67,34 @@ class Support(TimestampMixin):
         return self
 
     @classmethod
-    def find(cls, **kwargs):
+    def __find(cls, switch, *args, **kwargs):
+        query = cls.query
         try:
-            return cls.query.filter_by(**kwargs).first()
-        except:
-            raise apr.ApiError()
-
-    @classmethod
-    def find_all(cls, **kwargs):
-        try:
-            return cls.query.filter_by(**kwargs).all()
-        except:
-            raise apr.ApiError()
-
-    @classmethod
-    def find_one(cls, **kwargs):
-        try:
-            return cls.query.filter_by(**kwargs).one()
-        except sql_exc.SQLAlchemyError:  # Found none or multiple
+            switcher = {
+                "first": query.filter_by(**kwargs).first,
+                "all": query.filter_by(**kwargs).all,
+                "one": query.filter_by(**kwargs).one,
+                "search": query.filter(*args).all,
+            }
+            return switcher[switch]()
+        except sql_orm.NoResultFound:
             raise apr.NotFound(cls.__tablename__)
         except:
             raise apr.ApiError()
 
     @classmethod
+    def find(cls, **kwargs):
+        return cls.__find(switch="first", **kwargs)
+
+    @classmethod
+    def find_all(cls, **kwargs):
+        return cls.__find(switch="all", **kwargs)
+
+    @classmethod
+    def find_one(cls, **kwargs):
+        return cls.__find(switch="one", **kwargs)
+
+    @classmethod
     def search(cls, **kwargs):
         filters = [getattr(cls, col).ilike(f"%{val}%") for col, val in kwargs.items()]
-        try:
-            return cls.query.filter(*filters).all()
-        except:
-            raise apr.ApiError()
+        return cls.__find("search", *filters)
