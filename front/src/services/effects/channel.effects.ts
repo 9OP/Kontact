@@ -22,7 +22,7 @@ export const fetchChannels = (): AppThunk => async (dispatch) => {
 export const createChannel = (name: string): AppThunk => async (dispatch) => {
   try {
     const channel = await channelsHttpService.createChannel(name);
-    await user.reloadBeacon({});
+    user.reloadBeacon({});
     dispatch(createChannelAction(channel));
     emit(toast.channel_created(channel));
   } catch (err) {
