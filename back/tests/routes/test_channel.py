@@ -1,8 +1,7 @@
 import pytest
 import uuid
-import app.api_responses as apr
 from app.models import Access, Role, Channel, Membership
-from tests.routes.requests_helper import (
+from tests.routes.requests_helper import (  # noqa: F401
     expect_failure,
     expect_success,
     payload,

@@ -1,5 +1,4 @@
 import pytest
-import app.api_responses as api_res
 from sqlalchemy.exc import IntegrityError
 
 

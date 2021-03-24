@@ -1,7 +1,6 @@
 import pytest
-import app.api_responses as apr
-from app.models import Access, User
-from tests.routes.requests_helper import (
+from app.models import User
+from tests.routes.requests_helper import (  # noqa: F401
     expect_failure,
     expect_success,
     payload,

@@ -1,6 +1,4 @@
 import pytest
-import uuid
-import datetime
 from flask import json
 from tests.conftest import UserToken
 

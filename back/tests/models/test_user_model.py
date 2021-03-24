@@ -1,7 +1,3 @@
-import pytest
-from app.models import Access
-
-
 def test_define(_user):
     """
     GIVEN a user instance

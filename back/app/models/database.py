@@ -5,7 +5,6 @@ from sqlalchemy.inspection import inspect
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
 import app.api_responses as apr
-import uuid
 
 
 convention = {

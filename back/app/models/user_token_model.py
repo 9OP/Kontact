@@ -1,5 +1,4 @@
 import jwt
-from cryptography.fernet import Fernet
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime, timedelta
 from app.models.database import db, Support

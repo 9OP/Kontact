@@ -1,7 +1,6 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.dialects.postgresql import UUID
-from werkzeug.security import safe_str_cmp
 from app.models.database import db, Support
 from enum import IntEnum
 import uuid
