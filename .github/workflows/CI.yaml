@@ -7,20 +7,18 @@ on:
     branches: [master]
 
 jobs:
-  # Label of the container job
-  container-job:
-    # Containers must run in Linux based operating systems
+  build:
+    name: build
     runs-on: ubuntu-latest
-    # Docker Hub image that `container-job` executes in
-    # container: python:3.9-slim
+    defaults:
+      run:
+        working-directory: ./back
 
-    # Service containers to run with `container-job`
+    container: python:3.9-slim
+
     services:
-      # Label used to access the service container
       db:
-        # Docker Hub image
         image: postgres
-        # Provide the password for postgres
         env:
           POSTGRES_DB: kontact_test
           POSTGRES_USER: tester
@@ -33,25 +31,23 @@ jobs:
           --health-retries 5
 
     steps:
-      # Downloads a copy of the code in your repository before running CI tests
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
+      # - name: Set up Python 3.9
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: 3.9
 
       - name: Install dependencies
         run: |
-          cd back
           python -m pip install --upgrade pip
           pip install pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Test with pytest
         run: |
-          cd back && python manage.py test
+          pytest tests
         env:
           FLASK_ENV: testing
           SECRET_KEY: secret
