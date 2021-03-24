@@ -12,7 +12,7 @@ jobs:
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
     # Docker Hub image that `container-job` executes in
-    container: python:3.9-slim
+    # container: python:3.9-slim
 
     # Service containers to run with `container-job`
     services:
@@ -37,6 +37,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
       - name: Install dependencies
         run: |
           cd back
@@ -49,3 +54,4 @@ jobs:
           cd back && python manage.py test
         env:
           FLASK_ENV: testing
+          SECRET_KEY: secret
