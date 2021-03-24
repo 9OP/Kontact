@@ -5,38 +5,42 @@ services:
     build:
       context: ./back
       dockerfile: back.dockerfile
+    restart: always
     entrypoint: "./entrypoint.sh"
-    command: "gunicorn -c python:config.gunicorn 'app:create_app()'"
+    command: "gunicorn -c 'python:config.gunicorn' 'app:create_app()'"
+    environment:
+      FLASK_ENV: development
     volumes:
       - ./back:/back
     ports:
       - "5000:5000"
     depends_on:
-      - db
+      - database
 
-  beacon:
-    build:
-      context: ./beacon
-      dockerfile: beacon.dockerfile
-    command: "npm run start:dev"
-    environment:
-      NODE_ENV: "development"
-    volumes:
-      - ./beacon:/beacon
-    ports:
-      - "4000:4000"
-    depends_on:
-      - back
+  # beacon:
+  #   build:
+  #     context: ./beacon
+  #     dockerfile: beacon.dockerfile
+  #   restart: always
+  #   command: "npm run start:dev"
+  #   environment:
+  #     NODE_ENV: "development"
+  #   volumes:
+  #     - ./beacon:/beacon
+  #   ports:
+  #     - "4000:4000"
+  #   depends_on:
+  #     - back
 
-  db:
+  database:
     build:
-      context: ./back
-      dockerfile: db.dockerfile
+      context: ./back/database
+      dockerfile: database.dockerfile
     restart: always
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: kontact_dev
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: secret
     ports:
       - "5432:5432"
     volumes:
@@ -49,7 +53,7 @@ services:
     ports:
       - "8082:8080"
     links:
-      - db
+      - database
 
 volumes:
   db-data:

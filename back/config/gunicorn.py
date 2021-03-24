@@ -1,17 +1,31 @@
+from os import environ, path
+from distutils.util import strtobool
+from dotenv import load_dotenv
+
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, "../.env"))
+
+
+# PROC
+proc_name = "gunicorn_kontact_back"
 bind = "0.0.0.0:5000"
-proc = "gunicorn_kontact_back"
 
-workers = 3
-worker_class = "sync"  # "gevent"
-worker_connections = 50
-timeout = 30
-keepalive = 2
-
-reload = True
-errorlog = "-"
-loglevel = "debug"
-accesslog = "-"
+# LOGGING
+accesslog = "-"  # logs to stdout
+errorlog = "-"  # logs to stdout
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+loglevel = environ.get("WEB_LOG", "info")
+reload = bool(strtobool(environ.get("WEB_RELOAD", "false")))
+
+# WORKERS
+workers = 4
+max_requests = 100
+max_requests_jitter = 100
+keepalive = 10  # keep alive for 10s
+
+# SERVER
+preload_app = True
+forwarded_allow_ips = "127.0.0.1"  # addr of front or proxy
 
 
 def pre_fork(server, worker):
@@ -24,25 +38,6 @@ def pre_exec(server):
 
 def when_ready(server):
     server.log.info("Server is ready. Spawning workers")
-
-
-def worker_int(worker):
-    worker.log.info("worker received INT or QUIT signal")
-
-    # get traceback info
-    import threading
-    import sys
-    import traceback
-
-    id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
-    code = []
-    for threadId, stack in sys._current_frames().items():
-        code.append("\n# Thread: %s(%d)" % (id2name.get(threadId, ""), threadId))
-        for filename, lineno, name, line in traceback.extract_stack(stack):
-            code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
-            if line:
-                code.append("  %s" % (line.strip()))
-    worker.log.debug("\n".join(code))
 
 
 def worker_abort(worker):

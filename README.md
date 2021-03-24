@@ -1,13 +1,17 @@
 # Kontact
 
-E2E encrypted, memoryless, real-time chat
+E2E encrypted fast chat
 
-#### Run app
+## Run
+
 ```
-docker-compose up
+docker-compose up --build
 ```
 
-#### Run backend tests
+## Tests
+
+**Back:**
+
 ```
 docker-compose run back python manage.py test
 ```

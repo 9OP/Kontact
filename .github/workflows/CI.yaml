@@ -17,7 +17,7 @@ jobs:
     container: python:3.9-slim
 
     services:
-      db:
+      database:
         image: postgres
         env:
           POSTGRES_DB: kontact_test
@@ -45,4 +45,3 @@ jobs:
           pytest tests --cov-report=term
         env:
           FLASK_ENV: testing
-          SECRET_KEY: secret
