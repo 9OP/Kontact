@@ -13,6 +13,7 @@ from app.models import (
 @pytest.fixture(scope="session")
 def app():
     app = create_app("testing")
+    app.logger.disabled = True
     with app.app_context():
         yield app
 

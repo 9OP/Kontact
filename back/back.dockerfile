@@ -4,10 +4,6 @@ FROM base as builder
 
 WORKDIR /install
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
 # # install system dependencies
 # RUN apt-get update \
 #     && apt-get clean \
@@ -26,6 +22,10 @@ RUN pip install --no-cache-dir --prefix=/install -r ./requirements.txt
 
 # FINAL
 FROM base
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 

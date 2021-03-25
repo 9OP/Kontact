@@ -6,3 +6,118 @@
 2021-03-25 16:31:35,007 :: INFO :: MainThread :: AUTH :: martin@mail.com :: 172.18.0.1
 2021-03-25 16:31:37,499 :: INFO :: MainThread :: REQUEST :: 172.18.0.1 :: vscode-restclient :: channel_api.new :: POST http://127.0.0.1:5000/channel
 2021-03-25 16:31:37,622 :: INFO :: MainThread :: AUTH :: martin@mail.com :: 172.18.0.1
+2021-03-25 16:42:17,193 :: INFO :: MainThread :: AUTH :: frankmartinez@gmail.com :: None
+2021-03-25 16:42:17,319 :: INFO :: MainThread :: AUTH :: starkdavid@hernandez.com :: None
+2021-03-25 16:42:17,440 :: INFO :: MainThread :: AUTH :: meghanreilly@norris-prince.com :: None
+2021-03-25 16:42:17,562 :: INFO :: MainThread :: AUTH :: dgonzalez@yahoo.com :: None
+2021-03-25 16:42:17,685 :: INFO :: MainThread :: AUTH :: kayla55@hotmail.com :: None
+2021-03-25 16:42:17,818 :: INFO :: MainThread :: AUTH :: jennifer59@wagner.com :: None
+2021-03-25 16:42:17,956 :: INFO :: MainThread :: AUTH :: donaldfarrell@grant-jones.com :: None
+2021-03-25 16:42:18,095 :: INFO :: MainThread :: AUTH :: christinaskinner@brooks.com :: None
+2021-03-25 16:42:18,235 :: INFO :: MainThread :: AUTH :: jamesdillon@warren.com :: None
+2021-03-25 16:42:22,212 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:22,412 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:22,417 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:22,535 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:22,574 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: None :: GET http://localhost/void
+2021-03-25 16:42:22,611 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: None :: GET http://localhost/auth/signup
+2021-03-25 16:42:22,648 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:22,835 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:22,943 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:22,982 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,021 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,061 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,100 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,140 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,179 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,218 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,259 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signup :: POST http://localhost/auth/signup
+2021-03-25 16:42:23,368 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:23,559 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:23,738 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:23,854 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:23,965 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:24,073 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:24,183 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:24,270 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.whoami :: GET http://localhost/auth/whoami
+2021-03-25 16:42:24,278 :: INFO :: MainThread :: AUTH :: jessica36@porter-fuller.com :: 127.0.0.1
+2021-03-25 16:42:24,387 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:24,472 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signout :: POST http://localhost/auth/signout
+2021-03-25 16:42:24,480 :: INFO :: MainThread :: AUTH :: bonniealexander@young.net :: 127.0.0.1
+2021-03-25 16:42:24,486 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.whoami :: GET http://localhost/auth/whoami
+2021-03-25 16:42:24,599 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:24,683 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.key :: GET http://localhost/auth/key
+2021-03-25 16:42:24,793 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:24,878 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.new :: POST http://localhost/channel
+2021-03-25 16:42:24,886 :: INFO :: MainThread :: AUTH :: reillycurtis@yahoo.com :: 127.0.0.1
+2021-03-25 16:42:25,020 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:25,105 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.new :: POST http://localhost/channel
+2021-03-25 16:42:25,113 :: INFO :: MainThread :: AUTH :: agreen@gmail.com :: 127.0.0.1
+2021-03-25 16:42:25,225 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:25,311 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.new :: POST http://localhost/channel
+2021-03-25 16:42:25,318 :: INFO :: MainThread :: AUTH :: sharprichard@gmail.com :: 127.0.0.1
+2021-03-25 16:42:25,428 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:25,512 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.new :: POST http://localhost/channel
+2021-03-25 16:42:25,520 :: INFO :: MainThread :: AUTH :: thomas33@hotmail.com :: 127.0.0.1
+2021-03-25 16:42:25,629 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:25,714 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.new :: POST http://localhost/channel
+2021-03-25 16:42:25,722 :: INFO :: MainThread :: AUTH :: jacobsonrobert@hotmail.com :: 127.0.0.1
+2021-03-25 16:42:25,832 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:25,917 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.new :: POST http://localhost/channel
+2021-03-25 16:42:25,926 :: INFO :: MainThread :: AUTH :: kjackson@browning.com :: 127.0.0.1
+2021-03-25 16:42:25,941 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.new :: POST http://localhost/channel
+2021-03-25 16:42:25,950 :: INFO :: MainThread :: AUTH :: kjackson@browning.com :: 127.0.0.1
+2021-03-25 16:42:26,059 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:26,154 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.index :: GET http://localhost/channel
+2021-03-25 16:42:26,162 :: INFO :: MainThread :: AUTH :: gary82@hotmail.com :: 127.0.0.1
+2021-03-25 16:42:26,276 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:26,361 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.index :: GET http://localhost/channel
+2021-03-25 16:42:26,369 :: INFO :: MainThread :: AUTH :: wbaxter@bailey.org :: 127.0.0.1
+2021-03-25 16:42:26,477 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:26,568 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.show :: GET http://localhost/channel/1d1c23e3-a152-455b-8c12-3a712b16e739
+2021-03-25 16:42:26,576 :: INFO :: MainThread :: AUTH :: murraytimothy@gmail.com :: 127.0.0.1
+2021-03-25 16:42:26,688 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:26,784 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.show :: GET http://localhost/channel/44d52e63-6e14-457b-b585-c2cbbb8e217f
+2021-03-25 16:42:26,792 :: INFO :: MainThread :: AUTH :: hchandler@stanton-lane.com :: 127.0.0.1
+2021-03-25 16:42:26,902 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:26,992 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.show :: GET http://localhost/channel/60dbcb1d-de6e-4c34-8a90-13b956a140f7
+2021-03-25 16:42:27,000 :: INFO :: MainThread :: AUTH :: wigginsjonathan@yahoo.com :: 127.0.0.1
+2021-03-25 16:42:27,112 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:27,206 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.destroy :: DELETE http://localhost/channel/558cc477-c027-47c9-8d72-fbc43bd0e665
+2021-03-25 16:42:27,217 :: INFO :: MainThread :: AUTH :: jacksonmelissa@charles.biz :: 127.0.0.1
+2021-03-25 16:42:27,342 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:27,430 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.destroy :: DELETE http://localhost/channel/8a2a231f-4530-4654-855b-7b7d3e51502a
+2021-03-25 16:42:27,439 :: INFO :: MainThread :: AUTH :: scotthoffman@yahoo.com :: 127.0.0.1
+2021-03-25 16:42:27,550 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:27,639 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.destroy :: DELETE http://localhost/channel/2e4d9b43-78b1-42f3-90c1-16fd6eb26618
+2021-03-25 16:42:27,651 :: INFO :: MainThread :: AUTH :: wrodriguez@thomas-rice.com :: 127.0.0.1
+2021-03-25 16:42:27,775 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:27,872 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.destroy :: DELETE http://localhost/channel/13fb1890-da5c-4e0f-a19c-a170d25baacc
+2021-03-25 16:42:27,883 :: INFO :: MainThread :: AUTH :: thomasgreene@berg-johnson.net :: 127.0.0.1
+2021-03-25 16:42:27,994 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:28,087 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: channel_api.destroy :: DELETE http://localhost/channel/d97252f1-37c5-464d-afeb-afa1b43c6aae
+2021-03-25 16:42:28,095 :: INFO :: MainThread :: AUTH :: parkernatalie@gmail.com :: 127.0.0.1
+2021-03-25 16:42:28,536 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:28,832 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: user_api.index :: GET http://localhost/user
+2021-03-25 16:42:28,841 :: INFO :: MainThread :: AUTH :: davidcook@gordon.org :: 127.0.0.1
+2021-03-25 16:42:28,954 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:29,039 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: user_api.index :: GET http://localhost/user
+2021-03-25 16:42:29,047 :: INFO :: MainThread :: AUTH :: mirandawilliam@gmail.com :: 127.0.0.1
+2021-03-25 16:42:29,155 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:29,245 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: user_api.show :: GET http://localhost/user/f627aad1-e45d-4aee-b4d0-0b766f2e3e3c
+2021-03-25 16:42:29,252 :: INFO :: MainThread :: AUTH :: amy90@gmail.com :: 127.0.0.1
+2021-03-25 16:42:29,369 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:29,456 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: user_api.show :: GET http://localhost/user/a0f5bb24-1749-40d2-aa7d-3a7e6c1355fd
+2021-03-25 16:42:29,465 :: INFO :: MainThread :: AUTH :: pcase@thomas.com :: 127.0.0.1
+2021-03-25 16:42:29,573 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: auth_api.signin :: POST http://localhost/auth/signin
+2021-03-25 16:42:29,866 :: INFO :: MainThread :: REQUEST :: 127.0.0.1 :: werkzeug/0.16.1 :: user_api.search :: GET http://localhost/user/search?name=&email=domain.a
+2021-03-25 16:42:29,875 :: INFO :: MainThread :: AUTH :: normanstephanie@cochran.com :: 127.0.0.1
+2021-03-25 16:43:18,082 :: INFO :: MainThread :: AUTH :: adamsaaron@gmail.com :: None
+2021-03-25 16:43:18,222 :: INFO :: MainThread :: AUTH :: kimberlybrown@martinez.biz :: None
+2021-03-25 16:43:18,341 :: INFO :: MainThread :: AUTH :: fcarter@gmail.com :: None
+2021-03-25 16:43:18,460 :: INFO :: MainThread :: AUTH :: conwaynicholas@gmail.com :: None
+2021-03-25 16:43:18,580 :: INFO :: MainThread :: AUTH :: darrell82@tucker.net :: None
+2021-03-25 16:43:18,709 :: INFO :: MainThread :: AUTH :: cmckay@yahoo.com :: None
+2021-03-25 16:43:18,853 :: INFO :: MainThread :: AUTH :: bryantdonna@hotmail.com :: None
+2021-03-25 16:43:18,974 :: INFO :: MainThread :: AUTH :: brianshelton@craig.net :: None
+2021-03-25 16:43:19,106 :: INFO :: MainThread :: AUTH :: jeffsanchez@vasquez.com :: None
