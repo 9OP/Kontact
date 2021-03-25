@@ -1,6 +1,6 @@
 @hostname = 127.0.0.1
-@port = 5000
-@host = http://{{hostname}}:{{port}}
+@port = 443
+@host = https://{{hostname}}:{{port}}/api
 @contentType = application/json
 @origin = http://localhost:3000
 
