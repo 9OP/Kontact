@@ -19,6 +19,8 @@ class Config:
     # Referer
     REFERER = environ.get("REFERER", "")
 
+    FORCE_HTTPS = True
+
 
 class ProdConfig(Config):
     # Database
@@ -45,6 +47,8 @@ class DevConfig(Config):
 class TestConfig(Config):
     CORS_ORIGINS = "*"
     REFERER = ""
+    SESSION_COOKIE_SECURE = False
+    FORCE_HTTPS = False
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_URI = "postgresql://tester:secret@database:5432/kontact_test"
 

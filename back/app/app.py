@@ -17,12 +17,16 @@ def create_app(settings_override=None):
     app.json_encoder = JSON_Improved
     db.init_app(app)
     Migrate(app, db)
+
     CORS(
         app,
         supports_credentials=True,
         origins=app.config.get("CORS_ORIGINS"),
     )
-    Talisman(app, force_https=True)
+    Talisman(
+        app,
+        force_https=app.config.get("FORCE_HTTPS"),
+    )
 
     with app.app_context():
         from app.api import api, auth_api, user_api, channel_api
