@@ -11,8 +11,8 @@ proc_name = "gunicorn_kontact_back"
 bind = "0.0.0.0:5000"
 
 # LOGGING
-accesslog = "-"  # logs to stdout
-errorlog = "-"  # logs to stdout
+accesslog = None  # "-"  # logs to stdout
+errorlog = None  # "-"  # logs to stdout
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
 loglevel = environ.get("WEB_LOG", "info")
 reload = bool(strtobool(environ.get("WEB_RELOAD", "false")))

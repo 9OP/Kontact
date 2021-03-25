@@ -42,6 +42,11 @@ services:
   #   depends_on:
   #     - back
 
+  front:
+    build:
+      context: ./front
+      dockerfile: front.dockerfile
+
   database:
     build:
       context: ./back/database
@@ -58,8 +63,6 @@ services:
     image: adminer:standalone
     environment:
       ADMINER_DESIGN: "mvt"
-    ports:
-      - "8082:8080"
     links:
       - database
 

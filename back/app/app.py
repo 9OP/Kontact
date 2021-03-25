@@ -22,7 +22,7 @@ def create_app(settings_override=None):
         supports_credentials=True,
         origins=app.config.get("CORS_ORIGINS"),
     )
-    Talisman(app, force_https=False)
+    Talisman(app, force_https=True)
 
     with app.app_context():
         from app.api import api, auth_api, user_api, channel_api

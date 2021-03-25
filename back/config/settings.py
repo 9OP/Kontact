@@ -10,6 +10,9 @@ class Config:
     SECRET_KEY = environ.get("SECRET_KEY", "secret")
     PAYLOAD_EXPIRATION = 7200  # 2 hours
 
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "Strict"
+
     # CORS origins
     CORS_ORIGINS = environ.get("CORS_ORIGINS", "*")
 
