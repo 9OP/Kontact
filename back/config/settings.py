@@ -8,10 +8,10 @@ load_dotenv(path.join(basedir, "../.env"))
 class Config:
     # App
     SECRET_KEY = environ.get("SECRET_KEY", "secret")
-    PAYLOAD_EXPIRATION = 7200  # 2 hours
+    PAYLOAD_EXPIRATION = 3600  # 2 hours
 
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = "Strict"
+    # SESSION_COOKIE_SECURE = True
+    # SESSION_COOKIE_SAMESITE = "Strict"
 
     # CORS origins
     CORS_ORIGINS = environ.get("CORS_ORIGINS", "*")
@@ -19,7 +19,7 @@ class Config:
     # Referer
     REFERER = environ.get("REFERER", "")
 
-    FORCE_HTTPS = True
+    # FORCE_HTTPS = True
 
 
 class ProdConfig(Config):

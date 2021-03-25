@@ -3,6 +3,19 @@ import app.api_responses as apr
 import re
 
 
+def logger():
+    current_app.logger.info(
+        (
+            "REQUEST :: "
+            f"{'-'.join(request.access_route)} :: "
+            f"{request.user_agent} :: "
+            f"{request.endpoint} :: "
+            f"{request.method} {request.url}"
+        )
+    )
+
+
+# log handler
 def handler(exc):
     app_code = exc.app_code if hasattr(exc, "app_code") else 1000
     payload = {"app_code": app_code, "description": exc.description}

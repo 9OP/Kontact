@@ -4,10 +4,12 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_talisman import Talisman
 from config.settings import conf
-from app.extensions import JSON_Improved
+from app.extensions import JSON_Improved, logger_config
+from logging.config import dictConfig
 
 
 def create_app(settings_override=None):
+    dictConfig(logger_config())
     env = settings_override or environ.get("FLASK_ENV")
     app = Flask(__name__)
     app.config.from_object(conf[env])

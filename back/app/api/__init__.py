@@ -1,6 +1,6 @@
 from flask import Blueprint
 from werkzeug.exceptions import HTTPException
-from app.api.helpers import handler, expect_mimetype, expect_referer
+from app.api.helpers import handler, expect_mimetype, expect_referer, logger
 from app.api_responses import (
     ApiError,
     AuthError,
@@ -27,6 +27,7 @@ api.app_errorhandler(TokenExpired)(handler)
 
 # Application wide
 api.app_errorhandler(HTTPException)(handler)
+api.before_app_request(logger)
 api.before_app_request(expect_referer)
 api.before_app_request(expect_mimetype)
 

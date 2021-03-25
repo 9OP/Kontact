@@ -1,0 +1,8 @@
+2021-03-25 16:31:20,832 :: INFO :: MainThread :: REQUEST :: 172.18.0.1 :: vscode-restclient :: auth_api.signin :: POST http://127.0.0.1:5000/auth/signin
+2021-03-25 16:31:23,976 :: INFO :: MainThread :: REQUEST :: 172.18.0.1 :: vscode-restclient :: auth_api.key :: GET http://127.0.0.1:5000/auth/key
+2021-03-25 16:31:25,340 :: INFO :: MainThread :: REQUEST :: 172.18.0.1 :: vscode-restclient :: auth_api.whoami :: GET http://127.0.0.1:5000/auth/whoami
+2021-03-25 16:31:25,351 :: INFO :: MainThread :: AUTH :: martin@mail.com :: 172.18.0.1
+2021-03-25 16:31:34,897 :: INFO :: MainThread :: REQUEST :: 172.18.0.1 :: vscode-restclient :: auth_api.whoami :: GET http://127.0.0.1:5000/auth/whoami
+2021-03-25 16:31:35,007 :: INFO :: MainThread :: AUTH :: martin@mail.com :: 172.18.0.1
+2021-03-25 16:31:37,499 :: INFO :: MainThread :: REQUEST :: 172.18.0.1 :: vscode-restclient :: channel_api.new :: POST http://127.0.0.1:5000/channel
+2021-03-25 16:31:37,622 :: INFO :: MainThread :: AUTH :: martin@mail.com :: 172.18.0.1
