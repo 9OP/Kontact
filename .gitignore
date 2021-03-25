@@ -18,6 +18,7 @@ __pycache__/
 .crt
 .pem
 .key
+.log
 
 # misc
 .DS_Store

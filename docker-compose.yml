@@ -11,6 +11,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - back
+      - front
+      - adminer
 
   back:
     build:
@@ -20,12 +24,13 @@ services:
     entrypoint: "./entrypoint.sh"
     command: "gunicorn -c 'python:config.gunicorn' 'app:create_app()'"
     environment:
-      FLASK_ENV: development
+      FLASK_ENV: "development"
+    ports:
+      - "5000:5000"
     volumes:
-      - ./back:/back
+      - ./back:/app
     depends_on:
       - database
-      - proxy
 
   # beacon:
   #   build:
