@@ -79,7 +79,7 @@ def test_fail_decode_expired(_token, monkeypatch):
     WHEN exp is passed
     THEN raise TokenExpired one decode
     """
-    monkeypatch.setattr(Config, "PAYLOAD_EXPIRATION", -1)  # expire at now-1s
+    monkeypatch.setattr(Config, "TOKEN_EXPIRATION", -1)  # expire at now-1s
     token, _ = _token
     with pytest.raises(api_res.TokenExpired):
         UserToken.decode(token.encode())

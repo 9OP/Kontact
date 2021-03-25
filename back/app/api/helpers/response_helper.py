@@ -1,21 +1,21 @@
-from flask import request, json, jsonify, current_app
+from flask import request, json, jsonify, current_app, g
 import app.api_responses as apr
 import re
 
 
-def logger():
+def logger(response):
+    user = g.get("current_user", "<Anonymous>")
     current_app.logger.info(
         (
-            "REQUEST :: "
-            f"{'-'.join(request.access_route)} :: "
+            f"{'-'.join(request.access_route)} {user} :: "
+            f"{response.status_code} {request.method} {request.path} :: "
             f"{request.user_agent} :: "
-            f"{request.endpoint} :: "
-            f"{request.method} {request.url}"
+            f"{request.endpoint}"
         )
     )
+    return response
 
 
-# log handler
 def handler(exc):
     app_code = exc.app_code if hasattr(exc, "app_code") else 1000
     payload = {"app_code": app_code, "description": exc.description}

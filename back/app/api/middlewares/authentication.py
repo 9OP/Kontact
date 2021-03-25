@@ -1,4 +1,4 @@
-from flask import request, g, session, current_app
+from flask import request, g, session
 from app.models import User, UserToken
 import app.api_responses as apr
 
@@ -15,5 +15,3 @@ def authentication(delegation=False):
 
     g.current_user = User.find_one(id=uid)
     g.auth_token = UserToken.find_one(id=tid)
-
-    current_app.logger.info(f"AUTH :: {g.current_user.email} :: {request.remote_addr}")

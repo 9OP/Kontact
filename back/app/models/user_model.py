@@ -30,7 +30,7 @@ class User(db.Model, Support):
         self.password = User.hash_password(kwargs["password"]).decode("utf-8")
 
     def __repr__(self):
-        return "<user: {}>".format(self.email)
+        return f"<{Access(self.access).name}, {self.email}, {self.name}>"
 
     @staticmethod
     def hash_password(password):

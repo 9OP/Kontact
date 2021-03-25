@@ -19,7 +19,7 @@ class UserToken(db.Model, Support):
 
     def encode(self):
         payload = {
-            "exp": datetime.utcnow() + timedelta(seconds=Config.PAYLOAD_EXPIRATION),
+            "exp": datetime.utcnow() + timedelta(seconds=Config.TOKEN_EXPIRATION),
             "iat": datetime.utcnow(),
             "uid": self.user_id.hex,  # user id
             "tid": self.id.hex,  # token id

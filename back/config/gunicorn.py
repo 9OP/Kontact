@@ -13,7 +13,7 @@ bind = "0.0.0.0:5000"
 
 # LOGGING
 accesslog = None
-errorlog = "/app/logs/gunicorn_error.log"
+errorlog = "-"
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
 loglevel = environ.get("WEB_LOG", "info")
 reload = True  # bool(strtobool(environ.get("WEB_RELOAD", "false")))

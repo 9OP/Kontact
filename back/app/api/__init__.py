@@ -27,9 +27,9 @@ api.app_errorhandler(TokenExpired)(handler)
 
 # Application wide
 api.app_errorhandler(HTTPException)(handler)
-api.before_app_request(logger)
 api.before_app_request(expect_referer)
 api.before_app_request(expect_mimetype)
+api.after_app_request(logger)
 
 
 # [Authentication] blueprint

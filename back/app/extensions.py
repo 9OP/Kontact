@@ -18,12 +18,8 @@ def logger_config(log_name=None):
         "version": 1,
         "formatters": {
             "default": {
-                "format": (
-                    "%(asctime)s :: "
-                    "%(levelname)s :: "
-                    "%(threadName)s :: "
-                    "%(message)s"
-                ),
+                "format": "[%(asctime)s] %(message)s",
+                "datefmt": "%Y-%m-%d %H:%M:%S",
             }
         },
         "handlers": {

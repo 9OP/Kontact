@@ -1,3 +1,6 @@
+from app.models import Access
+
+
 def test_define(_user):
     """
     GIVEN a user instance
@@ -15,8 +18,8 @@ def test_repr(_user):
     WHEN repr
     THEN returns user email
     """
-    user, user_data = _user
-    assert user.__repr__() == f"<user: {user_data['email']}>"
+    user, _ = _user
+    assert user.__repr__() == f"<{Access(user.access).name}, {user.email}, {user.name}>"
 
 
 def test_check_password(_user):

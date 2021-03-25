@@ -6,24 +6,18 @@ load_dotenv(path.join(basedir, "../.env"))
 
 
 class Config:
-    # App
     SECRET_KEY = environ.get("SECRET_KEY", "secret")
-    PAYLOAD_EXPIRATION = 3600  # 2 hours
-
-    # SESSION_COOKIE_SECURE = True
-    # SESSION_COOKIE_SAMESITE = "Strict"
-
-    # CORS origins
+    TOKEN_EXPIRATION = 3600
+    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = environ.get("SECURE_COOKIE", False)
+    FORCE_HTTPS = environ.get("FORCE_HTTPS", False)
     CORS_ORIGINS = environ.get("CORS_ORIGINS", "*")
-
-    # Referer
     REFERER = environ.get("REFERER", "")
-
-    # FORCE_HTTPS = True
 
 
 class ProdConfig(Config):
-    # Database
+    SESSION_COOKIE_SECURE = True
+    FORCE_HTTPS = True
     SQLALCHEMY_DATABASE_URI = (
         "postgresql://"
         f"{environ.get('PROD_DB_USER')}@"
@@ -34,7 +28,6 @@ class ProdConfig(Config):
 
 
 class DevConfig(Config):
-    # Database
     SQLALCHEMY_DATABASE_URI = (
         "postgresql://"
         f"{environ.get('DB_USER', 'developer:secret')}@"
