@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   proxy:
+    container_name: "kontact_proxy"
     image: nginx
     restart: always
     volumes:
@@ -17,42 +18,46 @@ services:
       - adminer
 
   back:
+    container_name: "kontact_back"
     build:
       context: ./back
       dockerfile: back.dockerfile
     restart: always
     entrypoint: "./entrypoint.sh"
-    command: "gunicorn -c 'python:config.gunicorn' 'app:create_app()'"
+    command: "./startup.sh"
     environment:
       FLASK_ENV: "development"
-    ports:
-      - "5000:5000"
+    # ports:
+    #   - "5000:5000"
     volumes:
       - ./back:/app
     depends_on:
       - database
 
-  # beacon:
-  #   build:
-  #     context: ./beacon
-  #     dockerfile: beacon.dockerfile
-  #   restart: always
-  #   command: "npm run start:dev"
-  #   environment:
-  #     NODE_ENV: "development"
-  #   volumes:
-  #     - ./beacon:/beacon
-  #   ports:
-  #     - "4000:4000"
-  #   depends_on:
-  #     - back
+  beacon:
+    container_name: "kontact_beacon"
+    build:
+      context: ./beacon
+      dockerfile: beacon.dockerfile
+    restart: always
+    command: "./startup.sh"
+    environment:
+      NODE_ENV: "development"
+    volumes:
+      - ./beacon:/app
+    # ports:
+    #   - "4000:4000"
+    depends_on:
+      - back
 
   front:
+    container_name: "kontact_front"
     build:
       context: ./front
       dockerfile: front.dockerfile
 
   database:
+    container_name: "kontact_database"
     build:
       context: ./back/database
       dockerfile: database.dockerfile
@@ -65,6 +70,7 @@ services:
       - db-data:/var/lib/postgresql/data
 
   adminer:
+    container_name: "kontact_adminer"
     image: adminer:standalone
     environment:
       ADMINER_DESIGN: "mvt"

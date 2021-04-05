@@ -19,6 +19,8 @@ const createApp = (listener: http.Server): void => {
 
   io.listen(listener);
 
+  console.log('socket io start');
+
   io.use(authentication);
 
   io.on('connection', (socket: ExtSocket) => {

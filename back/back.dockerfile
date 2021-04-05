@@ -48,4 +48,4 @@ USER kontact
 EXPOSE 5000
 
 # start app
-CMD ["gunicorn", "-c", "python:config.gunicorn", "app:create_app()"]
+# CMD ["./startup.sh"]

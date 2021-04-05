@@ -1,0 +1,54 @@
+[2021-04-05 20:24:28] 172.19.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:24:39] 172.19.0.1 <Anonymous> :: 200 POST /auth/signin :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.signin
+[2021-04-05 20:24:39] 172.19.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:24:39] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.memberships
+[2021-04-05 20:24:39] 172.19.0.6 <ADMIN, admin@mail.com, Martin> :: 200 GET /auth/whoami :: axios/0.21.0 :: auth_api.whoami
+[2021-04-05 20:24:39] 172.19.0.6 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: axios/0.21.0 :: channel_api.memberships
+[2021-04-05 20:24:43] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:24:43] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:24:54] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/8f5f20c4-3b69-46c3-b4a4-de10d15f6879 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:24:57] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 DELETE /channel/8f5f20c4-3b69-46c3-b4a4-de10d15f6879 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.destroy
+[2021-04-05 20:25:00] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:25:00] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:25:06] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 PUT /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c/membership/4506abac-98af-4f78-8ae9-8d723357ff96 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.update_member
+[2021-04-05 20:25:10] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 DELETE /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c/membership/4506abac-98af-4f78-8ae9-8d723357ff96 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.delete_member
+[2021-04-05 20:25:30] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/112b4cde-0bc3-44f4-bb68-d0b75e0d6d05 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:25:31] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:25:49] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/43df39bd-6328-4292-a312-ce1f6890ce46 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:25:51] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:26:24] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 DELETE /channel/6f9ad480-dc17-4d57-a7a2-5aece53f9d1c :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.destroy
+[2021-04-05 20:26:36] 172.19.0.1 <Anonymous> :: 401 GET /auth/whoami :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.whoami
+[2021-04-05 20:26:43] 172.19.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:26:44] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /auth/whoami :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.whoami
+[2021-04-05 20:26:44] 172.19.0.6 <ADMIN, admin@mail.com, Martin> :: 200 GET /auth/whoami :: axios/0.21.0 :: auth_api.whoami
+[2021-04-05 20:26:44] 172.19.0.6 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: axios/0.21.0 :: channel_api.memberships
+[2021-04-05 20:26:44] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.memberships
+[2021-04-05 20:26:55] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 POST /auth/signout :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.signout
+[2021-04-05 20:26:55] 172.19.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:30:05] 172.19.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:30:20] 172.19.0.1 <Anonymous> :: 200 POST /auth/signin :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.signin
+[2021-04-05 20:30:20] 172.19.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:30:20] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.memberships
+[2021-04-05 20:30:20] 172.19.0.6 <ADMIN, admin@mail.com, Martin> :: 200 GET /auth/whoami :: axios/0.21.0 :: auth_api.whoami
+[2021-04-05 20:30:20] 172.19.0.6 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: axios/0.21.0 :: channel_api.memberships
+[2021-04-05 20:30:24] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/f2db6811-187d-430a-8069-1063799068b9 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:30:24] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/f2db6811-187d-430a-8069-1063799068b9 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:30:27] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 DELETE /channel/f2db6811-187d-430a-8069-1063799068b9 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.destroy
+[2021-04-05 20:30:29] 172.19.0.1 <ADMIN, admin@mail.com, Martin> :: 200 POST /auth/signout :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.signout
+[2021-04-05 20:30:29] 172.19.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:42:21] 172.20.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:43:43] 172.20.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:43:48] 172.20.0.1 <Anonymous> :: 200 POST /auth/signin :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.signin
+[2021-04-05 20:43:48] 172.20.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:43:49] 172.20.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.memberships
+[2021-04-05 20:43:51] 172.20.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/112b4cde-0bc3-44f4-bb68-d0b75e0d6d05 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:43:51] 172.20.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/112b4cde-0bc3-44f4-bb68-d0b75e0d6d05 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 20:59:21] 172.20.0.1 <ADMIN, admin@mail.com, Martin> :: 200 POST /auth/signout :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.signout
+[2021-04-05 20:59:21] 172.20.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 20:59:24] 172.20.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 21:10:49] 172.21.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 21:11:00] 172.21.0.1 <Anonymous> :: 200 POST /auth/signin :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.signin
+[2021-04-05 21:11:00] 172.21.0.1 <Anonymous> :: 200 GET /auth/key :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: auth_api.key
+[2021-04-05 21:11:01] 172.21.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/memberships :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.memberships
+[2021-04-05 21:11:11] 172.21.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/112b4cde-0bc3-44f4-bb68-d0b75e0d6d05 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show
+[2021-04-05 21:11:11] 172.21.0.1 <ADMIN, admin@mail.com, Martin> :: 200 GET /channel/112b4cde-0bc3-44f4-bb68-d0b75e0d6d05 :: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0 :: channel_api.show

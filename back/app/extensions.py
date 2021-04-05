@@ -34,5 +34,6 @@ def logger_config(log_name=None):
                 "encoding": "utf8",
             },
         },
-        "root": {"level": "INFO", "handlers": ["console", "file"]},
+        "root": {"level": "INFO", "handlers": ["file"]},
+        # "root": {"level": "INFO", "handlers": ["console", "file"]},
     }
