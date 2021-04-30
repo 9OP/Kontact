@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import * as http from 'http';
 import { Server } from 'socket.io';
 
@@ -6,20 +5,18 @@ import { ExtSocket } from './types';
 import { authentication } from './middlewares';
 import binders from './controllers';
 
-// Load .env
-dotenv.config();
-
 // App factory
 const createApp = (listener: http.Server): void => {
   const io = new Server({
     cors: {
       origin: '*',
     },
+    path: '/beacon',
   });
 
   io.listen(listener);
 
-  console.log('socket io start');
+  console.log('socket io started');
 
   io.use(authentication);
 

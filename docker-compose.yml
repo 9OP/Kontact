@@ -16,6 +16,7 @@ services:
       - back
       - front
       - adminer
+      - beacon
 
   back:
     container_name: "kontact_back"
@@ -27,8 +28,6 @@ services:
     command: "./startup.sh"
     environment:
       FLASK_ENV: "development"
-    # ports:
-    #   - "5000:5000"
     volumes:
       - ./back:/app
     depends_on:
@@ -42,11 +41,10 @@ services:
     restart: always
     command: "./startup.sh"
     environment:
+      CHOKIDAR_USEPOLLING: "true" # necessary ??
       NODE_ENV: "development"
     volumes:
       - ./beacon:/app
-    # ports:
-    #   - "4000:4000"
     depends_on:
       - back
 
@@ -55,6 +53,11 @@ services:
     build:
       context: ./front
       dockerfile: front.dockerfile
+    environment:
+      CHOKIDAR_USEPOLLING: "true" # necessary ??
+      NODE-ENV: "development"
+    volumes:
+      - ./front:/app
 
   database:
     container_name: "kontact_database"
@@ -74,8 +77,6 @@ services:
     image: adminer:standalone
     environment:
       ADMINER_DESIGN: "mvt"
-    links:
-      - database
 
 volumes:
   db-data:

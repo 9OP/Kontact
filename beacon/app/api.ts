@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
+import { BACKEND_API } from './config';
 import { IUser, IMembership } from './models/user.model';
 
-const BACKEND_API = 'http://proxy/api'; // process.env.BACKEND_API
 const back = axios.create({
   baseURL: BACKEND_API,
   timeout: 2000,
-  // headers: { Referer: 'http://localhost:3000' },
 });
 
 const JSONtoIMemberships = (data: any): IMembership[] => {

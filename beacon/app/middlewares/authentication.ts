@@ -5,7 +5,6 @@ import { ExtSocket } from '../types';
 import { whoami, fetchMemberships } from '../api';
 
 export default async (socket: Socket, next: (any?: any) => void): Promise<void> => {
-  console.log('auth handshake');
   const { token } = socket.handshake.auth as {token: string};
   try {
     const user = await whoami(token);
