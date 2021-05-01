@@ -87,7 +87,7 @@ class Api {
 /**
  * Backend API
  */
-const BACKEND = process.env.REACT_APP_BASE_URL as string;
+const BACKEND = `${window.location.origin}/api`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function backendHandler(this: Api, response: Response): Promise<any> {

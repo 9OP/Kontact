@@ -90,7 +90,7 @@ const eventEmitterCreator = (socket: Socket) => {
 /**
  * Beacon Api
  */
-const BEACON = process.env.REACT_APP_BEACON_URL as string;
+const BEACON = window.location.origin;
 export const beacon = new Socket(BEACON, { path: '/beacon' });
 export const beaconHandler = eventHandlerCreator(beacon);
 export const beaconEmitter = eventEmitterCreator(beacon);
