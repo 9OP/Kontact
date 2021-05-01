@@ -3,12 +3,13 @@ import React, { useCallback } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { IMessage, IMember } from '../../../../common/models';
 
-interface Props {
-  messages: {data: IMessage, author: IMember}[]
-}
+// interface Props {
+//   messages: {data: IMessage, author: IMember}[]
+// }
 
-export default (props: Props): JSX.Element => {
-  const { messages } = props;
+export default (): JSX.Element => {
+  const [messages] = useMessage();
+  // const { messages } = props;
 
   const chatRef = useCallback((node) => {
     if (node !== null) {

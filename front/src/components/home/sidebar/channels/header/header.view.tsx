@@ -4,6 +4,7 @@ import {
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import ModalCreator from '../../../../modal';
+import { useCreateChannel } from '../../../../../services/channel.hooks';
 
 interface ModalProps {
   isOpen: boolean,
@@ -42,12 +43,9 @@ const CreateChannelModal = (props: ModalProps):JSX.Element => {
   );
 };
 
-interface Props {
-  createChannel: (name: string) => void
-}
-
-export default (props: Props): JSX.Element => {
-  const { createChannel } = props;
+export default (): JSX.Element => {
+  const [createChannel] = useCreateChannel();
+  // const { createChannel } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

@@ -9,19 +9,22 @@ import {
   Button,
   InputGroup,
   InputRightElement,
+  Spinner,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useSignin } from '../../services/auth.hooks';
 
-interface Props {
-  signin: (event: React.FormEvent<HTMLFormElement>) => void;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setPassword: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export default (props: Props): JSX.Element => {
-  const { signin, setEmail, setPassword } = props;
+export default (): JSX.Element => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [signin, loading, error] = useSignin();
   const [showPassword, setShowPassword] = useState(false);
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    signin(email, password);
+  };
 
   return (
     <Box paddingTop="4rem">
@@ -38,7 +41,7 @@ export default (props: Props): JSX.Element => {
           </Box>
 
           <Box my={4} textAlign="left">
-            <form onSubmit={signin}>
+            <form onSubmit={handleSubmit}>
               <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input
@@ -75,7 +78,15 @@ export default (props: Props): JSX.Element => {
                 width="full"
                 mt={4}
               >
-                Sign In
+                { loading ? (
+                  <Spinner
+                    thickness="2px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="teal.500"
+                    size="md"
+                  />
+                ) : 'Sign In'}
               </Button>
             </form>
           </Box>

@@ -1,20 +1,17 @@
 import React from 'react';
 import { Flex } from '@chakra-ui/react';
-import Header from './header/header';
-import Channel from './channel/channel';
-import Message from './message/message';
-import Members from './members/members';
+import Header from './header/header.view';
+import Channel from './channel/channel.view';
+import Message from './message/message.view';
+import Members from './members/members.view';
+import { useChannels } from '../../../services/channel.hooks';
 
-interface Props {
-  channelOpened: boolean;
-}
-
-export default (props: Props): JSX.Element => {
-  const { channelOpened } = props;
+export default (): JSX.Element => {
+  const [, , currentChannel] = useChannels();
 
   return (
     <Flex flex="1 0 auto">
-      {channelOpened ? (
+      {currentChannel ? (
         <Flex flexDirection="column" width="100%">
           <Header />
           <Flex

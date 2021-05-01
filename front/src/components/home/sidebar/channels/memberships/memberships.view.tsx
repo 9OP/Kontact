@@ -5,17 +5,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { IChannel } from '../../../../../common/models/channel.model';
+import { useChannels } from '../../../../../services/channel.hooks';
 
-interface Props {
-  channels: IChannel[];
-  openedChannel: IChannel;
-  openChannel: (cid: string) => void
-}
+export default (): JSX.Element => {
+  const [channels, openChannel, currentChannel] = useChannels();
 
-export default (props: Props): JSX.Element => {
-  const { channels, openChannel, openedChannel } = props;
-
-  const isOpened = (cid: string) => openedChannel?.id === cid;
+  const isOpened = (cid: string) => currentChannel?.id === cid;
 
   const renderChannels = () => (
     channels.map((channel: IChannel) => (
@@ -26,10 +21,10 @@ export default (props: Props): JSX.Element => {
           cursor: 'pointer',
         }}
         bg={isOpened(channel.id) ? 'gray.100' : ''}
-        borderLeft={isOpened(channel.id) ? '3px solid' : ''}
+        borderLeft={isOpened(channel.id) ? '4px solid' : ''}
         borderColor="rgba(146, 101, 128, 0.4)"
         padding="1rem"
-        paddingLeft={isOpened(channel.id) ? 'calc(2rem - 3px)' : '2rem'}
+        paddingLeft={isOpened(channel.id) ? 'calc(2rem - 4px)' : '2rem'}
         onClick={() => openChannel(channel.id)}
       >
         <Text

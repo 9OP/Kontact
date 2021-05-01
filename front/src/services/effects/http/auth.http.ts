@@ -30,6 +30,7 @@ const key = async (): Promise<string> => {
 };
 
 export const signin = async (email: string, password: string): Promise<IAuth> => {
+  await new Promise((res) => setTimeout(res, 1000));
   const res = await back.post({
     route: 'auth/signin',
     payload: { email, password },

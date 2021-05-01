@@ -1,27 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { RouteProps } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import Guard from './guard';
-import { isAuthenticated } from '../../store/authentication/auth.selectors';
-import * as authEffect from '../../services/effects/auth.effects';
 import { LOGIN_PATH } from '../constants';
+import { useWhoami } from '../../services/auth.hooks';
 
 export default (props: RouteProps): JSX.Element => {
-  const dispatch = useDispatch();
-  const authenticated = useSelector(isAuthenticated);
-
-  useEffect(() => {
-    if (!authenticated) {
-      dispatch(authEffect.whoami());
-    }
-  }, [authenticated]);
+  const [auth] = useWhoami();
 
   return (
     <Guard
       {...props}
       fallbackPath={LOGIN_PATH}
-      isAllowed={authenticated}
+      isAllowed={!(auth === null)}
     />
   );
 };

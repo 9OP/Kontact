@@ -3,6 +3,7 @@ import {
   Box,
   Textarea,
 } from '@chakra-ui/react';
+import { useChannels } from '../../../../services/channel.hooks';
 
 interface Props {
   sendMessage: () => void,
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default (props: Props): JSX.Element => {
+  const [,, currentChannel] = useChannels();
   const { sendMessage, message, setMessage } = props;
 
   const send = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
