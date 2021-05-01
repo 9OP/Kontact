@@ -13,6 +13,7 @@ def test_define(_token):
     token, user = _token
     assert token.user_id == user.id
     assert token.revoked_at is None
+    assert len(token.token) == 64
 
 
 def test_repr(_token):

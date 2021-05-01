@@ -19,7 +19,7 @@ class UserToken(db.Model, Support):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.token = b64encode(urandom(48)).decode()  # 48 bytes -> 64 len string
+        self.token = b64encode(urandom(100)).decode()[:64]  # 48 bytes -> 64 len string
 
     def __repr__(self):
         return "<user_token: {}>".format(self.id)

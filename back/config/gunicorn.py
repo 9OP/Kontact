@@ -1,4 +1,5 @@
-from os import environ, path
+from os import path
+from app.extensions import logger_config
 
 # from distutils.util import strtobool
 from dotenv import load_dotenv
@@ -13,10 +14,7 @@ bind = "0.0.0.0:5000"
 
 # LOGGING
 accesslog = None
-errorlog = "-"
-access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
-loglevel = environ.get("WEB_LOG", "info")
-reload = True  # bool(strtobool(environ.get("WEB_RELOAD", "false")))
+logconfig_dict = logger_config(prefix="errors")
 
 # WORKERS
 workers = 3
@@ -26,6 +24,7 @@ keepalive = 10  # keep alive for 10s
 
 # SERVER
 preload_app = False  # not bool(strtobool(environ.get("WEB_RELOAD", "false")))
+reload = True  # bool(strtobool(environ.get("WEB_RELOAD", "false")))
 forwarded_allow_ips = "127.0.0.1"  # addr of front or proxy
 
 

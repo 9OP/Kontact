@@ -12,8 +12,8 @@ class JSON_Improved(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 
-def logger_config(log_name=None):
-    name = log_name or datetime.today().strftime("%Y%m%d")
+def logger_config(prefix="api", name=None):
+    name = name or datetime.today().strftime("%Y%m%d")
     return {
         "version": 1,
         "formatters": {
@@ -29,11 +29,27 @@ def logger_config(log_name=None):
             },
             "file": {
                 "class": "logging.FileHandler",
-                "filename": f"logs/api_{name}.log",
+                "filename": f"logs/{prefix}_{name}.log",
                 "formatter": "default",
                 "encoding": "utf8",
             },
         },
+        "loggers": {
+            "gunicorn": {
+                "level": "WARNING",
+                "propagate": False,
+                "handlers": ["file"],
+            },
+            # "gunicorn": {
+            #     "level": "INFO",
+            #     "propagate": False,
+            #     "handlers": ["file"],
+            # },
+        },
+        "incremental": False,
+        "disable_existing_loggers": False,
         "root": {"level": "INFO", "handlers": ["file"]},
+        # "root": {"level": "WARNING", "handlers": ["file"]},
+        # "root": {"level": "ERROR", "handlers": ["file"]},
         # "root": {"level": "INFO", "handlers": ["console", "file"]},
     }
