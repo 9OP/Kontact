@@ -21,10 +21,7 @@ def payload(data={}, headers={}, token=""):
 
 @pytest.fixture
 def mock_token(monkeypatch):
-    def mock(*args, **kwargs):
-        return "mocked_token"
-
-    monkeypatch.setattr(UserToken, "encode", mock)
+    monkeypatch.setattr(UserToken, "token", "mocked_token")
 
 
 @pytest.fixture

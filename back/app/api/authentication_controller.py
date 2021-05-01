@@ -56,7 +56,7 @@ def signin():
     if not user or not user.check_password(params["password"]):
         raise apr.LoginFailed()
 
-    token = UserToken.create(user_id=user.id).encode()
+    token = UserToken.create(user_id=user.id).token
     user_data = user.summary()
     user_data["token"] = token
     session["user_id"] = user.id

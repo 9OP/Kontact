@@ -1,3 +1,5 @@
+from os import urandom
+from base64 import b64encode
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime, timedelta
 from app.models.database import db, Support
@@ -12,65 +14,30 @@ class UserToken(db.Model, Support):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user.id"), nullable=False)
-    token = db.Column(db.String, nullable=False)
+    token = db.Column(db.String(64), nullable=False)
     revoked_at = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.token = "123456789"  # key_gen(ln=24)
+        self.token = b64encode(urandom(48)).decode()  # 48 bytes -> 64 len string
 
     def __repr__(self):
         return "<user_token: {}>".format(self.id)
-
-    def encode(self):
-        return self.token
 
     @classmethod
     def decode(cls, token):
         instance = cls.find(token=token)
 
-        if instance.revoked_at:
-            raise apr.TokenExpired()
+        if not instance:
+            raise apr.TokenInvalid()
 
-        if (datetime.utcnow() - instance.created_at).total_seconds() > timedelta(
-            seconds=Config.TOKEN_EXPIRATION
+        if instance.revoked_at or (
+            datetime.utcnow() - timedelta(seconds=Config.TOKEN_EXPIRATION)
+            > instance.created_at
         ):
             raise apr.TokenExpired()
 
         return (instance.user_id, instance.id)
-
-    # def encode(self):
-    #     payload = {
-    #         "exp": datetime.utcnow() + timedelta(seconds=Config.TOKEN_EXPIRATION),
-    #         "iat": datetime.utcnow(),
-    #         "uid": self.user_id.hex,  # user id
-    #         "tid": self.id.hex,  # token id
-    #     }
-    #     return jwt.encode(
-    #         payload,
-    #         Config.SECRET_KEY,
-    #         algorithm="HS512",
-    #     ).decode("utf-8")
-
-    # @classmethod
-    # def decode(cls, token):
-    #     try:
-    #         payload = jwt.decode(
-    #             token,
-    #             Config.SECRET_KEY,
-    #             algorithms="HS512",
-    #             options={"require": ["exp", "iat", "uid", "tid"]},
-    #         )
-    #     except jwt.ExpiredSignatureError:
-    #         raise apr.TokenExpired()
-    #     except jwt.InvalidTokenError:  # default error jwt
-    #         raise apr.TokenInvalid()
-    #     else:
-    #         uid = uuid.UUID(payload["uid"])
-    #         tid = uuid.UUID(payload["tid"])
-    #         if cls.find(id=tid).revoked_at:
-    #             raise apr.TokenExpired()
-    #         return (uid, tid)
 
     def revoke(self):
         self.update(revoked_at=datetime.utcnow())

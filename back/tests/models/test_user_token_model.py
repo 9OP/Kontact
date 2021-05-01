@@ -44,8 +44,8 @@ def test_decode(_token):
     WHEN decoded
     THEN return user id
     """
-    token, user = _token
-    assert UserToken.decode(token.encode()) == (user.id, token.id)
+    user_token, user = _token
+    assert UserToken.decode(user_token.token) == (user.id, user_token.id)
 
 
 def test_fail_decode_revoked(_token):
@@ -54,21 +54,19 @@ def test_fail_decode_revoked(_token):
     WHEN revoked
     THEN raise TokenExpired on decode
     """
-    token, user = _token
-    token.revoke()
+    user_token, user = _token
+    user_token.revoke()
     with pytest.raises(api_res.TokenExpired):
-        UserToken.decode(token.encode())
+        UserToken.decode(user_token.token)
 
 
-def test_fail_decode_invalid(_token, monkeypatch):
+def test_fail_decode_invalid(_token):
     """
-    GIVEN a token instance
-    WHEN invalid
-    THEN raise TokenInvalid on decode
+    GIVEN an invalid token
+    WHEN decode
+    THEN raise TokenInvalid
     """
-    token, _ = _token
-    token = token.encode()
-    monkeypatch.setattr(Config, "SECRET_KEY", "new_secret_key")
+    token = "invalid_token"
     with pytest.raises(api_res.TokenInvalid):
         UserToken.decode(token)
 
@@ -80,6 +78,6 @@ def test_fail_decode_expired(_token, monkeypatch):
     THEN raise TokenExpired one decode
     """
     monkeypatch.setattr(Config, "TOKEN_EXPIRATION", -1)  # expire at now-1s
-    token, _ = _token
+    user_token, _ = _token
     with pytest.raises(api_res.TokenExpired):
-        UserToken.decode(token.encode())
+        UserToken.decode(user_token.token)

@@ -13,11 +13,11 @@ class TestGateAuthentication:
 
     @pytest.fixture
     def token_context(self, app, _token):
-        token, user = _token
+        user_token, user = _token
         with app.test_request_context(
-            headers={"Authorization": f"Bearer {token.encode()}"}
+            headers={"Authorization": f"Bearer {user_token.token}"}
         ):
-            yield app, user, token
+            yield app, user, user_token
 
     def test_fail_token_not_set(self, no_token_context):
         """
@@ -100,12 +100,12 @@ class TestGateAuthentication:
 class TestGateAccess:
     @pytest.fixture
     def context(self, app, _token):
-        token, user = _token
+        user_token, user = _token
         with app.test_request_context(
-            headers={"Authorization": f"Bearer {token.encode()}"}
+            headers={"Authorization": f"Bearer {user_token.token}"}
         ):
             session["user_id"] = user.id
-            yield app, user, token
+            yield app, user, user_token
 
     def test_fail_access(self, context):
         """
@@ -161,9 +161,9 @@ class TestGateRole:
     def context(self, app, data, make_token, make_membership):
         user, channel = data
         membership = make_membership(user_id=user.id, channel_id=channel.id)
-        token = make_token(user_id=user.id)
+        user_token = make_token(user_id=user.id)
         with app.test_request_context(
-            headers={"Authorization": f"Bearer {token.encode()}"}
+            headers={"Authorization": f"Bearer {user_token.token}"}
         ):
             session["user_id"] = user.id
             yield user, channel, membership
@@ -171,9 +171,9 @@ class TestGateRole:
     @pytest.fixture
     def no_membership_context(self, app, data, make_token):
         user, channel = data
-        token = make_token(user_id=user.id)
+        user_token = make_token(user_id=user.id)
         with app.test_request_context(
-            headers={"Authorization": f"Bearer {token.encode()}"}
+            headers={"Authorization": f"Bearer {user_token.token}"}
         ):
             session["user_id"] = user.id
             yield user, channel

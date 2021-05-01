@@ -25,7 +25,7 @@ def upgrade():
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", UUID(), nullable=False),
-        sa.Column("token", sa.String(), nullable=False),
+        sa.Column("token", sa.String(length=64), nullable=False),
         sa.Column("revoked_at", sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(
             ["user_id"], ["user.id"], name=op.f("fk_user_token_user_id_user")
