@@ -31,7 +31,7 @@ export function useMembers(cid: string): [IMember[], boolean, Error | null] {
         });
     }
 
-    if (!members) {
+    if (members.length === 0) {
       fetchChannels();
     }
   }, [setLoading, members, setMembers]);

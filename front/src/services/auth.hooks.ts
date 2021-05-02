@@ -58,7 +58,7 @@ export function useWhoami(): [IAuth, boolean, Error | null] {
     if (!auth) {
       whoami();
     }
-  }, [setLoading, auth, setUser, resetUser]);
+  }, [auth, setUser, resetUser]);
 
   return [auth, loading, error];
 }

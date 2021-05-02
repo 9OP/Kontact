@@ -35,10 +35,10 @@ export function useChannels(): [
         });
     }
 
-    if (!channels) {
+    if (!channels.length && loading === false) {
       fetchChannels();
     }
-  }, [setLoading, channels, setChannels]);
+  }, []); // [setLoading, channels, setChannels, auth]);
 
   return [channels, openChannel, currentChannel, role, loading, error];
 }
