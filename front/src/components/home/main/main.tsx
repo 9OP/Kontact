@@ -1,37 +1,32 @@
-// import React, { useEffect } from 'react';
-// import { connect, ConnectedProps } from 'react-redux';
-// import { DispThunk, RootState } from '../../../store';
-// import { channelDataManager, membersDataManager } from '../../../services';
+import React from 'react';
+import { Flex } from '@chakra-ui/react';
+import Header from './header';
+import Channel from './channel';
+import Message from './message';
+import Members from './members/memberList';
+import { useChannels } from '../../../services/channel.hooks';
 
-// import MainView from './main.view';
+export default (): JSX.Element => {
+  const [, , currentChannel] = useChannels();
 
-// const mapState = (state: RootState) => ({
-//   channel: channelDataManager.selectOpenedChannel(state),
-// });
-
-// const mapDispatch = (dispatch: DispThunk) => ({
-//   fetchMembers: (cid: string) => dispatch(membersDataManager.fetchMembers(cid)),
-// });
-
-// const connector = connect(mapState, mapDispatch);
-
-// type PropsFromRedux = ConnectedProps<typeof connector>;
-
-// type Props = PropsFromRedux;
-
-// const Main = (props: Props): JSX.Element => {
-//   // pass channel as props add fetch messages too
-//   const { channel, fetchMembers } = props;
-//   const channelOpened = !!channel;
-
-//   useEffect(() => {
-//     if (channel) {
-//       fetchMembers(channel.id);
-//     }
-//   }, [channel]);
-
-//   return <MainView channelOpened={channelOpened} />;
-// };
-
-// export default connector(Main);
-export default {};
+  return (
+    <Flex flex="1 0 auto">
+      {currentChannel ? (
+        <Flex flexDirection="column" width="100%">
+          <Header />
+          <Flex
+            flexDirection="row"
+            height="calc(100vh - 7rem)"
+            paddingTop="1rem"
+          >
+            <Flex flexDirection="column" width="100%">
+              <Channel />
+              <Message />
+            </Flex>
+            <Members />
+          </Flex>
+        </Flex>
+      ) : null}
+    </Flex>
+  );
+};

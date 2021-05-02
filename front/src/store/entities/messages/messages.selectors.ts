@@ -1,11 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import { RootState } from '../..';
-import { IMember, IMessage } from '../../../common/models';
+import { IMemberMessage, IMessage } from '../../../common/models';
 import { selectOpenedChannel } from '../channels/channels.selectors';
 
-export const selectMessages = (
-  state: RootState,
-): { data: IMessage; author: IMember }[] => {
+export const selectMessages = (state: RootState): IMemberMessage[] => {
   const cid = selectOpenedChannel(state).id;
   const messages = Object.values(state.entities.messages?.byId || {}).filter(
     (message: IMessage) => message.channelId === cid,

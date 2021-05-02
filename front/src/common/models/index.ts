@@ -1,7 +1,7 @@
 import { IAuth, EAccess } from './auth.model';
 import { IMember, IMemberPreview, ERole } from './member.model';
 import { IChannel } from './channel.model';
-import { IMessage } from './message.model';
+import { IMessage, IMemberMessage } from './message.model';
 
 export type {
   IAuth,
@@ -9,6 +9,7 @@ export type {
   IMember,
   IMemberPreview,
   IMessage,
+  IMemberMessage,
 };
 
 export {

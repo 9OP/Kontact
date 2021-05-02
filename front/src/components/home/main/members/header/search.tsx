@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   Modal,
@@ -16,40 +16,30 @@ import {
   TagCloseButton,
 } from '@chakra-ui/react';
 import { RiUserSearchLine } from 'react-icons/ri';
-import { membersDataManager } from '../../../../../../services';
-import { IMemberPreview } from '../../../../../../common/models';
+import { IMemberPreview } from '../../../../../common/models';
+import { useCreateMember, useSearchUser } from '../../../../../services/member.hooks';
+import { useChannels } from '../../../../../services/channel.hooks';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  createMember: (uid: string) => void;
 }
 
 export default (props: Props): JSX.Element => {
-  const { isOpen, onClose, createMember } = props;
-  const [search, setSearch] = useState('');
-  const [searchedUsers, setSearchedUsers] = useState<IMemberPreview[]>([]);
+  const { isOpen, onClose } = props;
   const [selectedUsers, setSelectedUsers] = useState<{
     [id: string]: IMemberPreview;
   }>({});
 
-  useEffect(() => {
-    async function searchUsers() {
-      if (search.length >= 2) {
-        const data = await membersDataManager.searchUser(search);
-        setSearchedUsers(data);
-      } else {
-        setSearchedUsers([]);
-      }
-    }
-
-    searchUsers();
-  }, [search]);
+  const [,, currentChannel] = useChannels();
+  const [createMember] = useCreateMember();
+  const [search, setSearch, searchedUsers] = useSearchUser();
 
   const handleClose = () => {
-    Object.keys(selectedUsers).forEach((uid: string) => createMember(uid));
+    Object.keys(selectedUsers).forEach((uid: string) => {
+      createMember(currentChannel.id, uid);
+    });
     setSearch('');
-    setSearchedUsers([]);
     setSelectedUsers({});
     onClose();
   };

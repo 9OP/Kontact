@@ -14,8 +14,8 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { IChannel, ERole } from '../../../../common/models';
-import { useChannels, useDeleteChannel } from '../../../../services/channel.hooks';
+import { IChannel, ERole } from '../../../common/models';
+import { useChannels, useDeleteChannel } from '../../../services/channel.hooks';
 
 interface AlertProps {
   isOpen: boolean;

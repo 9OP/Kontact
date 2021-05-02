@@ -8,9 +8,9 @@ import {
 } from '../store/entities/members/memberships.actions';
 import { selectMemberById, selectMembers } from '../store/entities/members/memberships.selectors';
 import { emit, toast } from '../components/toast';
-import { ERole, IMemberPreview } from '../common/models';
+import { ERole, IMember, IMemberPreview } from '../common/models';
 
-export function useMembers(cid: string) {
+export function useMembers(cid: string): [IMember[], boolean, Error | null] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -39,7 +39,7 @@ export function useMembers(cid: string) {
   return [members, loading, error];
 }
 
-export function useCreateMember() {
+export function useCreateMember(): [(cid: string, uid: string) => void, boolean, Error | null] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const setMember = useAction(createMemberAction);
@@ -59,7 +59,7 @@ export function useCreateMember() {
   return [createMember, loading, error];
 }
 
-export function useDeleteMember() {
+export function useDeleteMember(): [(cid: string, uid: string) => void, boolean, Error | null] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const delMember = useAction(deleteMemberAction);
@@ -81,7 +81,8 @@ export function useDeleteMember() {
   return [deleteMember, loading, error];
 }
 
-export function useUpdateMember() {
+export function useUpdateMember(): [
+  (cid: string, uid: string, role: ERole) => void, boolean, Error | null] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const updMember = useAction(updateMemberAction);
@@ -101,21 +102,30 @@ export function useUpdateMember() {
   return [updateMember, loading, error];
 }
 
-export function useSearchUser() {
+export function useSearchUser(): [
+  string, (name: string) => void, IMemberPreview[], boolean, Error | null] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [search, setSearch] = useState('');
   const [previewMembers, setPreviewMembers] = useState<IMemberPreview[]>([]);
 
-  const searchMembers = useCallback((name: string) => {
-    setLoading(true);
-    membersHttpService.searchUser(name).then((preview) => {
-      setLoading(false);
-      setPreviewMembers(preview);
-    }).catch((err: Error) => {
-      setLoading(false);
-      setError(err);
-    });
-  }, []);
+  useEffect(() => {
+    async function searchUsers() {
+      if (search.length >= 2) {
+        setLoading(true);
+        try {
+          setLoading(false);
+          const data = await membersHttpService.searchUser(search);
+          setPreviewMembers(data);
+        } catch (err) {
+          setLoading(false);
+          setError(err);
+        }
+      }
+    }
 
-  return [searchMembers, previewMembers, loading, error];
+    searchUsers();
+  }, [search]);
+
+  return [search, setSearch, previewMembers, loading, error];
 }

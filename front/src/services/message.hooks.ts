@@ -5,9 +5,10 @@ import useAction from './useAction';
 import { selectMessages } from '../store/entities/messages/messages.selectors';
 import { receiveMessagesAction } from '../store/entities/messages/messages.actions';
 import * as message from './effects/socket/message.socket';
+import { IMemberMessage } from '../common/models';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useMessages() {
+export function useMessages(): [
+  IMemberMessage[], (cid: string, mess: string) => void, boolean, Error | null] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 

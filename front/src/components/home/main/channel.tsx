@@ -1,15 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useCallback } from 'react';
 import { Box, Text } from '@chakra-ui/react';
-import { IMessage, IMember } from '../../../../common/models';
-
-// interface Props {
-//   messages: {data: IMessage, author: IMember}[]
-// }
+import { IMessage, IMember } from '../../../common/models';
+import { useMessages } from '../../../services/message.hooks';
 
 export default (): JSX.Element => {
-  const [messages] = useMessage();
-  // const { messages } = props;
+  const [messages] = useMessages();
 
   const chatRef = useCallback((node) => {
     if (node !== null) {

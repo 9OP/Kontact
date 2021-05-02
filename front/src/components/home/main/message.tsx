@@ -1,24 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Textarea,
 } from '@chakra-ui/react';
-import { useChannels } from '../../../../services/channel.hooks';
+import { useChannels } from '../../../services/channel.hooks';
+import { useMessages } from '../../../services/message.hooks';
 
-interface Props {
-  sendMessage: () => void,
-  message: string,
-  setMessage: React.Dispatch<React.SetStateAction<string>>,
-}
-
-export default (props: Props): JSX.Element => {
+export default (): JSX.Element => {
+  const [message, setMessage] = useState('');
   const [,, currentChannel] = useChannels();
-  const { sendMessage, message, setMessage } = props;
+  const [, sendMessage] = useMessages();
 
   const send = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      sendMessage(currentChannel.id, message);
     }
   };
 

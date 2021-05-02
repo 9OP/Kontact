@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import SearchModal from './search/search';
+import SearchModal from './search';
 
 interface Props {
   isMaster: boolean;

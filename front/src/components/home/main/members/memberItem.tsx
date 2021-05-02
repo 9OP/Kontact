@@ -11,7 +11,7 @@ import {
   MenuDivider,
   MenuGroup,
 } from '@chakra-ui/react';
-import { ERole, IMember } from '../../../../../common/models';
+import { ERole, IMember } from '../../../../common/models';
 
 interface Props {
   isMaster: boolean;
