@@ -1,36 +1,25 @@
-// import React, { useEffect } from 'react';
-// import { connect, ConnectedProps } from 'react-redux';
+import React from 'react';
+import { Box, Flex } from '@chakra-ui/react';
 
-// import { DispThunk } from '../../../store';
-// import { channelDataManager } from '../../../services';
-// import SidebarView from './sidebar.view';
+import Header from './header';
+import Memberships from './memberships';
+import Footer from './footer';
 
-// const mapState = null;
-
-// const mapDispatch = (dispatch: DispThunk) => ({
-//   fetchChannels: () => dispatch(channelDataManager.fetchChannels()),
-// });
-
-// const connector = connect(
-//   mapState,
-//   mapDispatch,
-// );
-
-// type PropsFromRedux = ConnectedProps<typeof connector>
-
-// type Props = PropsFromRedux
-
-// const Sidebar = (props: Props): JSX.Element => {
-//   const { fetchChannels } = props;
-
-//   useEffect(() => {
-//     fetchChannels();
-//   }, []);
-
-//   return (
-//     <SidebarView />
-//   );
-// };
-
-// export default connector(Sidebar);
-export default {};
+export default (): JSX.Element => (
+  <Flex
+    direction="column"
+    width="17rem"
+    marginRight="1rem"
+    borderWidth={1}
+    borderRadius={8}
+    boxShadow="lg"
+  >
+    <Box overflow="auto">
+      <Box marginBottom="auto" marginTop="2rem">
+        <Header />
+        <Memberships />
+      </Box>
+    </Box>
+    <Footer />
+  </Flex>
+);

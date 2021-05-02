@@ -3,8 +3,8 @@ import {
   Text, Box, HStack, IconButton, useDisclosure, Input,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import ModalCreator from '../../../../modal';
-import { useCreateChannel } from '../../../../../services/channel.hooks';
+import ModalCreator from '../../modal';
+import { useCreateChannel } from '../../../services/channel.hooks';
 
 interface ModalProps {
   isOpen: boolean,

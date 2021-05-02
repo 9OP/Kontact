@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { back } from '../../../common/network/api';
-import { ERole, IMember } from '../../../common/models';
+import { ERole, IMember, IMemberPreview } from '../../../common/models';
 
 const JsonToMember = (json: any): IMember => ({
   id: json.id,
@@ -9,6 +9,13 @@ const JsonToMember = (json: any): IMember => ({
   role: json.role,
   joinedAt: new Date(json.joined_at),
 });
+
+const JsonToMemberPreviews = (json: any): IMemberPreview[] => json.map((member: IMemberPreview) => (
+  {
+    id: member.id,
+    name: member.name,
+  }
+));
 
 const JsonToMembers = (json: any[]): IMember[] => json.map((member: any) => JsonToMember(member));
 
@@ -32,4 +39,11 @@ export const updateMember = async (cid: string, uid: string, role: ERole): Promi
     payload: { role },
   });
   return JsonToMember(res);
+};
+
+export const searchUser = async (name = '', email = ''): Promise<IMemberPreview[]> => {
+  const res = await back.get({
+    route: `user/search?name=${name}&email=${email}`,
+  });
+  return JsonToMemberPreviews(res);
 };

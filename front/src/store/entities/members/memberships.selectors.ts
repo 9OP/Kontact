@@ -6,6 +6,8 @@ export const selectMembers = (state: RootState): IMember[] => {
   return Object.values(state.entities.members?.byId || {});
 };
 
-export const selectMemberById = (state: RootState, uid: string): IMember => {
-  return state.entities.members?.byId?.[uid] || {};
+export const selectMemberById = (state: RootState) => {
+  return (uid: string): IMember => {
+    return state.entities.members?.byId?.[uid] || {};
+  };
 };

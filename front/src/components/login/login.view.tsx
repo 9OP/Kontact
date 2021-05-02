@@ -17,8 +17,9 @@ import { useSignin } from '../../services/auth.hooks';
 export default (): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [signin, loading, error] = useSignin();
   const [showPassword, setShowPassword] = useState(false);
+
+  const [signin, loading, error] = useSignin();
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

@@ -4,8 +4,8 @@ import {
   ListItem,
   Text,
 } from '@chakra-ui/react';
-import { IChannel } from '../../../../../common/models/channel.model';
-import { useChannels } from '../../../../../services/channel.hooks';
+import { IChannel } from '../../../common/models/channel.model';
+import { useChannels } from '../../../services/channel.hooks';
 
 export default (): JSX.Element => {
   const [channels, openChannel, currentChannel] = useChannels();
