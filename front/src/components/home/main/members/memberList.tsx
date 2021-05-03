@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   useDisclosure,
@@ -8,20 +8,26 @@ import { ERole, IMember } from '../../../../common/models';
 import Header from './header/header';
 import Item from './memberItem';
 import Info from './infoDrawer';
-import { useDeleteMember, useMembers } from '../../../../services/member.hooks';
-import { useChannels } from '../../../../services/channel.hooks';
+import { useDeleteMember, useFetchMembers, useMembers } from '../../../../services/hooks/member.hooks';
+import { useChannels } from '../../../../services/hooks/channel.hooks';
 
 export default (): JSX.Element => {
-  const [,, currentChannel, role] = useChannels();
-  const [members] = useMembers(currentChannel.id);
+  const { channel, role } = useChannels();
+  const { members, byId } = useMembers();
   const [deleteMember] = useDeleteMember();
-  const [member, setMember] = useState<IMember>();
+  const [fetchMembers] = useFetchMembers();
+  const [memberId, setMemberId] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    // refetch members when opened channel changes
+    fetchMembers();
+  }, [channel]);
 
   const isMaster = role === ERole.Master;
 
-  const openInfo = (m: IMember) => {
-    setMember(m);
+  const openInfo = (uid: string) => {
+    setMemberId(uid);
     onOpen();
   };
 
@@ -30,8 +36,8 @@ export default (): JSX.Element => {
       key={member.id}
       isMaster={isMaster}
       member={member}
-      deleteMember={() => deleteMember(currentChannel.id, member.id)}
-      openInfo={() => openInfo(member)}
+      deleteMember={() => deleteMember(member.id)}
+      openInfo={() => openInfo(member.id)}
     />
   ));
 
@@ -51,11 +57,12 @@ export default (): JSX.Element => {
         {members ? renderMembers() : null}
       </List>
 
-      { member ? (
+      { memberId && byId(memberId) ? (
         <Info
           isOpen={isOpen}
           onClose={onClose}
-          member={member}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          member={byId(memberId)!}
           isMaster={isMaster}
         />
       ) : null}

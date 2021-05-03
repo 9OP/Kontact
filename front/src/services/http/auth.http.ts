@@ -1,8 +1,8 @@
-import { back } from '../../../common/network/api';
-import { beacon } from '../../../common/network/socket';
-import LES from '../../../common/localStorage';
-import { TOKEN } from '../../../common/constants';
-import { IAuth } from '../../../common/models';
+import { back } from '../../common/network/api';
+import { beacon } from '../../common/network/socket';
+import LES from '../../common/localStorage';
+import { TOKEN } from '../../common/constants';
+import { IAuth } from '../../common/models';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToUser = (json: any): IAuth => ({

@@ -15,8 +15,7 @@ import {
   FormHelperText,
 } from '@chakra-ui/react';
 import { ERole, IMember } from '../../../../common/models';
-import { useUpdateMember } from '../../../../services/member.hooks';
-import { useChannels } from '../../../../services/channel.hooks';
+import { useUpdateMember } from '../../../../services/hooks/member.hooks';
 
 interface Props {
   isOpen: boolean;
@@ -30,13 +29,11 @@ export default (props: Props): JSX.Element => {
     isOpen, onClose, isMaster, member,
   } = props;
   const btnRef = React.useRef(null);
-  const [,, currentChannel] = useChannels();
   const [update] = useUpdateMember();
 
   const changeRole = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     update(
-      currentChannel.id,
       member.id,
       member.role === ERole.Member ? ERole.Master : ERole.Member,
     );

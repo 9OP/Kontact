@@ -5,7 +5,7 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { FiLogOut } from 'react-icons/fi';
-import { useSignout } from '../../../services/auth.hooks';
+import { useSignout } from '../../../services/hooks/auth.hooks';
 
 export default (): JSX.Element => {
   const [signout] = useSignout();

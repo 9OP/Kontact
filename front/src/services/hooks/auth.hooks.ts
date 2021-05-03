@@ -1,17 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { resetUserAction, setUserAction } from '../store/authentication/auth.actions';
-import { selectUser } from '../store/authentication/auth.selectors';
-import { authHttpService } from './effects/http';
-import useAction from './useAction';
-import { emit, toast } from '../components/toast';
-import { IAuth } from '../common/models';
 
-export function useSignin(): [(...args: any) => void, boolean, Error | null] {
+import { resetUserAction, setUserAction } from '../../store/authentication/auth.actions';
+import { selectUser } from '../../store/authentication/auth.selectors';
+import { authHttpService } from '../http';
+import { useAction } from './hooks';
+
+import { emit, toast } from '../../components/toast';
+import { IAuth } from '../../common/models';
+
+export const useAuth = (): { user: IAuth } => {
+  const user = useSelector(selectUser);
+  return { user };
+};
+
+export const useSignin = (): [(email: string, password: string) => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-
   const setUser = useAction(setUserAction);
   const resetUser = useAction(resetUserAction);
   const auth = useSelector(selectUser);
@@ -32,44 +37,39 @@ export function useSignin(): [(...args: any) => void, boolean, Error | null] {
   }, [auth]);
 
   return [signin, loading, error];
-}
+};
 
-export function useWhoami(): [IAuth, boolean, Error | null] {
+export const useWhoami = (): [() => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-
   const setUser = useAction(setUserAction);
   const resetUser = useAction(resetUserAction);
   const auth = useSelector(selectUser);
 
-  useEffect(() => {
-    function whoami() {
-      setLoading(true);
+  const whoami = useCallback(() => {
+    setLoading(true);
+    if (!auth) {
       authHttpService.whoami().then((user) => {
-        setLoading(false);
         setUser(user);
       }).catch((err: Error) => {
-        setLoading(false);
         setError(err);
         resetUser();
+      }).finally(() => {
+        setLoading(false);
       });
     }
+  }, [auth]);
 
-    if (!auth) {
-      whoami();
-    }
-  }, [auth, setUser, resetUser]);
+  return [whoami, loading, error];
+};
 
-  return [auth, loading, error];
-}
-
-export function useSignout(): [() => void] {
+export const useSignout = (): [() => void] => {
   const resetUser = useAction(resetUserAction);
   const auth = useSelector(selectUser);
 
   const signout = useCallback(() => {
     if (auth) {
-      authHttpService.signout().then(() => {
+      authHttpService.signout().finally(() => {
         emit(toast.auth_signout());
         resetUser();
       });
@@ -77,4 +77,4 @@ export function useSignout(): [() => void] {
   }, [auth]);
 
   return [signout];
-}
+};

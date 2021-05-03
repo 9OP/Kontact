@@ -17,8 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { RiUserSearchLine } from 'react-icons/ri';
 import { IMemberPreview } from '../../../../../common/models';
-import { useCreateMember, useSearchUser } from '../../../../../services/member.hooks';
-import { useChannels } from '../../../../../services/channel.hooks';
+import { useCreateMember, useSearchUser } from '../../../../../services/hooks/member.hooks';
 
 interface Props {
   isOpen: boolean;
@@ -31,13 +30,12 @@ export default (props: Props): JSX.Element => {
     [id: string]: IMemberPreview;
   }>({});
 
-  const [,, currentChannel] = useChannels();
   const [createMember] = useCreateMember();
   const [search, setSearch, searchedUsers] = useSearchUser();
 
   const handleClose = () => {
     Object.keys(selectedUsers).forEach((uid: string) => {
-      createMember(currentChannel.id, uid);
+      createMember(uid);
     });
     setSearch('');
     setSelectedUsers({});

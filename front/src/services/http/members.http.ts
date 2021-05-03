@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { back } from '../../../common/network/api';
-import { ERole, IMember, IMemberPreview } from '../../../common/models';
+import { back } from '../../common/network/api';
+import { ERole, IMember, IMemberPreview } from '../../common/models';
 
 const JsonToMember = (json: any): IMember => ({
   id: json.id,

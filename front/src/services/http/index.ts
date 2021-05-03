@@ -7,9 +7,3 @@ export {
   channelsHttpService,
   membersHttpService,
 };
-
-export default {
-  authHttpService,
-  channelsHttpService,
-  membersHttpService,
-};

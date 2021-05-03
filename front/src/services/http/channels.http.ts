@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { back } from '../../../common/network/api';
-import { IChannel } from '../../../common/models';
+import { back } from '../../common/network/api';
+import { IChannel } from '../../common/models';
 
 const JsonToChannel = (json: any): IChannel => ({
   id: json.id,

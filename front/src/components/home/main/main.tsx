@@ -4,14 +4,14 @@ import Header from './header';
 import Channel from './channel';
 import Message from './message';
 import Members from './members/memberList';
-import { useChannels } from '../../../services/channel.hooks';
+import { useChannels } from '../../../services/hooks/channel.hooks';
 
 export default (): JSX.Element => {
-  const [, , currentChannel] = useChannels();
+  const { channel } = useChannels();
 
   return (
     <Flex flex="1 0 auto">
-      {currentChannel ? (
+      {channel ? (
         <Flex flexDirection="column" width="100%">
           <Header />
           <Flex

@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { beaconEmitter, beaconHandler } from '../../../common/network/socket';
+import { beaconEmitter, beaconHandler } from '../../common/network/socket';
 
 export interface response {
   id: string;

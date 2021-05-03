@@ -2,10 +2,10 @@
 import React, { useCallback } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { IMessage, IMember } from '../../../common/models';
-import { useMessages } from '../../../services/message.hooks';
+import { useMessages } from '../../../services/hooks/message.hooks';
 
 export default (): JSX.Element => {
-  const [messages] = useMessages();
+  const { messages } = useMessages();
 
   const chatRef = useCallback((node) => {
     if (node !== null) {

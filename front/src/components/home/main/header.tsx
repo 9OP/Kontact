@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { IChannel, ERole } from '../../../common/models';
-import { useChannels, useDeleteChannel } from '../../../services/channel.hooks';
+import { useChannels, useDeleteChannel } from '../../../services/hooks/channel.hooks';
 
 interface AlertProps {
   isOpen: boolean;
@@ -67,7 +67,7 @@ function DeleteChannelAlert(props: AlertProps) {
 
 export default (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [,, channel, role] = useChannels();
+  const { channel, role } = useChannels();
   const [deleteChannel] = useDeleteChannel();
 
   const isMaster = role === ERole.Master;
@@ -106,7 +106,7 @@ export default (): JSX.Element => {
         isOpen={isOpen}
         onClose={onClose}
         channel={channel}
-        deleteChannel={() => deleteChannel(channel)}
+        deleteChannel={deleteChannel}
       />
     </Box>
   );
