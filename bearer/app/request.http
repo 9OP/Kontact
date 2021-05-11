@@ -1,0 +1,19 @@
+@host = http://127.0.0.1:10000
+@contentType = application/json
+@bearerToken = bearer_token
+
+@channelId = 963
+
+
+### Post message
+POST {{host}}/message/{{channelId}}
+Authorization: Bearer {{bearerToken}}
+
+{
+    "authorId": "James",
+    "data": "Hello world!"
+}
+
+### Get message
+GET {{host}}/message/{{channelId}}
+Authorization: Bearer {{bearerToken}}

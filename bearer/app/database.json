@@ -1,0 +1,68 @@
+[
+ {
+  "date": "2021-05-11 23:39:09.220427 +0200 CEST m=+8.020614894",
+  "authorId": "Martin",
+  "data": "Hello world!",
+  "channelId": "456"
+ },
+ {
+  "date": "2021-05-11 23:39:27.561047 +0200 CEST m=+26.361458838",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "456"
+ },
+ {
+  "date": "2021-05-11 23:44:09.527086 +0200 CEST m=+6.893738461",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "123"
+ },
+ {
+  "date": "2021-05-11 23:50:59.156967 +0200 CEST m=+2.796636928",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "456"
+ },
+ {
+  "date": "2021-05-11 23:51:05.819484 +0200 CEST m=+9.459233434",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "456"
+ },
+ {
+  "date": "2021-05-11 23:51:21.526282 +0200 CEST m=+25.166221738",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "789"
+ },
+ {
+  "date": "2021-05-12 00:02:40.688166 +0200 CEST m=+9.410451424",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "789"
+ },
+ {
+  "date": "2021-05-12 00:02:58.458408 +0200 CEST m=+27.180908371",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "789"
+ },
+ {
+  "date": "2021-05-12 00:04:17.167064 +0200 CEST m=+4.084658121",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "789"
+ },
+ {
+  "date": "2021-05-12 00:04:30.042319 +0200 CEST m=+16.960068070",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "963"
+ },
+ {
+  "date": "2021-05-12 00:04:34.142215 +0200 CEST m=+21.060013388",
+  "authorId": "James",
+  "data": "Hello world!",
+  "channelId": "963"
+ }
+]
