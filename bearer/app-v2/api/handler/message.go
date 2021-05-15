@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/9op/Kontact/bearer/app-v2/pkg"
 	"github.com/9op/Kontact/bearer/app-v2/usecase/message"
 )
 
@@ -23,7 +24,7 @@ func render(w http.ResponseWriter, status int, data interface{}) {
 	json.NewEncoder(w).Encode(data)
 }
 
-func ListMessages(service message.UseCase) http.Handler {
+func listMessages(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// get channel id
 
@@ -77,7 +78,7 @@ func ListMessages(service message.UseCase) http.Handler {
 	})
 }
 
-func CreateMessage(service message.UseCase) http.Handler {
+func createMessage(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var input struct {
 			AuthorId string `json:"title"`
@@ -136,13 +137,7 @@ func CreateMessage(service message.UseCase) http.Handler {
 	})
 }
 
-// func MakeBookHandlers(r *http.ServeMux, service message.UseCase) {
-// 	r.Handle()
-// 	// r.Handle("/v1/book", n.With(
-// 	// 	negroni.Wrap(listBooks(service)),
-// 	// )).Methods("GET", "OPTIONS").Name("listBooks")
-
-// 	// r.Handle("/v1/book", n.With(
-// 	// 	negroni.Wrap(createBook(service)),
-// 	// )).Methods("POST", "OPTIONS").Name("createBook")
-// }
+func MakeMessageHandlers(r *pkg.MyRouter, service message.UseCase) {
+	r.Handle("GET", "/message/<id>", listMessages(service))
+	r.Handle("POST", "/message/<id>", createMessage(service))
+}
