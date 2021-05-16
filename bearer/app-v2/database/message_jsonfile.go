@@ -41,10 +41,10 @@ func (r *MessageJsonFile) all() ([]*entity.Message, error) {
 func (r *MessageJsonFile) Create(e *entity.Message) (*entity.Message, error) {
 	messages, err := r.all()
 	if err != nil {
-		return nil, err
+		return e, err
 	}
 	messages = append(messages, e)
-	data, _ := json.MarshalIndent(messages, "", " ")
+	data, _ := json.MarshalIndent(messages, "", "  ")
 	_ = ioutil.WriteFile(r.path, data, 0644)
 	return e, nil
 }
@@ -59,7 +59,6 @@ func (r *MessageJsonFile) List(channelId string) ([]*entity.Message, error) {
 	var res []*entity.Message
 	for _, mess := range messages {
 		if mess.ChannelId == channelId {
-			// res = append(res, mess.Summary())
 			res = append(res, mess)
 		}
 	}

@@ -10,7 +10,7 @@ type apiError struct {
 	Description string `json:"description"`
 }
 
-func unauthorized(w http.ResponseWriter, description string) {
+func Unauthorized(w http.ResponseWriter, description string) {
 	Render(
 		w,
 		http.StatusUnauthorized,
@@ -21,7 +21,7 @@ func unauthorized(w http.ResponseWriter, description string) {
 	)
 }
 
-func badrequest(w http.ResponseWriter, description string) {
+func Badrequest(w http.ResponseWriter, description string) {
 	Render(
 		w,
 		http.StatusBadRequest,
@@ -32,14 +32,34 @@ func badrequest(w http.ResponseWriter, description string) {
 	)
 }
 
-// TokenInvalid render unauthorized
-func TokenInvalid(w http.ResponseWriter) {
-	unauthorized(w, "Token invalid")
+func NotFound(w http.ResponseWriter, description string) {
+	Render(
+		w,
+		http.StatusNotFound,
+		apiError{
+			Code:        404,
+			Description: description,
+		},
+	)
 }
 
-// InvalidParameters render badrequest
+func ServerError(w http.ResponseWriter, description string) {
+	Render(
+		w,
+		http.StatusInternalServerError,
+		apiError{
+			Code:        1000,
+			Description: description,
+		},
+	)
+}
+
+func TokenInvalid(w http.ResponseWriter) {
+	Unauthorized(w, "Token invalid")
+}
+
 func InvalidParameters(w http.ResponseWriter) {
-	badrequest(w, "Parameters are invalid")
+	Badrequest(w, "Parameters are invalid")
 }
 
 // Render jsonified data

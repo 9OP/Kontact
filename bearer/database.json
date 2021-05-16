@@ -1,38 +1,62 @@
 [
- {
-  "authorId": "Martin",
-  "channelId": "456",
-  "data": "Hello world!",
-  "date": "2021-05-11 23:39:09.220427 +0200 CEST m=+8.020614894"
- },
- {
-  "authorId": "",
-  "channelId": "123",
-  "data": "Hello world!",
-  "date": "2021-05-16 14:42:45.494572 +0200 CEST m=+8.403335517"
- },
- {
-  "authorId": "",
-  "channelId": "123",
-  "data": "Hello world!",
-  "date": "2021-05-16 17:03:37.538634742 +0200 CEST m=+9.192174409"
- },
- {
-  "authorId": "",
-  "channelId": "1234",
-  "data": "Hello world!",
-  "date": "2021-05-16 17:48:57.71081091 +0200 CEST m=+14.008437916"
- },
- {
-  "authorId": "",
-  "channelId": "1234",
-  "data": "Hello world!",
-  "date": "2021-05-16 17:49:08.191318968 +0200 CEST m=+24.488946034"
- },
- {
-  "authorId": "Martin",
-  "channelId": "1234",
-  "data": "Hello world!",
-  "date": "2021-05-16 17:49:44.577167827 +0200 CEST m=+3.986573777"
- }
+  {
+    "authorId": "Martin",
+    "channelId": "1234",
+    "data": "",
+    "date": "2021-05-16 20:22:05.525761 +0200 CEST m=+26.587392659"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "1234",
+    "data": "",
+    "date": "2021-05-16 20:25:10.443745 +0200 CEST m=+3.600863575"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "1234",
+    "data": "",
+    "date": "2021-05-16 20:42:14.612052 +0200 CEST m=+2.424780976"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "1234",
+    "data": "",
+    "date": "2021-05-16 20:42:34.33243 +0200 CEST m=+22.145462466"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "12",
+    "data": "",
+    "date": "2021-05-16 20:48:11.055558 +0200 CEST m=+4.631377718"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "12",
+    "data": "",
+    "date": "2021-05-16 20:48:39.718268 +0200 CEST m=+33.294528118"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "12",
+    "data": "",
+    "date": "2021-05-16 21:12:50.516688 +0200 CEST m=+3.058445886"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "12",
+    "data": "Hello world!",
+    "date": "2021-05-16 21:15:23.981481 +0200 CEST m=+10.576794565"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "12",
+    "data": "Hello world!",
+    "date": "2021-05-16 21:15:32.396126 +0200 CEST m=+18.991561074"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "12",
+    "data": "Hello world!",
+    "date": "2021-05-16 21:15:44.498784 +0200 CEST m=+31.094394999"
+  }
 ]

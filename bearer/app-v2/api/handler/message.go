@@ -11,40 +11,45 @@ import (
 
 func listMessages(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// get channel id
 		channelId := pkg.Vars(r)["id"]
 
-		// get messages
 		data, err := service.ListMessages(channelId)
 		if err != nil {
-			presenter.InvalidParameters(w)
+			presenter.Badrequest(w, err.Error())
 			return
 		}
 
-		// format data to presenter
 		presenter.Render(w, http.StatusOK, data)
 	})
 }
 
+type MessageInput struct {
+	AuthorId string `json:"authorId" validation:"required"`
+	Data     string `json:"data" validation:"required"`
+}
+
 func createMessage(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var input struct {
-			AuthorId string `json:"authorId"`
-			Data     string `json:"data"`
-		}
+		input := MessageInput{}
+		validator := pkg.NewValidator(&input)
 
 		err := json.NewDecoder(r.Body).Decode(&input)
 		if err != nil {
-			// invalid input
-			presenter.InvalidParameters(w)
+			presenter.Badrequest(w, err.Error())
+			return
+		}
+
+		err = validator.Validate()
+		if err != nil {
+			presenter.Badrequest(w, err.Error())
+			return
 		}
 
 		channelId := pkg.Vars(r)["id"]
 
 		m, err := service.CreateMessage(input.AuthorId, channelId, input.Data)
 		if err != nil {
-			// cannot create message
-			presenter.InvalidParameters(w)
+			presenter.Badrequest(w, err.Error())
 			return
 		}
 

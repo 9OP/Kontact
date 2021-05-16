@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/9op/Kontact/bearer/app-v2/api/presenter"
 )
 
 type contextKey string
@@ -54,7 +56,7 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf(":: panic, %v", err)
-			http.Error(w, "server error", http.StatusInternalServerError)
+			presenter.ServerError(w, fmt.Sprintf("server error: %v", err))
 		}
 	}()
 
@@ -74,7 +76,7 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if handler == nil {
-		http.NotFound(w, r)
+		presenter.NotFound(w, fmt.Sprintf("route: %v-%v not found", r.Method, r.URL.Path))
 		return
 	}
 

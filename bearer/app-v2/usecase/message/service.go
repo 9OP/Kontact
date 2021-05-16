@@ -27,12 +27,9 @@ func (s *Service) CreateMessage(authorId, channelId, data string) (*entity.Messa
 
 // ListMessages list messages
 func (s *Service) ListMessages(channelId string) ([]*entity.Message, error) {
-	books, err := s.repo.List(channelId)
+	messages, err := s.repo.List(channelId)
 	if err != nil {
 		return nil, err
 	}
-	// if len(books) == 0 {
-	// 	return nil, entity.ErrNotFound
-	// }
-	return books, nil
+	return messages, nil
 }

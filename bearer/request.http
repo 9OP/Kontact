@@ -2,7 +2,7 @@
 @contentType = application/json
 @bearerToken = bearer_token
 
-@channelId = 1234
+@channelId = 12
 
 
 ### Post message
@@ -11,7 +11,8 @@ Authorization: Bearer {{bearerToken}}
 
 {
     "authorId": "Martin",
-    "data": "Hello world!"
+    "data": "Hello world!",
+    "any": "junk"
 }
 
 ### Get message
