@@ -12,9 +12,10 @@ import (
 func listMessages(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// get channel id
+		channelId := pkg.Vars(r)["id"]
 
 		// get messages
-		data, err := service.ListMessages()
+		data, err := service.ListMessages(channelId)
 		if err != nil {
 			presenter.InvalidParameters(w)
 			return
@@ -28,7 +29,7 @@ func listMessages(service message.UseCase) http.Handler {
 func createMessage(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var input struct {
-			AuthorId string `json:"title"`
+			AuthorId string `json:"authorId"`
 			Data     string `json:"data"`
 		}
 
@@ -38,7 +39,7 @@ func createMessage(service message.UseCase) http.Handler {
 			presenter.InvalidParameters(w)
 		}
 
-		channelId := "123"
+		channelId := pkg.Vars(r)["id"]
 
 		m, err := service.CreateMessage(input.AuthorId, channelId, input.Data)
 		if err != nil {

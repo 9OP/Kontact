@@ -8,7 +8,7 @@ import (
 	"github.com/9op/Kontact/bearer/app-v2/entity"
 )
 
-// Message jsonfile repo - single jsonFile storage
+// MessageJsonFile repo - single jsonFile storage
 // implements usecase/message/interface.Repository
 type MessageJsonFile struct {
 	path string
@@ -21,20 +21,8 @@ func NewMessageJsonFile(path string) *MessageJsonFile {
 	}
 }
 
-// Create a message
-func (r *MessageJsonFile) Create(e *entity.Message) (*entity.Message, error) {
-	messages, err := r.List()
-	if err != nil {
-		return nil, err
-	}
-	messages = append(messages, e)
-	data, _ := json.MarshalIndent(messages, "", " ")
-	_ = ioutil.WriteFile(r.path, data, 0644)
-	return e, nil
-}
-
-// List messages
-func (r *MessageJsonFile) List() ([]*entity.Message, error) {
+// all messages
+func (r *MessageJsonFile) all() ([]*entity.Message, error) {
 	jsonFile, err := os.Open(r.path)
 	if err != nil {
 		return nil, err
@@ -45,5 +33,35 @@ func (r *MessageJsonFile) List() ([]*entity.Message, error) {
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &messages)
+
 	return messages, nil
+}
+
+// Create a message
+func (r *MessageJsonFile) Create(e *entity.Message) (*entity.Message, error) {
+	messages, err := r.all()
+	if err != nil {
+		return nil, err
+	}
+	messages = append(messages, e)
+	data, _ := json.MarshalIndent(messages, "", " ")
+	_ = ioutil.WriteFile(r.path, data, 0644)
+	return e, nil
+}
+
+// List messages
+func (r *MessageJsonFile) List(channelId string) ([]*entity.Message, error) {
+	messages, err := r.all()
+	if err != nil {
+		return nil, err
+	}
+
+	var res []*entity.Message
+	for _, mess := range messages {
+		if mess.ChannelId == channelId {
+			// res = append(res, mess.Summary())
+			res = append(res, mess)
+		}
+	}
+	return res, nil
 }

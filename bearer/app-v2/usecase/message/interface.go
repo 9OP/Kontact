@@ -6,7 +6,7 @@ import (
 
 // Reader interface
 type Reader interface {
-	List() ([]*entity.Message, error)
+	List(channelId string) ([]*entity.Message, error)
 	// Get(id entity.ID) (*entity.Message, error)
 	// Search(query string) ([]*entity.Message, error)
 }
@@ -26,7 +26,7 @@ type Repository interface {
 
 // UseCase interface
 type UseCase interface {
-	ListMessages() ([]*entity.Message, error)
+	ListMessages(channelId string) ([]*entity.Message, error)
 	CreateMessage(authorId, channelId, data string) (*entity.Message, error)
 	// GetMessage(id entity.ID) (*entity.Message, error)
 	// SearchBooks(query string) ([]*entity.Message, error)

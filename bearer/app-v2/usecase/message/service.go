@@ -26,8 +26,8 @@ func (s *Service) CreateMessage(authorId, channelId, data string) (*entity.Messa
 }
 
 // ListMessages list messages
-func (s *Service) ListMessages() ([]*entity.Message, error) {
-	books, err := s.repo.List()
+func (s *Service) ListMessages(channelId string) ([]*entity.Message, error) {
+	books, err := s.repo.List(channelId)
 	if err != nil {
 		return nil, err
 	}

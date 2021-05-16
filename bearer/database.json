@@ -16,5 +16,23 @@
   "channelId": "123",
   "data": "Hello world!",
   "date": "2021-05-16 17:03:37.538634742 +0200 CEST m=+9.192174409"
+ },
+ {
+  "authorId": "",
+  "channelId": "1234",
+  "data": "Hello world!",
+  "date": "2021-05-16 17:48:57.71081091 +0200 CEST m=+14.008437916"
+ },
+ {
+  "authorId": "",
+  "channelId": "1234",
+  "data": "Hello world!",
+  "date": "2021-05-16 17:49:08.191318968 +0200 CEST m=+24.488946034"
+ },
+ {
+  "authorId": "Martin",
+  "channelId": "1234",
+  "data": "Hello world!",
+  "date": "2021-05-16 17:49:44.577167827 +0200 CEST m=+3.986573777"
  }
 ]
