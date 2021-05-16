@@ -137,7 +137,7 @@ func createMessage(service message.UseCase) http.Handler {
 	})
 }
 
-func MakeMessageHandlers(r *pkg.MyRouter, service message.UseCase) {
+func MakeMessageHandlers(r *pkg.Router, service message.UseCase) {
 	r.Handle("GET", "/message/<id>", listMessages(service))
 	r.Handle("POST", "/message/<id>", createMessage(service))
 }

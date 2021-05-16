@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/9op/Kontact/bearer/app-v2/api/handler"
+	"github.com/9op/Kontact/bearer/app-v2/api/middleware"
 	repository "github.com/9op/Kontact/bearer/app-v2/database"
 	pkg "github.com/9op/Kontact/bearer/app-v2/pkg"
 	"github.com/9op/Kontact/bearer/app-v2/usecase/message"
@@ -14,20 +15,21 @@ import (
 )
 
 func CreateApp() {
-	router := pkg.NewRouter() // custom router
+	router := pkg.NewRouter()
 
 	messageRepository := repository.NewMessageJsonFile(config.Conf.Dev.DATABASE_URL)
 	messageService := message.NewService(messageRepository)
 	handler.MakeMessageHandlers(router, messageService)
 
-	// router.Use(func)
+	router.Use(middleware.Authentication)
+	router.Use(middleware.Logger)
 
 	http.Handle("/", router)
 
 	addr := fmt.Sprintf("0.0.0.0:%v", config.PORT)
 	srv := &http.Server{
 		Addr:         addr,
-		Handler:      Wrap(http.DefaultServeMux),
+		Handler:      http.DefaultServeMux,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

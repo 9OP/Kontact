@@ -1,8 +1,14 @@
 [
-  {
-    "authorId": "Martin",
-    "channelId": "456",
-    "data": "Hello world!",
-    "date": "2021-05-11 23:39:09.220427 +0200 CEST m=+8.020614894"
-  }
+ {
+  "authorId": "Martin",
+  "channelId": "456",
+  "data": "Hello world!",
+  "date": "2021-05-11 23:39:09.220427 +0200 CEST m=+8.020614894"
+ },
+ {
+  "authorId": "",
+  "channelId": "123",
+  "data": "Hello world!",
+  "date": "2021-05-16 14:42:45.494572 +0200 CEST m=+8.403335517"
+ }
 ]

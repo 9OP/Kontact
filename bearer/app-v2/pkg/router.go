@@ -1,36 +1,56 @@
 package pkg
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
-	// h "github.com/9op/Kontact/bearer/app-v2/api/handler"
 )
 
-func Split(path string) []string {
-	path = strings.TrimSpace(path)
-	path = strings.TrimPrefix(path, "/")
-	path = strings.TrimSuffix(path, "/")
-	return strings.Split(path, "/")
+type contextKey string
+
+func (c contextKey) String() string {
+	return string(c)
 }
 
-type MyRouter struct {
-	routes map[string]http.Handler
+var contextVars = contextKey("vars")
+
+func Vars(r *http.Request) map[string]string {
+	vars := r.Context().Value(contextVars)
+	if vars != nil {
+		return vars.(map[string]string)
+	}
+	return map[string]string{}
 }
 
-func NewRouter() *MyRouter {
-	return &MyRouter{
-		routes: make(map[string]http.Handler),
+type middleware = func(h http.Handler) http.Handler
+
+type Router struct {
+	routes      map[string]http.Handler
+	middlewares []middleware
+}
+
+func NewRouter() *Router {
+	// Create without sizes ?
+	return &Router{
+		routes:      map[string]http.Handler{},
+		middlewares: []middleware{},
 	}
 }
 
-func (r *MyRouter) Handle(method string, path string, h http.Handler) {
+// Use middleware
+func (r *Router) Use(m middleware) {
+	r.middlewares = append(r.middlewares, m)
+}
+
+func (r *Router) Handle(method string, path string, h http.Handler) {
 	key := fmt.Sprintf("%s#%s", method, path)
 	r.routes[key] = h
 }
 
-func (router *MyRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// Avoid crashing the server when panics occur in handlers
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf(":: panic, %v", err)
@@ -58,17 +78,18 @@ func (router *MyRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: put vars in context
-	handler.ServeHTTP(w, r)
+	// apply middlewares
+	for _, m := range router.middlewares {
+		handler = m(handler)
+	}
+
+	ctx := context.WithValue(r.Context(), contextVars, vars)
+	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// TODO
-// func Vars(r *http.Request) map[string]string
-
 func match(r *http.Request, method string, pattern string, vars map[string]string) bool {
-	// path := r.Context().Value(api.ComponentsKey).([]string)
-	path := Split(r.URL.Path)
-	components := Split(pattern)
+	path := split(r.URL.Path)
+	components := split(pattern)
 
 	if r.Method != method || len(path) != len(components) {
 		return false
@@ -87,4 +108,11 @@ func match(r *http.Request, method string, pattern string, vars map[string]strin
 	}
 
 	return true
+}
+
+func split(path string) []string {
+	path = strings.TrimSpace(path)
+	path = strings.TrimPrefix(path, "/")
+	path = strings.TrimSuffix(path, "/")
+	return strings.Split(path, "/")
 }
