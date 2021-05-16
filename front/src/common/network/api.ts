@@ -87,7 +87,7 @@ class Api {
 /**
  * Backend API
  */
-const BACKEND = `${window.location.origin}/api`;
+const BACKEND = `${window.location.origin}/api/back`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function backendHandler(this: Api, response: Response): Promise<any> {
@@ -111,4 +111,22 @@ async function backendHandler(this: Api, response: Response): Promise<any> {
 export const back = new Api({
   host: BACKEND,
   handler: backendHandler,
+});
+
+/**
+ * Bearer API
+ */
+const BEARER = `${window.location.origin}/api/bearer`;
+
+async function bearerHandler(this: Api, response: Response): Promise<any> {
+  const json = await response.json();
+  if (!response.ok) {
+    throw Error(json.description || response.statusText);
+  }
+  return json;
+}
+
+export const bearer = new Api({
+  host: BEARER,
+  handler: bearerHandler,
 });

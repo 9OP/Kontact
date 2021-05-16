@@ -59,6 +59,14 @@ services:
     volumes:
       - ./front:/app
 
+  # bearer:
+  #   container_name: "kontact_bearer"
+  #   build:
+  #     context: ./bearer
+  #     dockerfile: bearer.dockerfile
+  #   volumes:
+  #     - ./bearer:/app
+
   database:
     container_name: "kontact_database"
     build:
