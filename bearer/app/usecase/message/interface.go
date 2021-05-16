@@ -1,7 +1,7 @@
 package message
 
 import (
-	"github.com/9op/Kontact/bearer/app-v2/entity"
+	"github.com/9op/Kontact/bearer/app/entity"
 )
 
 // Reader interface

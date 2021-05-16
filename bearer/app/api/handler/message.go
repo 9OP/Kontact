@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/9op/Kontact/bearer/app-v2/api/presenter"
-	"github.com/9op/Kontact/bearer/app-v2/pkg"
-	"github.com/9op/Kontact/bearer/app-v2/usecase/message"
+	"github.com/9op/Kontact/bearer/app/api/presenter"
+	"github.com/9op/Kontact/bearer/app/pkg"
+	"github.com/9op/Kontact/bearer/app/usecase/message"
 )
 
 func listMessages(service message.UseCase) http.Handler {

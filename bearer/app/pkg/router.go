@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/9op/Kontact/bearer/app-v2/api/presenter"
+	"github.com/9op/Kontact/bearer/app/api/presenter"
 )
 
 type contextKey string

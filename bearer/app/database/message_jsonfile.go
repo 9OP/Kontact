@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/9op/Kontact/bearer/app-v2/entity"
+	"github.com/9op/Kontact/bearer/app/entity"
 )
 
 // MessageJsonFile repo - single jsonFile storage

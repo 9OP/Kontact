@@ -6,18 +6,20 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/9op/Kontact/bearer/app-v2/api/handler"
-	"github.com/9op/Kontact/bearer/app-v2/api/middleware"
-	repository "github.com/9op/Kontact/bearer/app-v2/database"
-	pkg "github.com/9op/Kontact/bearer/app-v2/pkg"
-	"github.com/9op/Kontact/bearer/app-v2/usecase/message"
+	"github.com/9op/Kontact/bearer/app/api/handler"
+	"github.com/9op/Kontact/bearer/app/api/middleware"
+	repository "github.com/9op/Kontact/bearer/app/database"
+	pkg "github.com/9op/Kontact/bearer/app/pkg"
+	"github.com/9op/Kontact/bearer/app/usecase/message"
 	"github.com/9op/Kontact/bearer/config"
 )
+
+const PORT = 8080
 
 func CreateApp() {
 	router := pkg.NewRouter()
 
-	messageRepository := repository.NewMessageJsonFile(config.Conf.Dev.DATABASE_URL)
+	messageRepository := repository.NewMessageJsonFile(config.DATABASE_URL)
 	messageService := message.NewService(messageRepository)
 	handler.MakeMessageHandlers(router, messageService)
 
@@ -26,7 +28,7 @@ func CreateApp() {
 
 	http.Handle("/", router)
 
-	addr := fmt.Sprintf("0.0.0.0:%v", config.PORT)
+	addr := fmt.Sprintf("0.0.0.0:%v", PORT)
 	srv := &http.Server{
 		Addr:         addr,
 		Handler:      http.DefaultServeMux,
