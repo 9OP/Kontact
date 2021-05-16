@@ -1,4 +1,4 @@
-@host = http://localhost:8080
+@host = http://localhost:6000
 @contentType = application/json
 @bearerToken = bearer_token
 

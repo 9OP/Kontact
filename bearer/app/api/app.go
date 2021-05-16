@@ -14,7 +14,7 @@ import (
 	"github.com/9op/Kontact/bearer/config"
 )
 
-const PORT = 8080
+const PORT = 6000
 
 func CreateApp() {
 	router := pkg.NewRouter()
