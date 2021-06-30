@@ -2,119 +2,157 @@ package pkg
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"net/http"
+	"regexp"
 	"strings"
-
-	"github.com/9op/Kontact/bearer/app/api/presenter"
 )
-
-type contextKey string
-
-func (c contextKey) String() string {
-	return string(c)
-}
-
-var contextVars = contextKey("vars")
-
-func Vars(r *http.Request) map[string]string {
-	vars := r.Context().Value(contextVars)
-	if vars != nil {
-		return vars.(map[string]string)
-	}
-	return map[string]string{}
-}
-
-type middleware = func(h http.Handler) http.Handler
-
-type Router struct {
-	routes      map[string]http.Handler
-	middlewares []middleware
-}
-
-func NewRouter() *Router {
-	// Create without sizes ?
-	return &Router{
-		routes:      map[string]http.Handler{},
-		middlewares: []middleware{},
-	}
-}
-
-// Use middleware
-func (r *Router) Use(m middleware) {
-	r.middlewares = append(r.middlewares, m)
-}
-
-func (r *Router) Handle(method string, path string, h http.Handler) {
-	key := fmt.Sprintf("%s#%s", method, path)
-	r.routes[key] = h
-}
-
-func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Avoid crashing the server when panics occur in handlers
-	defer func() {
-		if err := recover(); err != nil {
-			log.Printf(":: panic, %v", err)
-			presenter.ServerError(w, fmt.Sprintf("server error: %v", err))
-		}
-	}()
-
-	vars := map[string]string{}
-	var handler http.Handler = nil
-
-	for key, value := range router.routes {
-		route := strings.Split(key, "#")
-
-		method := route[0]
-		path := route[1]
-
-		if match(r, method, path, vars) {
-			handler = value
-			break
-		}
-	}
-
-	if handler == nil {
-		presenter.NotFound(w, fmt.Sprintf("route: %v-%v not found", r.Method, r.URL.Path))
-		return
-	}
-
-	// apply middlewares
-	for _, m := range router.middlewares {
-		handler = m(handler)
-	}
-
-	ctx := context.WithValue(r.Context(), contextVars, vars)
-	handler.ServeHTTP(w, r.WithContext(ctx))
-}
-
-func match(r *http.Request, method string, pattern string, vars map[string]string) bool {
-	path := split(r.URL.Path)
-	components := split(pattern)
-
-	if r.Method != method || len(path) != len(components) {
-		return false
-	}
-
-	for i, c := range components {
-		switch {
-		case c == path[i]:
-			continue
-		case string(c[0]) == "<" && string(c[len(c)-1]) == ">":
-			vars[c[1:len(c)-1]] = path[i]
-			continue
-		default:
-			return false
-		}
-	}
-
-	return true
-}
 
 func split(path string) []string {
 	path = strings.TrimSpace(path)
 	path = strings.TrimPrefix(path, "/")
 	path = strings.TrimSuffix(path, "/")
 	return strings.Split(path, "/")
+}
+
+//
+//
+// Router
+
+type middleware = func(h http.Handler) http.Handler
+
+type Router struct {
+	trie        *node
+	middlewares []middleware
+}
+
+func NewRouter() *Router {
+	return &Router{
+		trie:        newNode(),
+		middlewares: []middleware{},
+	}
+}
+
+func (router *Router) Use(m middleware) {
+	router.middlewares = append(router.middlewares, m)
+}
+
+func (router *Router) Handle(method, path string, h http.Handler) {
+	node := router.trie.append(split(path))
+	node.handlers[method] = h
+}
+
+func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			http.Error(w, "server error", http.StatusInternalServerError)
+		}
+	}()
+
+	handler := http.NotFoundHandler()
+	vars := map[string]string{}
+
+	if h := router.match(r, vars); h != nil {
+		handler = h
+		for _, m := range router.middlewares {
+			handler = m(handler)
+		}
+	}
+
+	ctx := context.WithValue(r.Context(), "vars", vars)
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+func (router *Router) match(r *http.Request, vars map[string]string) http.Handler {
+	if node := router.trie.search(split(r.URL.Path), vars); node != nil {
+		return node.handlers[r.Method]
+	}
+	return nil
+}
+
+func Vars(r *http.Request) map[string]string {
+	if vars := r.Context().Value("vars"); vars != nil {
+		return vars.(map[string]string) // type cast
+	}
+	return nil
+}
+
+//
+//
+// Trie
+
+type node struct {
+	handlers map[string]http.Handler
+	leaves   map[string]*node
+	regex    map[string]*regexp.Regexp
+}
+
+func newNode() *node {
+	return &node{
+		handlers: map[string]http.Handler{},
+		leaves:   map[string]*node{},
+		regex:    map[string]*regexp.Regexp{},
+	}
+}
+
+func (node *node) getLeaf(v string) (*node, []string) {
+	if node, ok := node.leaves[v]; ok {
+		return node, nil
+	}
+	for key, regex := range node.regex {
+		if regex.MatchString(v) {
+			return node.leaves[key], []string{key, v}
+		}
+	}
+	return nil, nil
+}
+
+func parse(c string) (string, *regexp.Regexp) {
+	if string(c[0]) == ":" {
+		// Given c=":id:^[0-9]$", then pattern=["id" "^[0-9]$"]
+		pattern := strings.Split(c[1:], ":")
+		regex := ".*"
+		if len(pattern) > 1 {
+			regex = pattern[1]
+		}
+		if re, err := regexp.Compile(regex); err == nil {
+			return pattern[0], re
+		}
+	}
+	return c, nil
+}
+
+func (node *node) append(path []string) *node {
+	if len(path) == 0 {
+		return node
+	}
+	component, regex := parse(path[0])
+
+	leaf, _ := node.getLeaf(component)
+	if leaf == nil {
+		node.leaves[component] = newNode()
+		leaf = node.leaves[component]
+
+		if regex != nil {
+			node.regex[component] = regex
+		}
+	}
+
+	return leaf.append(path[1:])
+}
+
+func (node *node) search(path []string, vars map[string]string) *node {
+	if len(path) == 0 {
+		return node
+	}
+
+	leaf, pattern := node.getLeaf(path[0])
+	if leaf == nil {
+		return nil
+	}
+
+	if pattern != nil {
+		vars[pattern[0]] = pattern[1]
+	}
+
+	return leaf.search(path[1:], vars)
 }

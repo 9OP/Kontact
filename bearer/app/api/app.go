@@ -9,7 +9,7 @@ import (
 	"github.com/9op/Kontact/bearer/app/api/handler"
 	"github.com/9op/Kontact/bearer/app/api/middleware"
 	repository "github.com/9op/Kontact/bearer/app/database"
-	pkg "github.com/9op/Kontact/bearer/app/pkg"
+	"github.com/9op/Kontact/bearer/app/pkg"
 	"github.com/9op/Kontact/bearer/app/usecase/message"
 	"github.com/9op/Kontact/bearer/config"
 )
@@ -28,7 +28,7 @@ func CreateApp() {
 
 	http.Handle("/", router)
 
-	addr := fmt.Sprintf("0.0.0.0:%v", PORT)
+	addr := fmt.Sprintf("localhost:%v", PORT)
 	srv := &http.Server{
 		Addr:         addr,
 		Handler:      http.DefaultServeMux,

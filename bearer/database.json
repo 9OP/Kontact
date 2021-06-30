@@ -10,5 +10,11 @@
     "channelId": "12",
     "data": "Hello world!",
     "date": "2021-05-16 23:31:26.799156 +0200 CEST m=+10.095327465"
+  },
+  {
+    "authorId": "Martin",
+    "channelId": "12",
+    "data": "Hello world!",
+    "date": "2021-06-30 22:30:11.259485 +0200 CEST m=+3.814128838"
   }
 ]
