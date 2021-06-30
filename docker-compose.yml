@@ -17,6 +17,7 @@ services:
       - front
       - adminer
       - beacon
+      - bearer
 
   back:
     container_name: "kontact_back"
@@ -24,7 +25,6 @@ services:
       context: ./back
       dockerfile: back.dockerfile
     restart: always
-    entrypoint: "./entrypoint.sh"
     command: "./startup.sh"
     environment:
       FLASK_ENV: "development"
@@ -59,13 +59,14 @@ services:
     volumes:
       - ./front:/app
 
-  # bearer:
-  #   container_name: "kontact_bearer"
-  #   build:
-  #     context: ./bearer
-  #     dockerfile: bearer.dockerfile
-  #   volumes:
-  #     - ./bearer:/app
+  bearer:
+    container_name: "kontact_bearer"
+    build:
+      context: ./bearer
+      dockerfile: bearer.dockerfile
+    command: "./startup.sh"
+    volumes:
+      - ./bearer:/app
 
   database:
     container_name: "kontact_database"

@@ -15,6 +15,7 @@ from app.api_responses import (
 
 # Register custom errors
 api = Blueprint("api", __name__)
+# Is api.app_errorhandler(HTTPException)(handler) enough?
 api.app_errorhandler(ApiError)(handler)
 api.app_errorhandler(AuthError)(handler)
 api.app_errorhandler(AccessError)(handler)

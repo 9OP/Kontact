@@ -3,9 +3,10 @@
 import Joi from 'joi';
 import { createEvent } from './events';
 import { ExtSocket } from '../types';
+import { saveMessage } from '../api';
 
-let ID_COUNTER = 0;
-const DATABASE: { channel: string; author: string; message: string; }[] = [];
+// const ID_COUNTER = 0;
+// const DATABASE: { channel: string; author: string; message: string; }[] = [];
 
 const SEND_MESSAGE = 'message:send';
 const RECEIVE_MESSAGE = 'message:receive';
@@ -23,47 +24,39 @@ interface Message {
 export const sendMessage = createEvent(
   SEND_MESSAGE,
   SEND_MESSAGE_VALIDATION,
-  (socket: ExtSocket, payload: Message, ack: () => void): void => {
+  async (socket: ExtSocket, payload: Message, ack: () => void): Promise<void> => {
     if (!socket.rooms.has(payload.channel)) {
       throw new Error('Unauthorized');
     }
 
-    const response = {
-      id: ID_COUNTER,
-      channel: payload.channel,
-      author: socket.user.id,
-      message: payload.message,
-    };
+    const message = await saveMessage(payload.channel, socket.user.id, payload.message);
 
-    ID_COUNTER += 1;
-    DATABASE.push(response);
-    // console.log(DATABASE);
-
-    socket.to(payload.channel).emit(RECEIVE_MESSAGE, response); // to room
-    socket.emit(RECEIVE_MESSAGE, response); // to sender
+    socket.to(payload.channel).emit(RECEIVE_MESSAGE, message); // to room
+    socket.emit(RECEIVE_MESSAGE, message); // to sender
     ack();
   },
 );
 
+// Fetch will be carried through bearer from the front without using beacon
 // Fetch from DATABASE
 
-const FETCH_MESSAGES = 'messages:fetch';
-const RECEIVE_MESSAGES = 'messages:receive';
+// const FETCH_MESSAGES = 'messages:fetch';
+// const RECEIVE_MESSAGES = 'messages:receive';
 
-const FETCH_MESSAGES_VALIDATION = {
-  channel: Joi.string().required(), // channel-id
-};
+// const FETCH_MESSAGES_VALIDATION = {
+//   channel: Joi.string().required(), // channel-id
+// };
 
-interface Channel {
-  channel: string
-}
+// interface Channel {
+//   channel: string
+// }
 
-export const fetchMessages = createEvent(
-  FETCH_MESSAGES,
-  FETCH_MESSAGES_VALIDATION,
-  (socket: ExtSocket, payload: Channel, ack: () => void): void => {
-    const messages = DATABASE.filter((message: Message) => message.channel === payload.channel);
-    socket.emit(RECEIVE_MESSAGES, messages.slice(Math.max(messages.length - 5, 1))); // to sender
-    ack();
-  },
-);
+// export const fetchMessages = createEvent(
+//   FETCH_MESSAGES,
+//   FETCH_MESSAGES_VALIDATION,
+//   (socket: ExtSocket, payload: Channel, ack: () => void): void => {
+//     const messages = DATABASE.filter((message: Message) => message.channel === payload.channel);
+//     socket.emit(RECEIVE_MESSAGES, messages.slice(Math.max(messages.length - 5, 1))); // to sender
+//     ack();
+//   },
+// );

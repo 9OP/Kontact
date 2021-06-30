@@ -1,11 +1,11 @@
 /* eslint-disable no-shadow */
-enum Access {
+export enum Access {
   GUEST = 0,
   USER = 1,
   ADMIN = 2,
 }
 
-enum Role {
+export enum Role {
   MEMBER = 0,
   MASTER = 1,
 }

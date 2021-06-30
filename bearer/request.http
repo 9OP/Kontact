@@ -1,8 +1,9 @@
-@host = http://localhost:6000
+# @host = http://localhost:6000
+@host = https://localhost/api/bearer
 @contentType = application/json
 @bearerToken = bearer_token
 
-@channelId = 12
+@channelId = 1
 
 
 ### Post message

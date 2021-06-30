@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { BACKEND_API } from './config';
-import { IUser, IMembership } from './models/user.model';
+import { BACKEND_API, BEARER_API, BEARER_TOKEN } from './config';
+import { IUser, IMembership, IMessage } from './models';
 
 const back = axios.create({
   baseURL: BACKEND_API,
+  timeout: 2000,
+});
+
+const bearer = axios.create({
+  baseURL: BEARER_API,
   timeout: 2000,
 });
 
@@ -19,6 +24,16 @@ const JSONtoIUser = (data: any): IUser => ({
   access: data.access,
 });
 
+let ID_COUNTER = 0; // temporary until bearer implements a uuid (mongodb)
+const JSONtoIMessage = (data: any): IMessage => ({
+  // eslint-disable-next-line no-plusplus
+  id: data.id || String(ID_COUNTER++),
+  channel: data.channelId,
+  author: data.authorId,
+  message: data.data,
+  // date: data.date,
+});
+
 export const whoami = async (token: string): Promise<IUser> => {
   const res = await back.get('/auth/whoami', {
     headers: { Authorization: `Bearer ${token}` },
@@ -31,4 +46,27 @@ export const fetchMemberships = async (token: string): Promise<IMembership[]> =>
     headers: { Authorization: `Bearer ${token}` },
   });
   return JSONtoIMemberships(res.data);
+};
+
+// export const fetchMessages = async (channelId: string): Promise<any> => {
+//   const res = await bearer.get(`/message/${channelId}`, {
+//     headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+//   });
+
+//   return JSONtoIMessages(res.data);
+// };
+
+export const saveMessage = async (
+  channelId: string,
+  authorId: string,
+  data: string,
+): Promise<IMessage> => {
+  const res = await bearer.post(`/message/${channelId}`, JSON.stringify({
+    authorId,
+    data,
+  }), {
+    headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+  });
+
+  return JSONtoIMessage(res.data);
 };

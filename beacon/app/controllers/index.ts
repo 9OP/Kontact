@@ -5,7 +5,7 @@ import * as userController from './user_controller';
 
 const messageBinders = [
   bindEvent(messageController.sendMessage),
-  bindEvent(messageController.fetchMessages),
+  // bindEvent(messageController.fetchMessages),
 ];
 
 const userBinders = [
