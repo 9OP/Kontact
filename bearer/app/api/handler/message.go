@@ -23,14 +23,12 @@ func listMessages(service message.UseCase) http.Handler {
 	})
 }
 
-type MessageInput struct {
-	AuthorId string `json:"authorId" validation:"required"`
-	Data     string `json:"data" validation:"required"`
-}
-
 func createMessage(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		input := MessageInput{}
+		var input struct {
+			AuthorId string `json:"authorId" validation:"required"`
+			Data     string `json:"data" validation:"required"`
+		}
 		validator := pkg.NewValidator(&input)
 
 		err := json.NewDecoder(r.Body).Decode(&input)
