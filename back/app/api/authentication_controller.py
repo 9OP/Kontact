@@ -73,7 +73,7 @@ def signout():
 
 @gate(delegation=True)
 def whoami():
-    user_data = g.current_user.summary()
+    user_data = g.current_user.summary(verbose=True)
     return render(user_data)
 
 

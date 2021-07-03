@@ -1,14 +1,27 @@
-# @host = http://localhost:6000
-@host = https://localhost/api/bearer
+@host = http://localhost:6000
+# @host = https://localhost/api/bearer
+@back = http://localhost:5000
 @contentType = application/json
 @bearerToken = bearer_token
 
 @channelId = 1
 
+### Get token
+# @name login
+POST {{back}}/auth/signin
+Content-Type: {{contentType}}
+
+{
+    "email": "admin@mail.com",
+    "password": "Abc123*"
+}
+
+###
+@token = {{login.response.body.token}}
 
 ### Post message
 POST {{host}}/message/{{channelId}}
-Authorization: Bearer {{bearerToken}}
+Authorization: Bearer {{token}}
 
 {
     "authorId": "Martin",
@@ -18,4 +31,4 @@ Authorization: Bearer {{bearerToken}}
 
 ### Get message
 GET {{host}}/message/{{channelId}}
-Authorization: Bearer {{bearerToken}}
+Authorization: Bearer {{token}}

@@ -2,8 +2,10 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"github.com/9op/Kontact/bearer/app/api/middleware"
 	"github.com/9op/Kontact/bearer/app/api/presenter"
 	"github.com/9op/Kontact/bearer/app/pkg"
 	"github.com/9op/Kontact/bearer/app/usecase/message"
@@ -55,7 +57,20 @@ func createMessage(service message.UseCase) http.Handler {
 	})
 }
 
+// Block requests when user is not a channel member
+func channelGate(h http.Handler) http.Handler { // middleware
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		channelId := pkg.Vars(r)["id"]
+
+		if middleware.IsUserInChannel(r, channelId) {
+			h.ServeHTTP(w, r)
+		} else {
+			presenter.Unauthorized(w, fmt.Sprintf("User is not a member of channel %v", channelId))
+		}
+	})
+}
+
 func MakeMessageHandlers(r *pkg.Router, service message.UseCase) {
-	r.Handle("GET", "/message/:id", listMessages(service))
-	r.Handle("POST", "/message/:id", createMessage(service))
+	r.Handle("GET", "/message/:id", channelGate(listMessages(service)))
+	r.Handle("POST", "/message/:id", channelGate(createMessage(service)))
 }
