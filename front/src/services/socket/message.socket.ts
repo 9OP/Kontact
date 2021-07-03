@@ -1,12 +1,4 @@
-/* eslint-disable import/prefer-default-export */
 import { beaconEmitter, beaconHandler } from '../../common/network/socket';
-
-export interface response {
-  id: string;
-  author: string;
-  channel: string;
-  message: string;
-}
 
 // beacon.on('connect_error', (err: any) => {
 //   console.log('connect_error', err.message);

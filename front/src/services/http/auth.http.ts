@@ -1,4 +1,4 @@
-import { back } from '../../common/network/api';
+import { back, bearer } from '../../common/network/api';
 import { beacon } from '../../common/network/socket';
 import LES from '../../common/localStorage';
 import { TOKEN } from '../../common/constants';
@@ -15,6 +15,7 @@ const JsonToUser = (json: any): IAuth => ({
 const connect = (token: string) => {
   LES.setItem(TOKEN, token);
   back.authorization = { Authorization: `Bearer ${token}` };
+  bearer.authorization = { Authorization: 'Bearer bearer_token' }; // temporary solution
   beacon.connect(token);
 };
 

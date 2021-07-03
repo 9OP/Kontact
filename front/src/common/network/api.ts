@@ -51,7 +51,7 @@ class Api {
         ...param.headers,
       },
       body: JSON.stringify(param.payload),
-      credentials: 'include',
+      credentials: 'include', // include cookies
     }).then(this.handler.bind(this));
   }
 

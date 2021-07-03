@@ -1,7 +1,7 @@
 export interface IMessage {
   id: string,
-  channel: string,
-  author: string,
-  message: string,
+  channelId: string,
+  authorId: string,
+  content: string,
   // date: Date,
 }

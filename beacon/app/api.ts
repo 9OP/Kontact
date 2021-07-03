@@ -28,9 +28,9 @@ let ID_COUNTER = 0; // temporary until bearer implements a uuid (mongodb)
 const JSONtoIMessage = (data: any): IMessage => ({
   // eslint-disable-next-line no-plusplus
   id: data.id || String(ID_COUNTER++),
-  channel: data.channelId,
-  author: data.authorId,
-  message: data.data,
+  channelId: data.channelId,
+  authorId: data.authorId,
+  content: data.data,
   // date: data.date,
 });
 
@@ -47,14 +47,6 @@ export const fetchMemberships = async (token: string): Promise<IMembership[]> =>
   });
   return JSONtoIMemberships(res.data);
 };
-
-// export const fetchMessages = async (channelId: string): Promise<any> => {
-//   const res = await bearer.get(`/message/${channelId}`, {
-//     headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
-//   });
-
-//   return JSONtoIMessages(res.data);
-// };
 
 export const saveMessage = async (
   channelId: string,
