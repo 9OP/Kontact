@@ -35,6 +35,18 @@ services:
     depends_on:
       - database
 
+  bearer:
+    container_name: "kontact_bearer"
+    build:
+      context: ./bearer
+      dockerfile: bearer.dockerfile
+    environment:
+      BACKEND_API: "http://back:5000"
+    restart: always
+    # command: "./startup.sh"
+    volumes:
+      - ./bearer:/app
+
   beacon:
     container_name: "kontact_beacon"
     build:
@@ -61,21 +73,13 @@ services:
     volumes:
       - ./front:/app
 
-  bearer:
-    container_name: "kontact_bearer"
-    build:
-      context: ./bearer
-      dockerfile: bearer.dockerfile
-    command: "./startup.sh"
-    volumes:
-      - ./bearer:/app
-
   database:
     container_name: "kontact_database"
     build:
       context: ./back/database
       dockerfile: database.dockerfile
     restart: always
+    command: ["postgres", "-c", "log_statement=all"]
     environment:
       POSTGRES_DB: kontact_dev
       POSTGRES_USER: developer

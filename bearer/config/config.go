@@ -9,6 +9,5 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-var TOKEN = getEnv("TOKEN", "bearer_token")
 var DATABASE_URL = getEnv("DATABASE_URL", "database.json")
-var BACKEND_API = getEnv("BACKEND_API", "http://localhost:5000") // http://back:5000
+var BACKEND_API = getEnv("BACKEND_API", "http://back:5000") // http://localhost:5000

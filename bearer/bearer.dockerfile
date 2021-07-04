@@ -2,7 +2,7 @@ FROM golang:1.16-alpine AS build
 
 WORKDIR /app
 
-COPY . /app/
+COPY . .
 RUN CGO_ENABLED=0 go build  -o /bin/server /app/main.go
 
 # FROM scratch
@@ -10,4 +10,4 @@ RUN CGO_ENABLED=0 go build  -o /bin/server /app/main.go
 
 EXPOSE 6000
 
-# CMD ["/bin/server"]
+CMD ["/bin/server"]

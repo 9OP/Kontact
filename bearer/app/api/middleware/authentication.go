@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/9op/Kontact/bearer/app/api/presenter"
+	"github.com/9op/Kontact/bearer/app/pkg"
 	"github.com/9op/Kontact/bearer/config"
 )
 
@@ -17,8 +18,10 @@ type Channel struct {
 	Name string `json:"name"`
 }
 
+const keyChannels pkg.Key = "channels"
+
 func Channels(r *http.Request) []string {
-	if channels := r.Context().Value("channels"); channels != nil {
+	if channels := r.Context().Value(keyChannels); channels != nil {
 		return channels.([]string) // type cast
 	}
 	return nil
@@ -64,7 +67,7 @@ func Authentication(h http.Handler) http.Handler {
 			channel_ids[idx] = value.Id
 		}
 
-		ctx := context.WithValue(r.Context(), "channels", channel_ids)
+		ctx := context.WithValue(r.Context(), keyChannels, channel_ids)
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

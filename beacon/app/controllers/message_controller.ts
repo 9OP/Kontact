@@ -14,8 +14,8 @@ const SEND_MESSAGE_VALIDATION = {
 };
 
 interface Message {
-  message: string,
-  channel: string,
+  message: string;
+  channel: string;
 }
 
 export const sendMessage = createEvent(
@@ -26,7 +26,12 @@ export const sendMessage = createEvent(
       throw new Error('Unauthorized');
     }
 
-    const message = await saveMessage(payload.channel, socket.user.id, payload.message);
+    const message = await saveMessage(
+      payload.channel,
+      socket.user.id,
+      payload.message,
+      socket.token,
+    );
 
     socket.to(payload.channel).emit(RECEIVE_MESSAGE, message); // to room
     socket.emit(RECEIVE_MESSAGE, message); // to sender

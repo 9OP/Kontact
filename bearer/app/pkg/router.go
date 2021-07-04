@@ -17,6 +17,9 @@ func split(path string) []string {
 //
 //
 // Router
+type Key string
+
+const keyVars Key = "vars"
 
 type middleware = func(h http.Handler) http.Handler
 
@@ -58,7 +61,7 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	ctx := context.WithValue(r.Context(), "vars", vars)
+	ctx := context.WithValue(r.Context(), keyVars, vars)
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
@@ -70,7 +73,7 @@ func (router *Router) match(r *http.Request, vars map[string]string) http.Handle
 }
 
 func Vars(r *http.Request) map[string]string {
-	if vars := r.Context().Value("vars"); vars != nil {
+	if vars := r.Context().Value(keyVars); vars != nil {
 		return vars.(map[string]string) // type cast
 	}
 	return nil

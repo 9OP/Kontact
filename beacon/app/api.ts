@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { BACKEND_API, BEARER_API, BEARER_TOKEN } from './config';
+import { BACKEND_API, BEARER_API } from './config';
 import { IUser, IMembership, IMessage } from './models';
 
 const back = axios.create({
@@ -52,12 +52,13 @@ export const saveMessage = async (
   channelId: string,
   authorId: string,
   data: string,
+  token: string,
 ): Promise<IMessage> => {
   const res = await bearer.post(`/message/${channelId}`, JSON.stringify({
     authorId,
     data,
   }), {
-    headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+    headers: { Authorization: `Bearer ${token}` },
   });
 
   return JSONtoIMessage(res.data);

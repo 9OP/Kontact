@@ -4,4 +4,4 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-export const { BACKEND_API, BEARER_API, BEARER_TOKEN } = process.env;
+export const { BACKEND_API, BEARER_API } = process.env;

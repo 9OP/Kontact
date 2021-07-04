@@ -15,12 +15,13 @@ const JsonToUser = (json: any): IAuth => ({
 const connect = (token: string) => {
   LES.setItem(TOKEN, token);
   back.authorization = { Authorization: `Bearer ${token}` };
-  bearer.authorization = { Authorization: 'Bearer bearer_token' }; // temporary solution
+  bearer.authorization = { Authorization: `Bearer ${token}` };
   beacon.connect(token);
 };
 
 const disconnect = () => {
   back.authorization = null;
+  bearer.authorization = null;
   beacon.disconnect();
   LES.clear();
 };
