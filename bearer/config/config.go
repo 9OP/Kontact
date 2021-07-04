@@ -9,5 +9,8 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-var DATABASE_URL = getEnv("DATABASE_URL", "database.json")
-var BACKEND_API = getEnv("BACKEND_API", "http://back:5000") // http://localhost:5000
+// mongo, back when in docker-compose,
+// else localhost
+
+var DATABASE_URL = getEnv("DATABASE_URL", "mongodb://localhost:27017/") // mongodb://localhost:27017/
+var BACKEND_API = getEnv("BACKEND_API", "http://localhost:5000")        // http://localhost:5000

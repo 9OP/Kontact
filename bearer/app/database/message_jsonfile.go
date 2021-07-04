@@ -1,3 +1,6 @@
+/*
+Do not use in production, this is only for testing the endpoint and architecture work
+*/
 package repository
 
 import (
@@ -8,21 +11,20 @@ import (
 	"github.com/9op/Kontact/bearer/app/entity"
 )
 
-// MessageJsonFile repo - single jsonFile storage
 // implements usecase/message/interface.Repository
-type MessageJsonFile struct {
+type JSONFileRepo struct {
 	path string
 }
 
 // NewMessageJsonFile create new repository
-func NewMessageJsonFile(path string) *MessageJsonFile {
-	return &MessageJsonFile{
+func NewJSONFileRepo(path string) *JSONFileRepo {
+	return &JSONFileRepo{
 		path: path,
 	}
 }
 
 // all messages
-func (r *MessageJsonFile) all() ([]*entity.Message, error) {
+func (r *JSONFileRepo) all() ([]*entity.Message, error) {
 	jsonFile, err := os.Open(r.path)
 	if err != nil {
 		return nil, err
@@ -38,7 +40,7 @@ func (r *MessageJsonFile) all() ([]*entity.Message, error) {
 }
 
 // Create a message
-func (r *MessageJsonFile) Create(e *entity.Message) (*entity.Message, error) {
+func (r *JSONFileRepo) Create(e *entity.Message) (*entity.Message, error) {
 	messages, err := r.all()
 	if err != nil {
 		return e, err
@@ -50,7 +52,7 @@ func (r *MessageJsonFile) Create(e *entity.Message) (*entity.Message, error) {
 }
 
 // List messages
-func (r *MessageJsonFile) List(channelId string) ([]*entity.Message, error) {
+func (r *JSONFileRepo) List(channelId string) ([]*entity.Message, error) {
 	messages, err := r.all()
 	if err != nil {
 		return nil, err

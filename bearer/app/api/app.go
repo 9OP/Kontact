@@ -19,7 +19,8 @@ const PORT = 6000
 func CreateApp() {
 	router := pkg.NewRouter()
 
-	messageRepository := repository.NewMessageJsonFile(config.DATABASE_URL)
+	// messageRepository := repository.NewMessageJsonFile(config.DATABASE_URL)
+	messageRepository := repository.NewMongoRepo(config.DATABASE_URL)
 	messageService := message.NewService(messageRepository)
 	handler.MakeMessageHandlers(router, messageService)
 

@@ -2,12 +2,12 @@
 /* eslint-disable no-underscore-dangle */
 import {
   combineReducers,
-  applyMiddleware,
+  // applyMiddleware,
   compose,
-  Action,
+  // Action,
   createStore,
 } from 'redux';
-import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
+// import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 // Reducers
 import authReducer from './authentication/auth.reducer';
@@ -18,8 +18,8 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
   traceLimit: 10,
 }) || compose;
 // const composeEnhancers = compose;
-const middlewares = [thunk];
-export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
+// const middlewares = [thunk];
+// export const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
 export const rootReducer = combineReducers({
   authentication: authReducer,
@@ -27,12 +27,13 @@ export const rootReducer = combineReducers({
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action>;
-export type DispThunk = ThunkDispatch<RootState, unknown, Action>
+export type AppDispatch = typeof store.dispatch;
+// export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action>;
+// export type DispThunk = ThunkDispatch<RootState, unknown, Action>
 
 export const store = createStore(
   rootReducer,
-  enhancer,
+  composeEnhancers, // enhancer,
 );
 
 /* ThunkAction<R, S, E, A>

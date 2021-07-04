@@ -4,7 +4,7 @@
 @contentType = application/json
 @bearerToken = bearer_token
 
-@channelId = 1
+
 
 ### Get token
 # @name login
@@ -19,13 +19,21 @@ Content-Type: {{contentType}}
 ###
 @token = {{login.response.body.token}}
 
+### Get channel id
+# @name channel
+GET {{back}}/auth/whoami
+Authorization: Bearer {{token}}
+
+###
+@channelId  = {{channel.response.body.channels[0].id}}
+
 ### Post message
 POST {{host}}/message/{{channelId}}
 Authorization: Bearer {{token}}
 
 {
     "authorId": "Martin",
-    "data": "Hello world!",
+    "content": "456",
     "any": "junk"
 }
 

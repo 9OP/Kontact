@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 
 import { selectMessages } from '../../store/entities/messages/messages.selectors';
 import * as message from '../socket/message.socket';
@@ -8,7 +7,7 @@ import { IMemberMessage, IMessage } from '../../common/models';
 import { selectOpenedChannel } from '../../store/entities/channels/channels.selectors';
 import { store } from '../../store';
 import { receiveMessagesAction } from '../../store/entities/messages/messages.actions';
-import { useAction } from './hooks';
+import { useAction, useAppSelector } from './hooks';
 import { messageHttpService } from '../http';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,14 +27,14 @@ message.receive((data: any) => {
 });
 
 export const useMessages = (): {messages: IMemberMessage[]} => {
-  const messages = useSelector(selectMessages);
+  const messages = useAppSelector(selectMessages);
   return { messages };
 };
 
 export const useSendMessages = (): [(mess: string) => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const channel = useSelector(selectOpenedChannel);
+  const channel = useAppSelector(selectOpenedChannel);
 
   const sendMessage = useCallback((mess: string) => {
     setLoading(true);

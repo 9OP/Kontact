@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 
 import { ActionCreator } from 'redux';
 import {
@@ -11,7 +10,7 @@ import {
 import { selectChannels, selectOpenedChannel } from '../../store/entities/channels/channels.selectors';
 import { selectRole } from '../../store/authentication/auth.selectors';
 import { channelsHttpService } from '../http';
-import { useAction } from './hooks';
+import { useAction, useAppSelector } from './hooks';
 
 import { emit, toast } from '../../components/toast';
 import { ERole, IChannel } from '../../common/models';
@@ -20,9 +19,9 @@ import { channelsActionTypes } from '../../store/entities/channels/channels.acti
 export const useChannels = (): {
   channel: IChannel, channels: IChannel[],
   role: ERole, open: ActionCreator<channelsActionTypes>} => {
-  const channels = useSelector(selectChannels);
-  const channel = useSelector(selectOpenedChannel);
-  const role = useSelector(selectRole);
+  const channels = useAppSelector(selectChannels);
+  const channel = useAppSelector(selectOpenedChannel);
+  const role = useAppSelector(selectRole);
   const open = useAction(openChannelAction);
 
   return {
@@ -75,7 +74,7 @@ export const useDeleteChannel = (): [() => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const removeChannel = useAction(deleteChannelAction);
-  const channel = useSelector(selectOpenedChannel);
+  const channel = useAppSelector(selectOpenedChannel);
 
   const deleteChannel = useCallback(() => {
     setLoading(true);

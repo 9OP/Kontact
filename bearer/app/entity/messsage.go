@@ -4,19 +4,19 @@ import "time"
 
 // Message entity
 type Message struct {
-	AuthorId  string `json:"authorId"`
-	ChannelId string `json:"channelId"`
-	Data      string `json:"data"`
-	Date      string `json:"date"`
+	Id        string    `json:"id"`
+	AuthorId  string    `json:"authorId"`
+	ChannelId string    `json:"channelId"`
+	Content   string    `json:"content"`
+	Date      time.Time `json:"date"`
 }
 
-// NewMessage create a new message
-func NewMessage(authorId, channelId, data string) (*Message, error) {
+func NewMessage(authorId, channelId, content string) *Message {
 	m := &Message{
 		AuthorId:  authorId,
 		ChannelId: channelId,
-		Data:      data,
-		Date:      time.Now().String(),
+		Content:   content,
+		Date:      time.Now(),
 	}
-	return m, nil
+	return m
 }

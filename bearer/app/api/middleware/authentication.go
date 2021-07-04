@@ -13,22 +13,25 @@ import (
 	"github.com/9op/Kontact/bearer/config"
 )
 
-type Channel struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+type User struct {
+	Id       string   // user_id
+	Channels []string // channel_ids
 }
 
-const keyChannels pkg.Key = "channels"
+const keyUser pkg.Key = "user"
 
-func Channels(r *http.Request) []string {
-	if channels := r.Context().Value(keyChannels); channels != nil {
-		return channels.([]string) // type cast
-	}
-	return nil
+func getChannels(r *http.Request) []string {
+	user := r.Context().Value(keyUser).(User)
+	return user.Channels
+}
+
+func GetUserId(r *http.Request) string {
+	user := r.Context().Value(keyUser).(User)
+	return user.Id
 }
 
 func IsUserInChannel(r *http.Request, channelId string) bool {
-	for _, id := range Channels(r) {
+	for _, id := range getChannels(r) {
 		if id == channelId {
 			return true
 		}
@@ -58,7 +61,10 @@ func Authentication(h http.Handler) http.Handler {
 		defer resp.Body.Close()
 
 		var target struct {
-			Channels []Channel `json:"channels"`
+			Id       string `json:"id"`
+			Channels []struct {
+				Id string `json:"id"`
+			} `json:"channels"`
 		}
 		json.NewDecoder(resp.Body).Decode(&target)
 
@@ -67,7 +73,12 @@ func Authentication(h http.Handler) http.Handler {
 			channel_ids[idx] = value.Id
 		}
 
-		ctx := context.WithValue(r.Context(), keyChannels, channel_ids)
+		user := User{
+			Id:       target.Id,
+			Channels: channel_ids,
+		}
+
+		ctx := context.WithValue(r.Context(), keyUser, user)
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

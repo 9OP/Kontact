@@ -18,11 +18,9 @@ func NewService(r Repository) *Service {
 
 // CreateMessage create a message
 func (s *Service) CreateMessage(authorId, channelId, data string) (*entity.Message, error) {
-	m, err := entity.NewMessage(authorId, channelId, data)
-	if err != nil {
-		return nil, err
-	}
-	return s.repo.Create(m)
+	m := entity.NewMessage(authorId, channelId, data)
+
+	return s.repo.Create(m) // repo.create handles the creation of message id
 }
 
 // ListMessages list messages
