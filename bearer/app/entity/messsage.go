@@ -4,7 +4,7 @@ import "time"
 
 // Message entity
 type Message struct {
-	Id        string    `json:"id"`
+	Id        string    `json:"id" bson:"_id,omitempty"`
 	AuthorId  string    `json:"authorId"`
 	ChannelId string    `json:"channelId"`
 	Content   string    `json:"content"`
