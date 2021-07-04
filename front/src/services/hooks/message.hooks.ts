@@ -9,15 +9,7 @@ import { store } from '../../store';
 import { receiveMessagesAction } from '../../store/entities/messages/messages.actions';
 import { useAction, useAppSelector } from './hooks';
 import { messageHttpService } from '../http';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const JsonToMessage = (json: any): IMessage => ({
-  id: json.id,
-  authorId: json.authorId,
-  channelId: json.channelId,
-  content: json.content,
-  date: new Date(), // should use date send back
-});
+import { JsonToMessage } from '../http/message.http';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 message.receive((data: any) => {

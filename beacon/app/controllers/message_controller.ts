@@ -28,7 +28,6 @@ export const sendMessage = createEvent(
 
     const message = await saveMessage(
       payload.channel,
-      socket.user.id,
       payload.message,
       socket.token,
     );

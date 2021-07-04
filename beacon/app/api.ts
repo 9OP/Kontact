@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { BACKEND_API, BEARER_API } from './config';
-import { IUser, IMembership, IMessage } from './models';
+import { IUser, IMembership } from './models';
 
 const back = axios.create({
   baseURL: BACKEND_API,
@@ -24,15 +24,13 @@ const JSONtoIUser = (data: any): IUser => ({
   access: data.access,
 });
 
-let ID_COUNTER = 0; // temporary until bearer implements a uuid (mongodb)
-const JSONtoIMessage = (data: any): IMessage => ({
-  // eslint-disable-next-line no-plusplus
-  id: data.id || String(ID_COUNTER++),
-  channelId: data.channelId,
-  authorId: data.authorId,
-  content: data.data,
-  // date: data.date,
-});
+// const JSONtoIMessage = (data: any): IMessage => ({
+//   id: data.id,
+//   channelId: data.channelId,
+//   authorId: data.authorId,
+//   content: data.content,
+//   date: new Date(data.date),
+// });
 
 export const whoami = async (token: string): Promise<IUser> => {
   const res = await back.get('/auth/whoami', {
@@ -48,18 +46,28 @@ export const fetchMemberships = async (token: string): Promise<IMembership[]> =>
   return JSONtoIMemberships(res.data);
 };
 
+// Do not marshall the response to keep the responsibility of the interface format
+// to Bearer service
 export const saveMessage = async (
   channelId: string,
-  authorId: string,
-  data: string,
+  content: string,
   token: string,
-): Promise<IMessage> => {
-  const res = await bearer.post(`/message/${channelId}`, JSON.stringify({
-    authorId,
-    data,
-  }), {
+): Promise<any> => {
+  const res = await bearer.post(`/message/${channelId}`, JSON.stringify({ content }), {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return JSONtoIMessage(res.data);
+  return res.data;
 };
+
+// export const saveMessage = async (
+//   channelId: string,
+//   content: string,
+//   token: string,
+// ): Promise<IMessage> => {
+//   const res = await bearer.post(`/message/${channelId}`, JSON.stringify({ content }), {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+
+//   return JSONtoIMessage(res.data);
+// };
