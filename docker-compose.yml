@@ -14,10 +14,10 @@ services:
       - "443:443"
     depends_on:
       - back
-      - front
-      - adminer
       - beacon
       - bearer
+      - front
+      - adminer
 
   back:
     container_name: "kontact_back"
@@ -33,19 +33,19 @@ services:
     volumes:
       - ./back:/app
     depends_on:
-      - database
+      - postgres
 
   bearer:
     container_name: "kontact_bearer"
     build:
       context: ./bearer
       dockerfile: bearer.dockerfile
-    environment:
-      BACKEND_API: "http://back:5000"
     restart: always
-    # command: "./startup.sh"
+    command: "./startup.sh"
     volumes:
       - ./bearer:/app
+    depends_on:
+      - mongo
 
   beacon:
     container_name: "kontact_beacon"
@@ -73,8 +73,8 @@ services:
     volumes:
       - ./front:/app
 
-  database:
-    container_name: "kontact_database"
+  postgres:
+    container_name: "kontact_postgres"
     build:
       context: ./back/database
       dockerfile: database.dockerfile
@@ -85,7 +85,7 @@ services:
       POSTGRES_USER: developer
       POSTGRES_PASSWORD: secret
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 
   mongo:
     container_name: "kontact_mongo"
@@ -104,5 +104,5 @@ services:
       ADMINER_DESIGN: "mvt"
 
 volumes:
-  db-data:
+  pgdata:
   mongodata:

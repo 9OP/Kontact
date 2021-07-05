@@ -3,11 +3,8 @@ FROM golang:1.16-alpine AS build
 WORKDIR /app
 
 COPY . .
-RUN CGO_ENABLED=0 go build  -o /bin/server /app/main.go
 
-# FROM scratch
-# COPY --from=build /bin/server /bin/server
+# Download dependancies
+RUN go mod vendor
 
 EXPOSE 6000
-
-CMD ["/bin/server"]

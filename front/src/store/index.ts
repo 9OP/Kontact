@@ -33,7 +33,7 @@ export type AppDispatch = typeof store.dispatch;
 
 export const store = createStore(
   rootReducer,
-  composeEnhancers, // enhancer,
+  composeEnhancers(), // enhancer,
 );
 
 /* ThunkAction<R, S, E, A>

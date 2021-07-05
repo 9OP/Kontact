@@ -31,7 +31,7 @@ class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         "postgresql://"
         f"{environ.get('DB_USER', 'developer:secret')}@"
-        f"{environ.get('DB_ADDR', 'database:5432')}/"
+        f"{environ.get('DB_ADDR', 'postgres:5432')}/"
         f"{environ.get('DB_NAME', 'kontact_dev')}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -43,7 +43,7 @@ class TestConfig(Config):
     SESSION_COOKIE_SECURE = False
     FORCE_HTTPS = False
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_DATABASE_URI = "postgresql://tester:secret@database:5432/kontact_test"
+    SQLALCHEMY_DATABASE_URI = "postgresql://tester:secret@postgres:5432/kontact_test"
 
 
 conf = {
