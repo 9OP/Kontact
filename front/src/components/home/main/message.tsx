@@ -15,6 +15,8 @@ const MessageBox = (): JSX.Element => {
   useEffect(() => {
     if (messages && messages.length) {
       setLoading(false);
+    } else {
+      setLoading(true);
     }
   }, [messages]);
 
@@ -43,23 +45,13 @@ const MessageBox = (): JSX.Element => {
         borderColor="gray.100"
       >
         <Box p=".5em" width="25rem">
-          <Text
-            fontSize="xs"
-            color="gray.400"
-          >
+          <Text fontSize="xs" color="gray.400">
             {renderDate(message.data.date)}
           </Text>
-          <Text
-            fontSize="md"
-            fontWeight="bold"
-            color="gray.600"
-          >
+          <Text fontSize="md" fontWeight="bold" color="gray.600">
             {message?.author?.name}
           </Text>
-          <Text
-            fontSize="sm"
-            color="gray.500"
-          >
+          <Text fontSize="sm" color="gray.500">
             {message.data.content}
           </Text>
         </Box>
@@ -69,30 +61,34 @@ const MessageBox = (): JSX.Element => {
   );
 
   return (
-    <Box
-      marginBottom="auto"
-      paddingRight="3rem"
-    >
+    <>
       { !loading
         ? (
-          <Box overflow="auto" className="scroller">
+          <Box
+            paddingRight="3rem"
+            marginBottom="auto"
+            overflow="auto"
+            className="scroller"
+          >
             {renderMessages()}
             <Box ref={chatRef} />
           </Box>
         )
         : (
-          <Box display="flex" justifyContent="center">
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="teal.500"
-              size="xl"
-            />
+          <Box paddingRight="3rem" marginBottom="auto" marginTop="auto">
+            <Box display="flex" justifyContent="center">
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="teal.500"
+                size="xl"
+              />
+            </Box>
           </Box>
 
         )}
-    </Box>
+    </>
 
   );
 };
