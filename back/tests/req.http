@@ -123,5 +123,5 @@ DELETE {{host}}/channel/{{cid}}/membership/{{uid}}
 Authorization: Bearer {{token}}
 
 ### Search users
-GET {{host}}/user/search?name=li
+GET {{host}}/user/search?id=
 Authorization: Bearer {{token}}

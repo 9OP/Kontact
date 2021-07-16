@@ -1,10 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, cast, String
 from sqlalchemy import exc as sql_exc
 from sqlalchemy.orm import exc as sql_orm
 from sqlalchemy.inspection import inspect
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
+
 import app.api_responses as apr
 
 
@@ -96,5 +97,8 @@ class Support(TimestampMixin):
 
     @classmethod
     def search(cls, **kwargs):
-        filters = [getattr(cls, col).ilike(f"%{val}%") for col, val in kwargs.items()]
+        # Cast is required for comparing UUIDs with strings
+        filters = []
+        for col, val in kwargs.items():
+            filters.append(cast(getattr(cls, col), String(32)).ilike(val))
         return cls.__find("search", *filters)
