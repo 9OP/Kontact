@@ -14,9 +14,13 @@ export default (): JSX.Element => {
   }, [messages]);
 
   const renderDate = (date: Date) => {
+    const local = 'en';
+    const ye = new Intl.DateTimeFormat(local, { year: 'numeric' }).format(date);
+    const mo = new Intl.DateTimeFormat(local, { month: 'short' }).format(date);
+    const da = new Intl.DateTimeFormat(local, { day: '2-digit' }).format(date);
     const hours = (`0${date.getHours()}`).slice(-2);
     const mins = (`0${date.getMinutes()}`).slice(-2);
-    return `${hours}:${mins}`;
+    return `${mo} ${da}, ${ye} at ${hours}:${mins}`;
   };
 
   const renderMessages = () => (
