@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Flex } from '@chakra-ui/react';
 import Header from './header';
-import Channel from './channel';
 import Message from './message';
 import Members from './members/memberList';
 import { useChannels } from '../../../services/hooks/channel.hooks';
@@ -28,7 +27,6 @@ export default (): JSX.Element => {
             paddingTop="1rem"
           >
             <Flex flexDirection="column" width="100%">
-              <Channel />
               <Message />
             </Flex>
             <Members />

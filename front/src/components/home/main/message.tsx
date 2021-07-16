@@ -1,11 +1,103 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   Box,
   Textarea,
+  Text,
+  Spinner,
 } from '@chakra-ui/react';
-import { useSendMessages } from '../../../services/hooks/message.hooks';
+import { IMessage, IMember } from '../../../common/models';
+import { useMessages, useSendMessages } from '../../../services/hooks/message.hooks';
 
-export default (): JSX.Element => {
+const MessageBox = (): JSX.Element => {
+  const [loading, setLoading] = useState(true);
+  const { messages } = useMessages();
+
+  useEffect(() => {
+    if (messages && messages.length) {
+      setLoading(false);
+    }
+  }, [messages]);
+
+  const chatRef = useCallback((node) => {
+    if (node !== null) {
+      node.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  const renderDate = (date: Date) => {
+    const local = 'en';
+    const ye = new Intl.DateTimeFormat(local, { year: 'numeric' }).format(date);
+    const mo = new Intl.DateTimeFormat(local, { month: 'short' }).format(date);
+    const da = new Intl.DateTimeFormat(local, { day: '2-digit' }).format(date);
+    const hours = (`0${date.getHours()}`).slice(-2);
+    const mins = (`0${date.getMinutes()}`).slice(-2);
+    return `${mo} ${da}, ${ye} at ${hours}:${mins}`;
+  };
+
+  const renderMessages = () => (
+    messages.map((message: {data: IMessage, author: IMember}) => (
+      <Box
+        key={message.data.id}
+        marginBottom="2rem"
+        borderBottom="1px solid"
+        borderColor="gray.100"
+      >
+        <Box p=".5em" width="25rem">
+          <Text
+            fontSize="xs"
+            color="gray.400"
+          >
+            {renderDate(message.data.date)}
+          </Text>
+          <Text
+            fontSize="md"
+            fontWeight="bold"
+            color="gray.600"
+          >
+            {message?.author?.name}
+          </Text>
+          <Text
+            fontSize="sm"
+            color="gray.500"
+          >
+            {message.data.content}
+          </Text>
+        </Box>
+      </Box>
+
+    ))
+  );
+
+  return (
+    <Box
+      marginBottom="auto"
+      paddingRight="3rem"
+    >
+      { !loading
+        ? (
+          <Box overflow="auto" className="scroller">
+            {renderMessages()}
+            <Box ref={chatRef} />
+          </Box>
+        )
+        : (
+          <Box display="flex" justifyContent="center">
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="teal.500"
+              size="xl"
+            />
+          </Box>
+
+        )}
+    </Box>
+
+  );
+};
+
+const MessageInput = (): JSX.Element => {
   const [message, setMessage] = useState('');
   const [sendMessage] = useSendMessages();
 
@@ -45,3 +137,10 @@ export default (): JSX.Element => {
 
   );
 };
+
+export default (): JSX.Element => (
+  <>
+    <MessageBox />
+    <MessageInput />
+  </>
+);
