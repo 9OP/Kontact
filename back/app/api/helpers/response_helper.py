@@ -4,7 +4,7 @@ import re
 
 
 def logger(response):
-    user = g.get("current_user", "<Anonymous>")
+    user = g.get("current_user", "<Unlogged>")
     current_app.logger.info(
         (
             f"{'-'.join(request.access_route)} {user} :: "

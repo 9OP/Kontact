@@ -120,9 +120,13 @@ export const useSearchUser = (): [
     async function searchUsers() {
       if (search.length >= 2) {
         setLoading(true);
+        // const value = encodeURI(search);
+        // const value = encodeURIComponent(search);
+        // console.log('search', search, value);
         try {
           setLoading(false);
           const data = await membersHttpService.searchUser(search);
+          console.log(search, data);
           setPreviewMembers(data);
         } catch (err) {
           setLoading(false);
@@ -132,7 +136,7 @@ export const useSearchUser = (): [
     }
 
     searchUsers();
-  }, [search]);
+  }, [search, setPreviewMembers]);
 
   return [search, setSearch, previewMembers, loading, error];
 };

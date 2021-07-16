@@ -13,6 +13,7 @@ export default (): JSX.Element => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage(message);
+      setMessage('');
     }
   };
 

@@ -41,9 +41,9 @@ export const updateMember = async (cid: string, uid: string, role: ERole): Promi
   return JsonToMember(res);
 };
 
-export const searchUser = async (name = '', email = ''): Promise<IMemberPreview[]> => {
+export const searchUser = async (value = ''): Promise<IMemberPreview[]> => {
   const res = await back.get({
-    route: `user/search?name=${name}&email=${email}`,
+    route: `user/search?value=${value}`,
   });
   return JsonToMemberPreviews(res);
 };

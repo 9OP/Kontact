@@ -1,6 +1,7 @@
 
 # @host = https://127.0.0.1:443/api
-@host = http://127.0.0.1:5000
+# @host = http://127.0.0.1:5000
+@host = https://localhost:443/api/back
 @contentType = application/json
 @origin = http://localhost:3000
 
@@ -122,5 +123,5 @@ DELETE {{host}}/channel/{{cid}}/membership/{{uid}}
 Authorization: Bearer {{token}}
 
 ### Search users
-GET {{host}}/user/search?name=mi
+GET {{host}}/user/search?name=li
 Authorization: Bearer {{token}}

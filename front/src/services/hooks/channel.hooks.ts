@@ -87,7 +87,7 @@ export const useDeleteChannel = (): [() => void, boolean, Error | null] => {
       }).finally(() => {
         setLoading(false);
       });
-  }, [removeChannel]);
+  }, [removeChannel, channel]);
 
   return [deleteChannel, loading, error];
 };

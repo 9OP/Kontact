@@ -12,7 +12,7 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useSignin } from '../../services/hooks/auth.hooks';
+import { useSignin } from '../services/hooks/auth.hooks';
 
 export default (): JSX.Element => {
   const [email, setEmail] = useState('');
