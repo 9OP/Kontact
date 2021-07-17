@@ -10,7 +10,10 @@ const INITIAL_STATE: IAuth = null as unknown as IAuth;
 export default function userReducer(state: IAuth = INITIAL_STATE, action: authActionTypes): IAuth {
   switch (action.type) {
     case SET_USER:
-      return action.payload;
+      return {
+        ...state,
+        ...action.payload,
+      };
 
     case RESET_USER:
       return INITIAL_STATE;

@@ -59,6 +59,8 @@ def signin():
     if not user or not user.check_password(params["password"]):
         raise apr.LoginFailed()
 
+    g.current_user = user
+
     token = UserToken.create(user_id=user.id).token
     user_data = user.summary()
     user_data["token"] = token
@@ -83,8 +85,3 @@ def whoami():
 def key():
     key = session.get("les_key")
     return render({"key": key})
-
-
-@gate()
-def material():
-    return render(g.current_user.serialize("material"))

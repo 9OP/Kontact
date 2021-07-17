@@ -1,8 +1,14 @@
 export interface IAuth {
-  id: string,
-  email: string,
-  name: string,
-  access: EAccess,
+  id: string;
+  email: string;
+  name: string;
+  material: IMaterial;
+  access: EAccess;
+}
+
+export interface IMaterial {
+  puek: string;
+  suek: string;
 }
 
 export enum EAccess {

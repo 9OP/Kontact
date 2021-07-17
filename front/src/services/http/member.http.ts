@@ -8,6 +8,9 @@ const JsonToMember = (json: any): IMember => ({
   email: json.email,
   role: json.role,
   joinedAt: new Date(json.joined_at),
+  material: {
+    puek: json.material?.puek,
+  },
 });
 
 const JsonToMemberPreviews = (json: any): IMemberPreview[] => json.map((member: IMemberPreview) => (

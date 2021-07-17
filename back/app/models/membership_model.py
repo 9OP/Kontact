@@ -43,8 +43,8 @@ class Membership(db.Model, Support):
 
     def summary(self, source=None):
         switcher = {
-            "user": self.user.serialize("id", "name", "email"),
-            "channel": self.channel.serialize("id", "name"),
+            "user": self.user.summary(),
+            "channel": self.channel.summary(),
         }
         membership_data = self.serialize("role", created_at="joined_at")
         membership_data.update(switcher.get(source, {}))

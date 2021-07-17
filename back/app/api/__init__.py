@@ -42,7 +42,6 @@ auth_api.route("/signin", methods=["POST"])(auth.signin)
 auth_api.route("/signout", methods=["POST"])(auth.signout)
 auth_api.route("/whoami", methods=["GET"])(auth.whoami)
 auth_api.route("/key", methods=["GET"])(auth.key)
-auth_api.route("/material", methods=["GET"])(auth.material)
 # auth_api.route("/change_password", methods=["POST"])(change_password)
 # auth_api.route("/forgot_password", methods=["POST"])(forgot_password)
 

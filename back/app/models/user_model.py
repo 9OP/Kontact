@@ -1,3 +1,4 @@
+from flask import g
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.dialects.postgresql import UUID
@@ -45,13 +46,19 @@ class User(db.Model, Support):
         return bcrypt.checkpw(digest.encode("utf-8"), hashed)
 
     def summary(self, verbose=False):
-        user_data = self.serialize("id", "email", "name", "access", "channels_count")
-        user_data["puek"] = self.material.get("puek")
+        user_data = self.serialize(
+            "id", "email", "name", "access", _material="material"
+        )
         if verbose:
             channels = [u.summary("channel") for u in self.user_memberships]
             user_data["channels"] = channels
         return user_data
 
     @hybrid_property
-    def channels_count(self):
-        return len(self.channels)
+    def _material(self):
+        if self == g.current_user:
+            return self.material
+        # Return only public material if self not current user
+        return {
+            "puek": self.material.get("puek"),
+        }

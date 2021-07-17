@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import { back, bearer } from '../../common/network/api';
 import { beacon } from '../../common/network/socket';
 import LES from '../../common/localStorage';
@@ -10,6 +11,10 @@ const JsonToUser = (json: any): IAuth => ({
   email: json.email,
   name: json.name,
   access: json.access,
+  material: {
+    puek: json.material?.puek,
+    suek: json.material?.suek,
+  },
 });
 
 const connect = (token: string) => {
@@ -32,17 +37,21 @@ const key = async (): Promise<string> => {
 };
 
 export const signin = async (email: string, password: string): Promise<IAuth> => {
-  await new Promise((res) => setTimeout(res, 1000));
+  const prehash = CryptoJS.SHA256(password).toString();
   const res = await back.post({
     route: 'auth/signin',
-    payload: { email, password },
+    payload: { email, password: prehash },
   });
-  LES.key(await key());
+  const k = await key();
+
+  LES.key(k);
   connect(res.token);
+
   return JsonToUser(res);
 };
 
 export const signup = async (email: string, password: string, name: string): Promise<IAuth> => {
+  // should generate keys (puek, suek)
   const res = await back.post({
     route: 'auth/signup',
     payload: { email, password, name },
