@@ -2,8 +2,9 @@
 import { RootState } from '../..';
 import { IMember } from '../../../common/models';
 
-export const selectMembers = (state: RootState): IMember[] => {
-  return Object.values(state.entities.members?.byId || {});
+export const selectMembers = (cid: string) => (state: RootState): IMember[] => {
+  const membersId = state.entities.memberships?.[cid] || [];
+  return membersId.map((id) => state.entities.members?.byId[id]);
 };
 
 export const selectMemberById = (state: RootState, uid: string): IMember => {

@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import {
+  useState, useEffect, useCallback,
+} from 'react';
 
 import {
   createMemberAction,
   deleteMemberAction,
   fetchMembersAction,
   updateMemberAction,
-} from '../../store/entities/members/memberships.actions';
-import { selectMembers } from '../../store/entities/members/memberships.selectors';
+} from '../../store/entities/members/members.actions';
+import { selectMembers } from '../../store/entities/members/members.selectors';
 import { membersHttpService } from '../http';
 import { useAction, useAppSelector } from './hooks';
 
@@ -14,10 +16,14 @@ import { emit, toast } from '../../components/toast';
 import { ERole, IMember, IMemberPreview } from '../../common/models';
 import { selectOpenedChannel } from '../../store/entities/channels/channels.selectors';
 
-export const useMembers = (): {members: IMember[], byId: (uid: string) => IMember | null} => {
-  const members = useAppSelector(selectMembers);
-  // const byId = (uid: string) => useSelector((state: RootState) => selectMemberById(state, uid));
-  const byId = (uid: string) => members.find(({ id }) => id === uid) || null;
+export const useMembers = (cid: string): {
+  members: IMember[], byId: (uid: string) => IMember | null} => {
+  const members = useAppSelector(selectMembers(cid));
+
+  const byId = useCallback(
+    (uid: string) => members.find(({ id }) => id === uid) || null,
+    [members],
+  );
   return { members, byId };
 };
 
@@ -31,7 +37,7 @@ export const useFetchMembers = (): [() => void, boolean, Error | null] => {
     setLoading(true);
     membersHttpService.fetchMembers(channel.id)
       .then((members: IMember[]) => {
-        setMembers(members);
+        setMembers(members, channel);
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {
@@ -53,7 +59,7 @@ export const useCreateMember = (): [(uid: string) => void, boolean, Error | null
     membersHttpService.createMember(channel.id, uid)
       .then((member: IMember) => {
         emit(toast.member_created(member));
-        setMember(member);
+        setMember(member, channel);
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {
@@ -69,7 +75,7 @@ export const useDeleteMember = (): [(uid: string) => void, boolean, Error | null
   const [error, setError] = useState<Error | null>(null);
   const removeMember = useAction(deleteMemberAction);
   const channel = useAppSelector(selectOpenedChannel);
-  const members = useAppSelector(selectMembers);
+  const members = useAppSelector(selectMembers(channel.id));
 
   const deleteMember = useCallback((uid: string) => {
     setLoading(true);
@@ -77,7 +83,7 @@ export const useDeleteMember = (): [(uid: string) => void, boolean, Error | null
     membersHttpService.deleteMember(channel.id, uid)
       .then(() => {
         emit(toast.member_deleted(member));
-        removeMember(uid);
+        removeMember(uid, channel.id);
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {
@@ -120,13 +126,9 @@ export const useSearchUser = (): [
     async function searchUsers() {
       if (search.length >= 2) {
         setLoading(true);
-        // const value = encodeURI(search);
-        // const value = encodeURIComponent(search);
-        // console.log('search', search, value);
         try {
           setLoading(false);
           const data = await membersHttpService.searchUser(search);
-          console.log(search, data);
           setPreviewMembers(data);
         } catch (err) {
           setLoading(false);

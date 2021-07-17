@@ -8,7 +8,7 @@ import {
   CREATE_MEMBER,
   UPDATE_MEMBER,
   DELETE_MEMBER,
-} from './memberships.action-types';
+} from './members.action-types';
 
 interface State {
   byId: {
@@ -24,21 +24,22 @@ export default function membersReducer(
 ): State {
   switch (action.type) {
     case FETCH_MEMBERS:
-      const members = action.payload.reduce((acc, membership) => {
+      const members = action.payload.members.reduce((acc, membership) => {
         acc[membership.id] = membership;
         return acc;
       }, {} as { [id: string]: IMember });
 
-      return { byId: members };
+      return {
+        byId: {
+          ...state.byId,
+          ...members,
+        },
+      };
 
     case UPDATE_MEMBER:
     case CREATE_MEMBER:
-      const member = action.payload;
+      const { member } = action.payload;
       return { byId: { ...state.byId, [member.id]: member } };
-
-    case DELETE_MEMBER:
-      const { [action.payload]: _, ...rest } = state.byId;
-      return { byId: { ...rest } };
 
     case RESET_USER:
       return INITIAL_STATE;

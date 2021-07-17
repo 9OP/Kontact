@@ -13,7 +13,7 @@ import { useChannels } from '../../../../services/hooks/channel.hooks';
 
 export default (): JSX.Element => {
   const { channel, role } = useChannels();
-  const { members, byId } = useMembers();
+  const { members, byId } = useMembers(channel.id);
   const [deleteMember] = useDeleteMember();
   const [fetchMembers] = useFetchMembers();
   const [memberId, setMemberId] = useState('');
@@ -54,7 +54,7 @@ export default (): JSX.Element => {
       <Header isMaster={isMaster} />
 
       <List spacing={8} marginY="2rem">
-        {members ? renderMembers() : null}
+        { (members && members?.length) ? renderMembers() : null}
       </List>
 
       { memberId && byId(memberId) ? (
