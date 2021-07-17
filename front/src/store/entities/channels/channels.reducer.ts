@@ -24,16 +24,16 @@ const INITIAL_STATE = {} as State;
 export default function channelsReducer(state = INITIAL_STATE, action: channelsActionTypes): State {
   switch (action.type) {
     case FETCH_CHANNELS:
+      const opened = action.payload?.[0]?.id;
       const channels = action.payload.reduce((acc, channel) => {
         acc[channel.id] = channel;
         return acc;
       }, {} as {[id: string]: IChannel});
-      // const ids = action.payload.map(({ id }) => id);
 
       return {
         ...state,
         byId: { ...state.byId, ...channels },
-        // allIds: [...state.allIds, ...ids],
+        opened,
       };
 
     case UPDATE_CHANNEL:
