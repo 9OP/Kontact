@@ -9,11 +9,11 @@ WORKDIR /install
 #     && apt-get clean \
 #     && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
 
-# lint
-COPY app lib .flake8 ./
-RUN pip install --upgrade pip \
-    && pip install flake8 \
-    && flake8
+# # lint
+# COPY app lib .flake8 ./
+# RUN pip install --upgrade pip \
+#     && pip install flake8 \
+#     && flake8
 
 # install python dependencies
 COPY ./requirements.txt .

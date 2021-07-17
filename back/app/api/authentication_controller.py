@@ -12,14 +12,15 @@ _EMAIL_SCHEMA = {
     "is_email": True,
     "coerce": "lowercase",
 }
-_PWD_SCHEMA = {
-    "type": "string",
-    "required": True,
-}
-_NAME_SCHEMA = {
-    "type": "string",
-    "required": True,
-    "empty": False,
+_PWD_SCHEMA = {"type": "string", "required": True}
+_NAME_SCHEMA = {"type": "string", "required": True, "empty": False}
+
+# Define the structure of encryption material
+# puek: public user encryption key
+# suek: secret user encryption key (stored encrypted with client-side password hash)
+_MATERIAL_SCHEMA = {
+    "puek": {"type": "string", "required": True, "empty": False},
+    "suek": {"type": "string", "required": True, "empty": False},
 }
 
 AUTH_SIGNIN_SCHEMA = {
@@ -35,6 +36,7 @@ AUTH_SIGNUP_SCHEMA = {
         "is_strong": True,
     },
     "name": _NAME_SCHEMA,
+    "material": _MATERIAL_SCHEMA,
 }
 
 
@@ -44,6 +46,7 @@ def signup():
         email=params["email"],
         name=params["name"],
         password=params["password"],
+        material=params["material"],
     )
     user_data = new_user.summary()
     return render(user_data, code=201)
@@ -80,3 +83,8 @@ def whoami():
 def key():
     key = session.get("les_key")
     return render({"key": key})
+
+
+@gate()
+def material():
+    return render(g.current_user.serialize("material"))

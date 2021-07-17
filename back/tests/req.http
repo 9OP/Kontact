@@ -1,7 +1,7 @@
 
 # @host = https://127.0.0.1:443/api
-# @host = http://127.0.0.1:5000
-@host = https://localhost:443/api/back
+@host = http://127.0.0.1:5000
+# @host = https://localhost:443/api/back
 @contentType = application/json
 @origin = http://localhost:3000
 
@@ -26,7 +26,7 @@ Referer: {{origin}}
 
 {
     "email": "admin@mail.com",
-    "password": "Abc123*"
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
 }
 
 ### Signin - User
@@ -37,7 +37,7 @@ Referer: {{origin}}
 
 {
     "email": "Martin@mail.com",
-    "password": "Abc123*"
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
 }
 
 ###
@@ -47,6 +47,10 @@ Referer: {{origin}}
 ### Key
 GET {{host}}/auth/key
 Referer: {{origin}}
+
+### Material
+GET {{host}}/auth/material
+Authorization: Bearer {{token}}
 
 ### Whoami
 GET {{host}}/auth/whoami

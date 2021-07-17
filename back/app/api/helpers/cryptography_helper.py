@@ -1,3 +1,4 @@
+from Cryptodome.PublicKey import RSA
 from base64 import b64encode, b64decode
 from os import urandom
 
@@ -25,3 +26,12 @@ def enc(token: bytes) -> tuple[str, str]:
 
 def dec(enc_token: str, secret: str) -> bytes:
     return bxor(from_base64(enc_token), from_base64(secret))
+
+
+# Used for testing and database seed
+def rsa_key_gen(passphrase):
+    # Return public key and encrypted private key
+    key = RSA.generate(2048)
+    pk = key.public_key().export_key("PEM").decode()
+    sk = key.export_key("PEM", passphrase=passphrase).decode()
+    return pk, sk

@@ -22,6 +22,7 @@ class User(db.Model, Support):
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     access = db.Column(db.Integer, nullable=False, default=Access.USER.value)
+    material = db.Column(db.JSON, nullable=False)
     tokens = db.relationship("UserToken", backref="user", lazy=True)
     channels = association_proxy("user_memberships", "channel")
 
@@ -45,6 +46,7 @@ class User(db.Model, Support):
 
     def summary(self, verbose=False):
         user_data = self.serialize("id", "email", "name", "access", "channels_count")
+        user_data["puek"] = self.material.get("puek")
         if verbose:
             channels = [u.summary("channel") for u in self.user_memberships]
             user_data["channels"] = channels

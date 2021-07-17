@@ -1,6 +1,8 @@
+from app.api.helpers.cryptography_helper import rsa_key_gen
 from app.models import User, Channel, Membership
 from faker import Faker
 from random import randint, sample
+from hashlib import sha256
 from .create_db import create_db
 
 
@@ -34,14 +36,17 @@ def seed():
     print("> Seeding database...")
 
     users, channels = [], []
-    n_user, n_channel = 50, 20
+    n_user, n_channel = 50, 4
+    password = sha256("123456".encode()).hexdigest()  # pre-hash
+    pk, sk = rsa_key_gen(sha256(password.encode()).hexdigest())
 
     for _ in progress(range(n_user), prefix="Users:", suffix=f"/{n_user}"):
         users.append(
             User.create(
                 name=faker.name(),
                 email=faker.unique.email(),
-                password="Abc123*",
+                password=password,
+                material={"puek": pk, "suek": sk},
             )
         )
 
@@ -51,15 +56,16 @@ def seed():
     admin = User.create(
         name="Martin",
         email="admin@mail.com",
-        password="Abc123*",
+        password=password,
         access=2,
+        material={"puek": pk, "suek": sk},
     )
 
     for channel in progress(
         channels, prefix="Memberships:", suffix=f"/{len(channels)}"
     ):
         Membership.create(user_id=admin.id, channel_id=channel.id, role=1)
-        for user in sample(users, 10):
+        for user in sample(users, 5):
             Membership.create(
                 user_id=user.id, channel_id=channel.id, role=randint(0, 1)
             )
