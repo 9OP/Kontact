@@ -16,6 +16,7 @@ class Membership(db.Model, Support):
     channel_id = db.Column(
         UUID(as_uuid=True), db.ForeignKey("channel.id"), primary_key=True
     )
+    material = db.Column(db.JSON, nullable=False)
     role = db.Column(db.Integer, nullable=False, default=Role.MEMBER.value)
 
     user = db.relationship(

@@ -48,10 +48,6 @@ Referer: {{origin}}
 GET {{host}}/auth/key
 Referer: {{origin}}
 
-### Material
-GET {{host}}/auth/material
-Authorization: Bearer {{token}}
-
 ### Whoami
 GET {{host}}/auth/whoami
 Authorization: Bearer {{token}}

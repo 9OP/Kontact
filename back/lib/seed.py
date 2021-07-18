@@ -36,7 +36,7 @@ def seed():
     print("> Seeding database...")
 
     users, channels = [], []
-    n_user, n_channel = 50, 4
+    n_user, n_channel = 10, 4
     password = sha256("123456".encode()).hexdigest()  # pre-hash
     pk, sk = rsa_key_gen(sha256(password.encode()).hexdigest())
 
@@ -51,7 +51,9 @@ def seed():
         )
 
     for _ in progress(range(n_channel), prefix="Channels:", suffix=f"/{n_channel}"):
-        channels.append(Channel.create(name=faker.unique.company()))
+        channels.append(
+            Channel.create(name=faker.unique.company(), material={"pcek": pk})
+        )
 
     admin = User.create(
         name="Martin",
@@ -64,10 +66,15 @@ def seed():
     for channel in progress(
         channels, prefix="Memberships:", suffix=f"/{len(channels)}"
     ):
-        Membership.create(user_id=admin.id, channel_id=channel.id, role=1)
+        Membership.create(
+            user_id=admin.id, channel_id=channel.id, role=1, material={"scek": sk}
+        )
         for user in sample(users, 5):
             Membership.create(
-                user_id=user.id, channel_id=channel.id, role=randint(0, 1)
+                user_id=user.id,
+                channel_id=channel.id,
+                role=randint(0, 1),
+                material={"scek": sk},
             )
 
     print("> Database seeded!")
