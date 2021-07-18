@@ -33,10 +33,13 @@ AUTH_SIGNUP_SCHEMA = {
         **_PWD_SCHEMA,
         "minlength": 6,
         "empty": False,
-        "is_strong": True,
+        # "is_strong": True,
     },
     "name": _NAME_SCHEMA,
-    "material": _MATERIAL_SCHEMA,
+    "material": {
+        "type": "dict",
+        "schema": _MATERIAL_SCHEMA,
+    },
 }
 
 
@@ -48,6 +51,7 @@ def signup():
         password=params["password"],
         material=params["material"],
     )
+    g.current_user = new_user
     user_data = new_user.summary()
     return render(user_data, code=201)
 

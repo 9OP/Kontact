@@ -4,6 +4,7 @@ import { beacon } from '../../common/network/socket';
 import LES from '../../common/localStorage';
 import { TOKEN } from '../../common/constants';
 import { IAuth } from '../../common/models';
+import generateKeyPair from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToUser = (json: any): IAuth => ({
@@ -51,10 +52,17 @@ export const signin = async (email: string, password: string): Promise<IAuth> =>
 };
 
 export const signup = async (email: string, password: string, name: string): Promise<IAuth> => {
-  // should generate keys (puek, suek)
+  const prehash = CryptoJS.SHA256(password).toString();
+  const keyPair = await generateKeyPair(password);
+  const material = {
+    puek: keyPair.public,
+    suek: keyPair.private,
+  };
   const res = await back.post({
     route: 'auth/signup',
-    payload: { email, password, name },
+    payload: {
+      email, password: prehash, name, material,
+    },
   });
   return JsonToUser(res);
 };

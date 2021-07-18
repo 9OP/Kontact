@@ -13,6 +13,28 @@ export const useAuth = (): { user: IAuth } => {
   return { user };
 };
 
+export const useSignup = (): [
+  (name:string, email: string, password: string) => void, boolean, Error | null] => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const auth = useAppSelector(selectUser);
+
+  const signin = useCallback((name: string, email: string, password: string) => {
+    setLoading(true);
+    if (!auth) {
+      authHttpService.signup(email, password, name).then((user) => {
+        setLoading(false);
+        emit(toast.auth_signup(user));
+      }).catch((err: Error) => {
+        setLoading(false);
+        setError(err);
+      });
+    }
+  }, [auth]);
+
+  return [signin, loading, error];
+};
+
 export const useSignin = (): [(email: string, password: string) => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);

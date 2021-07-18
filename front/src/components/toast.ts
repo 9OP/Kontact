@@ -11,6 +11,7 @@ interface IToast {
 export enum Events {
   AUTH_SIGNOUT = 'auth_signout',
   AUTH_SIGNIN = 'auth_signin',
+  AUTH_SIGNUP = 'auth_signup',
   AUTH_TOKEN_EXPIRED = 'auth_token_expired',
   CHANNEL_CREATED = 'channel_created',
   CHANNEL_DELETED = 'channel_deleted',
@@ -27,6 +28,11 @@ export const toast = {
   [Events.AUTH_SIGNIN]: (user: IAuth): IToast => ({
     title: `Welcome back ${user.name}!`,
     description: 'You are logged in.',
+    status: 'info' as toastStatus,
+  }),
+  [Events.AUTH_SIGNUP]: (user: IAuth): IToast => ({
+    title: `Account created ${user.name}!`,
+    description: 'You can log in now',
     status: 'info' as toastStatus,
   }),
   [Events.AUTH_TOKEN_EXPIRED]: (): IToast => ({
