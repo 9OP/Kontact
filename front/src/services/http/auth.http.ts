@@ -50,19 +50,18 @@ const cryptoDemo = async (password: string) => {
   // const privateKey = await unwrapCryptoKey(keyPair.private, password);
 
   // generate encryption key and store on server
-  const aesKey = await generateKey('passphrase');
-  console.log('aesKey', aesKey);
+  const aesKey = await generateKey('passphrase'); // should use privateKey
+
   // fetch encryption key and unwrap
-  const key = await unwrapCryptoKey(aesKey, 'passphrase');
-  console.log('key', key);
+  const key = await unwrapCryptoKey(aesKey, 'passphrase', 'raw', 'AES-GCM');
 
   const message = 'Hello World! 123#@$%^!';
 
   // encrypt message
-  // const encrypted = await encryptMessage(message, key);
-  // const decrypted = await decryptMessage(encrypted, key);
+  const encrypted = await encryptMessage(message, key);
+  const decrypted = await decryptMessage(encrypted, key);
 
-  // console.log('encrypted:', encrypted, 'decrypted:', decrypted);
+  console.log('encrypted:', encrypted, 'decrypted:', decrypted);
 };
 
 export const signin = async (email: string, password: string): Promise<IAuth> => {

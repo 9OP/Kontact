@@ -75,7 +75,7 @@ async function wrapCryptoKey(keyToWrap: CryptoKey, password: string, format = 'p
   );
 }
 
-export async function unwrapCryptoKey(keyToUnwrap: string, password: string): Promise<CryptoKey> {
+export async function unwrapCryptoKey(keyToUnwrap: string, password: string, format = 'pkcs8', algo = 'RSA-OAEP'): Promise<CryptoKey> {
   const keyMaterial = await getKeyMaterial(password);
   const salt = new Uint8Array(16);
   const unwrappingKey = await getKey(keyMaterial, salt);
@@ -84,7 +84,7 @@ export async function unwrapCryptoKey(keyToUnwrap: string, password: string): Pr
   const iv = new Uint8Array(12);
 
   const unwrapped = await window.crypto.subtle.unwrapKey(
-    'pkcs8', // import format
+    format, // import format
     wrappedKeyBuffer, // ArrayBuffer representing key to unwrap
     unwrappingKey, // CryptoKey representing key encryption key
     { // algorithm params for key encryption key
@@ -92,7 +92,8 @@ export async function unwrapCryptoKey(keyToUnwrap: string, password: string): Pr
       iv,
     },
     { // algorithm params for key to unwrap
-      name: 'RSA-OAEP', // name: 'RSA-PSS',
+      name: algo, // name: 'RSA-PSS',
+      length: 256,
       hash: { name: 'SHA-256' },
     },
     true, // extractability of key to unwrap
