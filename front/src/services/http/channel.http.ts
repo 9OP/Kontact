@@ -6,6 +6,10 @@ const JsonToChannel = (json: any): IChannel => ({
   id: json.id,
   name: json.name,
   createdAt: new Date(json.createdAt),
+  material: {
+    pcek: json.material?.pcek,
+    scek: json.material?.scek,
+  },
 });
 
 const JsonToChannels = (json: any): IChannel[] => json.map(

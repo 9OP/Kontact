@@ -2,13 +2,13 @@ export interface IMember {
   id: string;
   email: string;
   name: string;
-  material: IMemberMaterial; // public user encryption key
+  material: IMemberMaterial;
   role: ERole;
   joinedAt: Date;
 }
 
 export interface IMemberMaterial {
-  puek: string;
+  puek: string; // public user encryption key
 }
 
 export type IMemberPreview = Pick<IMember, 'id' | 'name'>;

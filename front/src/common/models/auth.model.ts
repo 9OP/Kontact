@@ -7,8 +7,8 @@ export interface IAuth {
 }
 
 export interface IMaterial {
-  puek: string;
-  suek: string;
+  puek: string; // public user encryption key
+  suek: string; // secret user encryption key
 }
 
 export enum EAccess {
