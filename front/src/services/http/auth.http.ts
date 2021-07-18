@@ -4,7 +4,10 @@ import { beacon } from '../../common/network/socket';
 import LES from '../../common/localStorage';
 import { TOKEN } from '../../common/constants';
 import { IAuth } from '../../common/models';
-import generateKeyPair from '../../common/crypto';
+import {
+  decryptMessage,
+  encryptMessage, generateKey, generateKeyPair, unwrapCryptoKey,
+} from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToUser = (json: any): IAuth => ({
@@ -37,8 +40,36 @@ const key = async (): Promise<string> => {
   return res.key;
 };
 
+const cryptoDemo = async (password: string) => {
+  // generate key pair and store on server
+  const keyPair = await generateKeyPair(password);
+
+  // console.log(keyPair);
+
+  // fetch key pair from server and unwrap private
+  // const privateKey = await unwrapCryptoKey(keyPair.private, password);
+
+  // generate encryption key and store on server
+  const aesKey = await generateKey('passphrase');
+  console.log('aesKey', aesKey);
+  // fetch encryption key and unwrap
+  const key = await unwrapCryptoKey(aesKey, 'passphrase');
+  console.log('key', key);
+
+  const message = 'Hello World! 123#@$%^!';
+
+  // encrypt message
+  // const encrypted = await encryptMessage(message, key);
+  // const decrypted = await decryptMessage(encrypted, key);
+
+  // console.log('encrypted:', encrypted, 'decrypted:', decrypted);
+};
+
 export const signin = async (email: string, password: string): Promise<IAuth> => {
   const prehash = CryptoJS.SHA256(password).toString();
+
+  await cryptoDemo(password);
+
   const res = await back.post({
     route: 'auth/signin',
     payload: { email, password: prehash },

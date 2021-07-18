@@ -33,7 +33,5 @@ def rsa_key_gen(passphrase):
     # Return public key and encrypted private key
     key = RSA.generate(2048)
     pk = key.public_key().export_key("PEM").decode()
-    sk = key.export_key(
-        "PEM", passphrase=passphrase, protection="PBKDF2WithHMAC-SHA1AndAES256-CBC"
-    ).decode()
+    sk = key.export_key("PEM").decode()
     return pk, sk
