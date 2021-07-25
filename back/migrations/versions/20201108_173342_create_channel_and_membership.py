@@ -25,7 +25,6 @@ def upgrade():
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("id", UUID(), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=False),
-        sa.Column("material", sa.JSON(), nullable=False),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_channel")),
         sa.UniqueConstraint("name", name=op.f("uq_channel_name")),
     )

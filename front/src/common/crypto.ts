@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 
@@ -56,15 +57,20 @@ function getKey(keyMaterial: CryptoKey, salt: Uint8Array) {
   );
 }
 
-async function wrapCryptoKey(keyToWrap: CryptoKey, password: string, format = 'pkcs8') {
-  const keyMaterial = await getKeyMaterial(password);
-  // const salt = window.crypto.getRandomValues(new Uint8Array(16));
-  const salt = new Uint8Array(16);
-  const wrappingKey = await getKey(keyMaterial, salt);
-  const iv = new Uint8Array(12);
-  // const iv = window.crypto.getRandomValues(new Uint8Array(12));
+interface KeyBundle {
+  key: string,
+  salt: Uint8Array,
+  iv: Uint8Array,
+}
 
-  return window.crypto.subtle.wrapKey(
+async function wrapCryptoKey(keyToWrap: CryptoKey, password: string, format = 'pkcs8'): Promise<KeyBundle> {
+  const keyMaterial = await getKeyMaterial(password);
+  const salt = window.crypto.getRandomValues(new Uint8Array(16));
+
+  const wrappingKey = await getKey(keyMaterial, salt);
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+  const wrappedKey = await window.crypto.subtle.wrapKey(
     format,
     keyToWrap,
     wrappingKey,
@@ -73,16 +79,19 @@ async function wrapCryptoKey(keyToWrap: CryptoKey, password: string, format = 'p
       iv,
     },
   );
+
+  return {
+    key: arrayBufferToBase64(wrappedKey),
+    salt,
+    iv,
+  };
 }
 
-async function unwrapCryptoKey(keyToUnwrap: string, password: string,
-  usages: KeyUsage[], format: string, unwrappedKeyAlgo: any): Promise<CryptoKey> {
+async function unwrapCryptoKey(keyToUnwrap: KeyBundle, password: string, usages: KeyUsage[], format: string, unwrappedKeyAlgo: any): Promise<CryptoKey> {
+  const { key, salt, iv } = keyToUnwrap;
   const keyMaterial = await getKeyMaterial(password);
-  const salt = new Uint8Array(16);
   const unwrappingKey = await getKey(keyMaterial, salt);
-  const wrappedKeyBuffer = base64ToArrayBuffer(keyToUnwrap);
-  // const ivBuffer = bytesToArrayBuffer(ivBytes);
-  const iv = new Uint8Array(12);
+  const wrappedKeyBuffer = base64ToArrayBuffer(key);
 
   const unwrapAlgo = {
     name: 'AES-GCM',
@@ -102,11 +111,8 @@ async function unwrapCryptoKey(keyToUnwrap: string, password: string,
   return unwrapped;
 }
 
-// return salt and iv
-
-// INTERFACES
-export async function generateUserEncryptionKeyPair(password: string):
-Promise<{ public: string, private: string}> {
+// API
+export async function generateUserEncryptionKeyPair(password: string): Promise<{ public: string, private: KeyBundle}> {
   const keyPair = await window.crypto.subtle.generateKey(
     {
       name: 'RSA-OAEP',
@@ -118,7 +124,7 @@ Promise<{ public: string, private: string}> {
     ['encrypt', 'decrypt'],
   );
 
-  const privateKey = await wrapCryptoKey(keyPair.privateKey, password, 'pkcs8');
+  const privateKeyBundle = await wrapCryptoKey(keyPair.privateKey, password, 'pkcs8');
   const publicKey = await window.crypto.subtle.exportKey(
     'spki',
     keyPair.publicKey,
@@ -126,11 +132,11 @@ Promise<{ public: string, private: string}> {
 
   return {
     public: arrayBufferToBase64(publicKey),
-    private: arrayBufferToBase64(privateKey),
+    private: privateKeyBundle,
   };
 }
 
-export async function generateChannelEncryptionKey(passphrase: string): Promise<string> {
+export async function generateChannelEncryptionKey(passphrase: string): Promise<KeyBundle> {
   const key = await window.crypto.subtle.generateKey(
     {
       name: 'AES-GCM',
@@ -141,11 +147,10 @@ export async function generateChannelEncryptionKey(passphrase: string): Promise<
     ['encrypt', 'decrypt'],
   );
 
-  const wrappedKey = await wrapCryptoKey(key, passphrase, 'raw');
-  return arrayBufferToBase64(wrappedKey);
+  return wrapCryptoKey(key, passphrase, 'raw');
 }
 
-export async function unwrapChannelEncryptionKey(key: string, password: string):
+export async function unwrapChannelEncryptionKey(key: KeyBundle, password: string):
 Promise<CryptoKey> {
   const format = 'raw';
   const usages: KeyUsage[] = ['decrypt', 'encrypt'];
@@ -156,7 +161,7 @@ Promise<CryptoKey> {
   return unwrapCryptoKey(key, password, usages, format, algo);
 }
 
-export async function unwrapUserEncryptionKey(key: string, password: string): Promise<string> {
+export async function unwrapUserEncryptionKey(key: KeyBundle, password: string): Promise<string> {
   const format = 'pkcs8';
   const usages: KeyUsage[] = ['sign'];
   const algo = {
@@ -172,11 +177,16 @@ export async function unwrapUserEncryptionKey(key: string, password: string): Pr
   return arrayBufferToBase64(userKey);
 }
 
-export async function encryptMessage(plain: string, key: CryptoKey): Promise<string> {
+interface MessageBundle {
+  text: string,
+  iv: Uint8Array,
+}
+
+export async function encryptMessage(plain: string, key: CryptoKey): Promise<MessageBundle> {
   const enc = new TextEncoder();
   const encoded = enc.encode(plain);
-  // const iv = window.crypto.getRandomValues(new Uint8Array(12));
-  const iv = new Uint8Array(12);
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
   const encrypted = await window.crypto.subtle.encrypt(
     {
       name: 'AES-GCM',
@@ -186,20 +196,58 @@ export async function encryptMessage(plain: string, key: CryptoKey): Promise<str
     encoded,
   );
 
-  return arrayBufferToBase64(encrypted);
+  return {
+    text: arrayBufferToBase64(encrypted),
+    iv,
+  };
 }
 
-export async function decryptMessage(ciphertext: string, key: CryptoKey): Promise<string> {
+export async function decryptMessage(cipher: MessageBundle, key: CryptoKey): Promise<string> {
+  const { text, iv } = cipher;
+
   const decrypted = await window.crypto.subtle.decrypt(
     {
       name: 'AES-GCM',
-      iv: new Uint8Array(12),
+      iv,
     },
     key,
-    base64ToArrayBuffer(ciphertext),
+    base64ToArrayBuffer(text),
   );
 
   const dec = new TextDecoder();
   const decoded = dec.decode(decrypted);
   return decoded;
 }
+
+// //
+// //
+// // Generates the default keys for back seed task
+// function addNewLines(str: string) {
+//   let finalString = '';
+//   while (str.length > 0) {
+//     finalString += `${str.substring(0, 64)}\n`;
+//     str = str.substring(64);
+//   }
+
+//   return finalString;
+// }
+
+// const cryptoGenerateSeedKeys = async () => {
+//   // Pass: '123456' sha256 x2
+//   const pass = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
+//   const keyPair = await generateUserEncryptionKeyPair(pass);
+
+//   console.log('public', addNewLines(keyPair.public));
+//   console.log('private', addNewLines(keyPair.private.key));
+//   console.log('salt', Array.from(keyPair.private.salt));
+//   console.log('iv', Array.from(keyPair.private.iv));
+
+//   const privateKey = await unwrapUserEncryptionKey(keyPair.private, pass);
+//   const aesKey = await generateChannelEncryptionKey(privateKey);
+
+//   console.log('aes', addNewLines(aesKey.key));
+//   console.log('salt', Array.from(aesKey.salt));
+//   console.log('iv', Array.from(aesKey.iv));
+// };
+
+// cryptoGenerateSeedKeys();

@@ -24,7 +24,7 @@ export const useSignup = (): [
     if (!auth) {
       authHttpService.signup(email, password, name).then((user) => {
         setLoading(false);
-        emit(toast.auth_signup(user));
+        emit(toast.auth_signup(email));
       }).catch((err: Error) => {
         setLoading(false);
         setError(err);
@@ -50,6 +50,7 @@ export const useSignin = (): [(email: string, password: string) => void, boolean
         emit(toast.auth_signin(user));
         setUser(user);
       }).catch((err: Error) => {
+        console.log('err', err);
         setLoading(false);
         setError(err);
         resetUser();

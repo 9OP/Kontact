@@ -1,33 +1,45 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { back } from '../../common/network/api';
 import { IChannel } from '../../common/models';
+import { unwrapChannelEncryptionKey } from '../../common/crypto';
 
-const JsonToChannel = (json: any): IChannel => ({
-  id: json.id,
-  name: json.name,
-  createdAt: new Date(json.createdAt),
-  material: {
-    pcek: json.material?.pcek,
-    scek: json.material?.scek,
-  },
-});
+const JsonToChannel = async (json: any, passphrase: string): Promise<IChannel> => {
+  const keyBundle = {
+    key: json.material?.scek,
+    salt: new Uint8Array(json.material?.salt),
+    iv: new Uint8Array(json.material?.iv),
+  };
+  const scek = await unwrapChannelEncryptionKey(keyBundle, passphrase);
 
-const JsonToChannels = (json: any): IChannel[] => json.map(
-  (channel: IChannel) => JsonToChannel(channel),
-);
+  return {
+    id: json.id,
+    name: json.name,
+    createdAt: new Date(json.created_at),
+    material: { scek },
+  };
+};
 
-export const fetchChannels = async (): Promise<IChannel[]> => {
+const JsonToChannels = async (json: any, passphrase: string): Promise<IChannel[]> => {
+  const channels = json.map(
+    async (channel: IChannel) => JsonToChannel(channel, passphrase),
+  );
+
+  return Promise.all(channels);
+};
+
+export const fetchChannels = async (key: string): Promise<IChannel[]> => {
   const res = await back.get({ route: 'channel/memberships' });
-  return JsonToChannels(res);
+  return JsonToChannels(res, key);
 };
 
 export const createChannel = async (name: string): Promise<IChannel> => {
+  // Create channelEncryptionKey
   const res = await back.post({
     route: 'channel',
     payload: { name },
   });
 
-  return JsonToChannel(res);
+  return JsonToChannel(res, '');
 };
 
 export const deleteChannel = async (cid: string): Promise<void> => {

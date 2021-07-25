@@ -30,8 +30,8 @@ export const toast = {
     description: 'You are logged in.',
     status: 'info' as toastStatus,
   }),
-  [Events.AUTH_SIGNUP]: (user: IAuth): IToast => ({
-    title: `Account created ${user.name}!`,
+  [Events.AUTH_SIGNUP]: (email: string): IToast => ({
+    title: `Account created ${email}!`,
     description: 'You can log in now',
     status: 'info' as toastStatus,
   }),

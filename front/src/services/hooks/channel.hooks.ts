@@ -8,7 +8,7 @@ import {
   openChannelAction,
 } from '../../store/entities/channels/channels.actions';
 import { selectChannels, selectOpenedChannel } from '../../store/entities/channels/channels.selectors';
-import { selectRole } from '../../store/authentication/auth.selectors';
+import { selectRole, selectUser } from '../../store/authentication/auth.selectors';
 import { channelsHttpService } from '../http';
 import { useAction, useAppSelector } from './hooks';
 
@@ -33,18 +33,22 @@ export const useFetchChannels = (): [() => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const setChannels = useAction(fetchChannelsAction);
+  const auth = useAppSelector(selectUser);
 
   const fetchChannels = useCallback(() => {
     setLoading(true);
-    channelsHttpService.fetchChannels()
-      .then((channels: IChannel[]) => {
-        setChannels(channels);
-      }).catch((err: Error) => {
-        setError(err);
-      }).finally(() => {
-        setLoading(false);
-      });
-  }, [setChannels]);
+    if (auth?.material?.suek) {
+      channelsHttpService.fetchChannels(auth.material.suek)
+        .then((channels: IChannel[]) => {
+          console.log('channels', channels);
+          setChannels(channels);
+        }).catch((err: Error) => {
+          setError(err);
+        }).finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [setChannels, auth]);
 
   return [fetchChannels, loading, error];
 };

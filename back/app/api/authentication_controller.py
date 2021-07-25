@@ -18,9 +18,13 @@ _NAME_SCHEMA = {"type": "string", "required": True, "empty": False}
 # Define the structure of encryption material
 # puek: public user encryption key
 # suek: secret user encryption key (stored encrypted with client-side password hash)
+# salt: salt of the password used to wrap the suek
+# iv: initialization vector of the suek wrap
 _MATERIAL_SCHEMA = {
     "puek": {"type": "string", "required": True, "empty": False},
     "suek": {"type": "string", "required": True, "empty": False},
+    "salt": {"type": "list", "required": True, "empty": False, "schema": {"type": "integer"}},
+    "iv": {"type": "list", "required": True, "empty": False, "schema": {"type": "integer"}},
 }
 
 AUTH_SIGNIN_SCHEMA = {

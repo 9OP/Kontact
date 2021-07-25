@@ -2,31 +2,35 @@ import CryptoJS from 'crypto-js';
 import { back, bearer } from '../../common/network/api';
 import { beacon } from '../../common/network/socket';
 import LES from '../../common/localStorage';
-import { TOKEN } from '../../common/constants';
+import { PASSPHRASE, TOKEN } from '../../common/constants';
 import { IAuth } from '../../common/models';
-import {
-  decryptMessage,
-  encryptMessage,
-  generateChannelEncryptionKey,
-  generateUserEncryptionKeyPair,
-  unwrapChannelEncryptionKey,
-  unwrapUserEncryptionKey,
-} from '../../common/crypto';
+import { generateUserEncryptionKeyPair, unwrapUserEncryptionKey } from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const JsonToUser = (json: any): IAuth => ({
-  id: json.id,
-  email: json.email,
-  name: json.name,
-  access: json.access,
-  material: {
-    puek: json.material?.puek,
-    suek: json.material?.suek,
-  },
-});
+const JsonToUser = async (json: any): Promise<IAuth> => {
+  const passphrase = LES.getItem(PASSPHRASE);
+
+  const keyBundle = {
+    key: json.material?.suek,
+    salt: new Uint8Array(json.material?.salt),
+    iv: new Uint8Array(json.material?.iv),
+  };
+
+  const suek = await unwrapUserEncryptionKey(keyBundle, passphrase);
+
+  return {
+    id: json.id,
+    email: json.email,
+    name: json.name,
+    access: json.access,
+    material: {
+      puek: json.material?.puek,
+      suek,
+    },
+  };
+};
 
 const connect = (token: string) => {
-  LES.setItem(TOKEN, token);
   back.authorization = { Authorization: `Bearer ${token}` };
   bearer.authorization = { Authorization: `Bearer ${token}` };
   beacon.connect(token);
@@ -44,54 +48,40 @@ const key = async (): Promise<string> => {
   return res.key;
 };
 
-// const cryptoDemo = async (password: string) => {
-//   // generate key pair and store on server
-//   const keyPair = await generateUserEncryptionKeyPair(password);
-//   // fetch key pair from server and unwrap private
-//   const privateKey = await unwrapUserEncryptionKey(keyPair.private, password);
-//   // generate encryption key and store on server
-//   const aesKey = await generateChannelEncryptionKey(privateKey);
-//   // fetch encryption key and unwrap
-//   const key = await unwrapChannelEncryptionKey(aesKey, privateKey);
-//   const message = 'Hello World! 123#@$%^!';
-
-//   // encrypt message
-//   const encrypted = await encryptMessage(message, key);
-//   const decrypted = await decryptMessage(encrypted, key);
-//   console.log('encrypted:', encrypted, 'decrypted:', decrypted);
-// };
-
 export const signin = async (email: string, password: string): Promise<IAuth> => {
-  const prehash = CryptoJS.SHA256(password).toString();
-
-  // await cryptoDemo(password);
-
+  const passphrase = CryptoJS.SHA256(password).toString(); // use web api instead of crypto js
+  const prehash = CryptoJS.SHA256(passphrase).toString();
   const res = await back.post({
     route: 'auth/signin',
     payload: { email, password: prehash },
   });
   const k = await key();
+  const { token } = res;
 
   LES.key(k);
-  connect(res.token);
+  LES.setItem(TOKEN, token);
+  LES.setItem(PASSPHRASE, passphrase);
+  connect(token);
 
   return JsonToUser(res);
 };
 
-export const signup = async (email: string, password: string, name: string): Promise<IAuth> => {
-  const prehash = CryptoJS.SHA256(password).toString();
-  const keyPair = await generateUserEncryptionKeyPair(password);
+export const signup = async (email: string, password: string, name: string): Promise<void> => {
+  const passphrase = CryptoJS.SHA256(password).toString(); // use web api instead of crypto js
+  const prehash = CryptoJS.SHA256(passphrase).toString();
+  const keyPair = await generateUserEncryptionKeyPair(passphrase);
   const material = {
     puek: keyPair.public,
-    suek: keyPair.private,
+    suek: keyPair.private.key,
+    salt: keyPair.private.salt,
+    iv: keyPair.private.iv,
   };
-  const res = await back.post({
+  await back.post({
     route: 'auth/signup',
     payload: {
       email, password: prehash, name, material,
     },
   });
-  return JsonToUser(res);
 };
 
 export const signout = async (): Promise<void> => {
