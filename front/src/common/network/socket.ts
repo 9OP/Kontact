@@ -94,3 +94,7 @@ const BEACON = window.location.origin;
 export const beacon = new Socket(BEACON, { path: '/beacon' });
 export const beaconHandler = eventHandlerCreator(beacon);
 export const beaconEmitter = eventEmitterCreator(beacon);
+
+// beacon.on('connect_error', (err) => {
+//   console.log(`connect_error due to ${err.message}`);
+// });

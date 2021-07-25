@@ -6,7 +6,11 @@ import { TOKEN } from '../../common/constants';
 import { IAuth } from '../../common/models';
 import {
   decryptMessage,
-  encryptMessage, generateKey, generateKeyPair, unwrapCryptoKey,
+  encryptMessage,
+  generateChannelEncryptionKey,
+  generateUserEncryptionKeyPair,
+  unwrapChannelEncryptionKey,
+  unwrapUserEncryptionKey,
 } from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,34 +44,27 @@ const key = async (): Promise<string> => {
   return res.key;
 };
 
-const cryptoDemo = async (password: string) => {
-  // generate key pair and store on server
-  const keyPair = await generateKeyPair(password);
+// const cryptoDemo = async (password: string) => {
+//   // generate key pair and store on server
+//   const keyPair = await generateUserEncryptionKeyPair(password);
+//   // fetch key pair from server and unwrap private
+//   const privateKey = await unwrapUserEncryptionKey(keyPair.private, password);
+//   // generate encryption key and store on server
+//   const aesKey = await generateChannelEncryptionKey(privateKey);
+//   // fetch encryption key and unwrap
+//   const key = await unwrapChannelEncryptionKey(aesKey, privateKey);
+//   const message = 'Hello World! 123#@$%^!';
 
-  // console.log(keyPair);
-
-  // fetch key pair from server and unwrap private
-  // const privateKey = await unwrapCryptoKey(keyPair.private, password);
-
-  // generate encryption key and store on server
-  const aesKey = await generateKey('passphrase'); // should use privateKey
-
-  // fetch encryption key and unwrap
-  const key = await unwrapCryptoKey(aesKey, 'passphrase', 'raw', 'AES-GCM');
-
-  const message = 'Hello World! 123#@$%^!';
-
-  // encrypt message
-  const encrypted = await encryptMessage(message, key);
-  const decrypted = await decryptMessage(encrypted, key);
-
-  console.log('encrypted:', encrypted, 'decrypted:', decrypted);
-};
+//   // encrypt message
+//   const encrypted = await encryptMessage(message, key);
+//   const decrypted = await decryptMessage(encrypted, key);
+//   console.log('encrypted:', encrypted, 'decrypted:', decrypted);
+// };
 
 export const signin = async (email: string, password: string): Promise<IAuth> => {
   const prehash = CryptoJS.SHA256(password).toString();
 
-  await cryptoDemo(password);
+  // await cryptoDemo(password);
 
   const res = await back.post({
     route: 'auth/signin',
@@ -83,7 +80,7 @@ export const signin = async (email: string, password: string): Promise<IAuth> =>
 
 export const signup = async (email: string, password: string, name: string): Promise<IAuth> => {
   const prehash = CryptoJS.SHA256(password).toString();
-  const keyPair = await generateKeyPair(password);
+  const keyPair = await generateUserEncryptionKeyPair(password);
   const material = {
     puek: keyPair.public,
     suek: keyPair.private,

@@ -75,7 +75,8 @@ async function wrapCryptoKey(keyToWrap: CryptoKey, password: string, format = 'p
   );
 }
 
-export async function unwrapCryptoKey(keyToUnwrap: string, password: string, format = 'pkcs8', algo = 'RSA-OAEP'): Promise<CryptoKey> {
+async function unwrapCryptoKey(keyToUnwrap: string, password: string,
+  usages: KeyUsage[], format: string, unwrappedKeyAlgo: any): Promise<CryptoKey> {
   const keyMaterial = await getKeyMaterial(password);
   const salt = new Uint8Array(16);
   const unwrappingKey = await getKey(keyMaterial, salt);
@@ -83,30 +84,28 @@ export async function unwrapCryptoKey(keyToUnwrap: string, password: string, for
   // const ivBuffer = bytesToArrayBuffer(ivBytes);
   const iv = new Uint8Array(12);
 
+  const unwrapAlgo = {
+    name: 'AES-GCM',
+    iv,
+  };
+
   const unwrapped = await window.crypto.subtle.unwrapKey(
     format, // import format
     wrappedKeyBuffer, // ArrayBuffer representing key to unwrap
     unwrappingKey, // CryptoKey representing key encryption key
-    { // algorithm params for key encryption key
-      name: 'AES-GCM',
-      iv,
-    },
-    { // algorithm params for key to unwrap
-      name: algo, // name: 'RSA-PSS',
-      length: 256,
-      hash: { name: 'SHA-256' },
-    },
+    unwrapAlgo, // algorithm params for key encryption key
+    unwrappedKeyAlgo, // algotounwrap
     true, // extractability of key to unwrap
-    ['encrypt', 'decrypt'], // ['sign'], // key usages for key to unwrap
+    usages, // key usages for key to unwrap
   );
 
   return unwrapped;
 }
 
-/**
- * Generate an RSA key pair in PEM format with the private key wrapped with the password secret
- */
-export async function generateKeyPair(password: string):
+// return salt and iv
+
+// INTERFACES
+export async function generateUserEncryptionKeyPair(password: string):
 Promise<{ public: string, private: string}> {
   const keyPair = await window.crypto.subtle.generateKey(
     {
@@ -119,21 +118,19 @@ Promise<{ public: string, private: string}> {
     ['encrypt', 'decrypt'],
   );
 
-  const privateKey = await wrapCryptoKey(keyPair.privateKey, password);
-
+  const privateKey = await wrapCryptoKey(keyPair.privateKey, password, 'pkcs8');
   const publicKey = await window.crypto.subtle.exportKey(
     'spki',
     keyPair.publicKey,
   );
 
   return {
-    public: arrayBufferToBase64(publicKey), // 'public'),
-    private: arrayBufferToBase64(privateKey), // 'private'),
+    public: arrayBufferToBase64(publicKey),
+    private: arrayBufferToBase64(privateKey),
   };
 }
 
-export async function generateKey(password: string): Promise<string> {
-  // generated AES key wrapped with secret key
+export async function generateChannelEncryptionKey(passphrase: string): Promise<string> {
   const key = await window.crypto.subtle.generateKey(
     {
       name: 'AES-GCM',
@@ -144,24 +141,38 @@ export async function generateKey(password: string): Promise<string> {
     ['encrypt', 'decrypt'],
   );
 
-  const wrappedKey = await wrapCryptoKey(key, password, 'raw');
+  const wrappedKey = await wrapCryptoKey(key, passphrase, 'raw');
   return arrayBufferToBase64(wrappedKey);
-  // return arrayBufferToBase64(encryptionKey);
+}
+
+export async function unwrapChannelEncryptionKey(key: string, password: string):
+Promise<CryptoKey> {
+  const format = 'raw';
+  const usages: KeyUsage[] = ['decrypt', 'encrypt'];
+  const algo = {
+    name: 'AES-GCM',
+  };
+
+  return unwrapCryptoKey(key, password, usages, format, algo);
+}
+
+export async function unwrapUserEncryptionKey(key: string, password: string): Promise<string> {
+  const format = 'pkcs8';
+  const usages: KeyUsage[] = ['sign'];
+  const algo = {
+    name: 'RSA-PSS',
+    hash: 'SHA-256',
+  };
+
+  const cryptoKey = await unwrapCryptoKey(key, password, usages, format, algo);
+  const userKey = await window.crypto.subtle.exportKey(
+    'pkcs8',
+    cryptoKey,
+  );
+  return arrayBufferToBase64(userKey);
 }
 
 export async function encryptMessage(plain: string, key: CryptoKey): Promise<string> {
-  // const encryptionKey = await window.crypto.subtle.importKey(
-  //   'raw',
-  //   base64ToArrayBuffer(key),
-  //   {
-  //     name: 'AES-GCM',
-  //     hash: 'SHA-256',
-  //   },
-  //   true,
-  //   ['encrypt'],
-  // );
-  const encryptionKey = key;
-
   const enc = new TextEncoder();
   const encoded = enc.encode(plain);
   // const iv = window.crypto.getRandomValues(new Uint8Array(12));
@@ -171,7 +182,7 @@ export async function encryptMessage(plain: string, key: CryptoKey): Promise<str
       name: 'AES-GCM',
       iv,
     },
-    encryptionKey,
+    key,
     encoded,
   );
 
@@ -179,24 +190,12 @@ export async function encryptMessage(plain: string, key: CryptoKey): Promise<str
 }
 
 export async function decryptMessage(ciphertext: string, key: CryptoKey): Promise<string> {
-  // const decryptionKey = await window.crypto.subtle.importKey(
-  //   'raw',
-  //   base64ToArrayBuffer(key),
-  //   {
-  //     name: 'AES-GCM',
-  //     hash: 'SHA-256',
-  //   },
-  //   true,
-  //   ['decrypt'],
-  // );
-  const decryptionKey = key;
-
   const decrypted = await window.crypto.subtle.decrypt(
     {
       name: 'AES-GCM',
       iv: new Uint8Array(12),
     },
-    decryptionKey,
+    key,
     base64ToArrayBuffer(ciphertext),
   );
 
