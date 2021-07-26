@@ -10,6 +10,7 @@ import { receiveMessagesAction } from '../../store/entities/messages/messages.ac
 import { useAction, useAppSelector } from './hooks';
 import { messageHttpService } from '../http';
 import { JsonToMessage } from '../http/message.http';
+import { encryptMessage } from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 message.receive((data: any) => {
@@ -28,9 +29,10 @@ export const useSendMessages = (): [(mess: string) => void, boolean, Error | nul
   const [error, setError] = useState<Error | null>(null);
   const channel = useAppSelector(selectOpenedChannel);
 
-  const sendMessage = useCallback((mess: string) => {
+  const sendMessage = useCallback(async (mess: string) => {
     setLoading(true);
-    message.send({ channel: channel.id, message: mess })
+    const encrypted = (await encryptMessage(mess, channel.material.scek)).text;
+    message.send({ channel: channel.id, message: encrypted })
       .catch((err) => {
         setError(err);
       }).finally(() => {

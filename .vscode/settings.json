@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "back/venv/bin/python",
+    "python.pythonPath": "/usr/bin/python3.8",
     "python.analysis.extraPaths": ["back"],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true

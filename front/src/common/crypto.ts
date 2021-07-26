@@ -150,15 +150,19 @@ export async function generateChannelEncryptionKey(passphrase: string): Promise<
   return wrapCryptoKey(key, passphrase, 'raw');
 }
 
-export async function unwrapChannelEncryptionKey(key: KeyBundle, password: string):
-Promise<CryptoKey> {
+export async function unwrapChannelEncryptionKey(key: KeyBundle, password: string): Promise<string> {
   const format = 'raw';
   const usages: KeyUsage[] = ['decrypt', 'encrypt'];
   const algo = {
     name: 'AES-GCM',
   };
 
-  return unwrapCryptoKey(key, password, usages, format, algo);
+  const cryptoKey = await unwrapCryptoKey(key, password, usages, format, algo);
+  const aesKey = await window.crypto.subtle.exportKey(
+    'raw',
+    cryptoKey,
+  );
+  return arrayBufferToBase64(aesKey);
 }
 
 export async function unwrapUserEncryptionKey(key: KeyBundle, password: string): Promise<string> {
@@ -182,7 +186,18 @@ interface MessageBundle {
   iv: Uint8Array,
 }
 
-export async function encryptMessage(plain: string, key: CryptoKey): Promise<MessageBundle> {
+export async function encryptMessage(plain: string, key: string): Promise<MessageBundle> {
+  const encryptionKey = await window.crypto.subtle.importKey(
+    'raw',
+    base64ToArrayBuffer(key),
+    {
+      name: 'AES-GCM',
+      hash: 'SHA-256',
+    },
+    true,
+    ['encrypt'],
+  );
+
   const enc = new TextEncoder();
   const encoded = enc.encode(plain);
   const iv = window.crypto.getRandomValues(new Uint8Array(12));
@@ -192,7 +207,7 @@ export async function encryptMessage(plain: string, key: CryptoKey): Promise<Mes
       name: 'AES-GCM',
       iv,
     },
-    key,
+    encryptionKey,
     encoded,
   );
 
@@ -202,7 +217,17 @@ export async function encryptMessage(plain: string, key: CryptoKey): Promise<Mes
   };
 }
 
-export async function decryptMessage(cipher: MessageBundle, key: CryptoKey): Promise<string> {
+export async function decryptMessage(cipher: MessageBundle, key: string): Promise<string> {
+  const decryptionKey = await window.crypto.subtle.importKey(
+    'raw',
+    base64ToArrayBuffer(key),
+    {
+      name: 'AES-GCM',
+      hash: 'SHA-256',
+    },
+    true,
+    ['decrypt'],
+  );
   const { text, iv } = cipher;
 
   const decrypted = await window.crypto.subtle.decrypt(
@@ -210,7 +235,7 @@ export async function decryptMessage(cipher: MessageBundle, key: CryptoKey): Pro
       name: 'AES-GCM',
       iv,
     },
-    key,
+    decryptionKey,
     base64ToArrayBuffer(text),
   );
 

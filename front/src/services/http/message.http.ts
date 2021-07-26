@@ -15,5 +15,6 @@ const JsonToMessages = (json: any[]): IMessage[] => json.map((data: any) => Json
 
 export const fetchMessages = async (cid: string): Promise<IMessage[]> => {
   const res = await bearer.get({ route: `message/${cid}` });
+  // decode messages
   return JsonToMessages(res);
 };

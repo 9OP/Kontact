@@ -6,5 +6,5 @@ export interface IChannel {
 }
 
 export interface IChannelMaterial {
-  scek: CryptoKey; // string; // secret channel encryption key
+  scek: string; // secret channel encryption key
 }

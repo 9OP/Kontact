@@ -9,6 +9,7 @@ const JsonToChannel = async (json: any, passphrase: string): Promise<IChannel> =
     salt: new Uint8Array(json.material?.salt),
     iv: new Uint8Array(json.material?.iv),
   };
+  // should return string
   const scek = await unwrapChannelEncryptionKey(keyBundle, passphrase);
 
   return {
