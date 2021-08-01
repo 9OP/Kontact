@@ -29,6 +29,7 @@ func createMessage(service message.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var input struct {
 			Content string `json:"content" validation:"required"`
+			Iv      []int  `json:"iv" validation:"required"`
 		}
 		validator := pkg.NewValidator(&input)
 
@@ -47,7 +48,7 @@ func createMessage(service message.UseCase) http.Handler {
 		channelId := pkg.Vars(r)["id"]
 		authorId := middleware.GetUserId(r)
 
-		m, err := service.CreateMessage(authorId, channelId, input.Content)
+		m, err := service.CreateMessage(authorId, channelId, input.Content, input.Iv)
 		if err != nil {
 			presenter.Badrequest(w, err.Error())
 			return

@@ -42,6 +42,8 @@ services:
       dockerfile: bearer.dockerfile
     restart: always
     command: "./startup.sh"
+    ports:
+      - "6000:6000"
     volumes:
       - ./bearer:/app
     depends_on:

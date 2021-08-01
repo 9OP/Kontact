@@ -8,14 +8,16 @@ type Message struct {
 	AuthorId  string    `json:"authorId"`
 	ChannelId string    `json:"channelId"`
 	Content   string    `json:"content"`
+	Iv        []int     `json:"iv"`
 	Date      time.Time `json:"date"`
 }
 
-func NewMessage(authorId, channelId, content string) *Message {
+func NewMessage(authorId, channelId, content string, iv []int) *Message {
 	m := &Message{
 		AuthorId:  authorId,
 		ChannelId: channelId,
 		Content:   content,
+		Iv:        iv,
 		Date:      time.Now(),
 	}
 	return m

@@ -7,3 +7,10 @@ Kontact bearer (message storing API)
 ---
 The binary is not build in the dockerfile but in the startup.sh file. The main reason is to prevent rebuilding the image
 when source files change. It is not great because it cause longer starting time of the container, but this is most practical in development.
+
+## Mongo shell
+
+
+basic command to look into the mongo db
+```
+```

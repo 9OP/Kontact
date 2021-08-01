@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -74,7 +73,6 @@ func (r *MongoRepo) List(channelId string) ([]*entity.Message, error) {
 
 	// once exhausted, close the cursor
 	cur.Close(r.Ctx)
-	fmt.Println(messages)
 	return messages, nil
 }
 
@@ -84,7 +82,6 @@ func (r *MongoRepo) Create(e *entity.Message) (*entity.Message, error) {
 
 	inserted, err := r.Collection.InsertOne(r.Ctx, e)
 	if err != nil {
-		fmt.Print(err)
 		return nil, err
 	}
 	id := inserted.InsertedID

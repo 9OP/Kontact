@@ -23,5 +23,5 @@ type Repository interface {
 // UseCase interface
 type UseCase interface {
 	ListMessages(channelId string) ([]*entity.Message, error)
-	CreateMessage(authorId, channelId, data string) (*entity.Message, error)
+	CreateMessage(authorId, channelId, data string, iv []int) (*entity.Message, error)
 }
