@@ -26,7 +26,6 @@ def upgrade():
         sa.Column("id", UUID(), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=False),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_channel")),
-        sa.UniqueConstraint("name", name=op.f("uq_channel_name")),
     )
     op.create_table(
         "membership",

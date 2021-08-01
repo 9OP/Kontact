@@ -39,7 +39,7 @@ def seed():
     n_user, n_channel = 10, 4
     password = sha256(
         sha256("123456".encode()).hexdigest().encode()
-    ).hexdigest() # "123456" hashed 2 times by the front
+    ).hexdigest()  # "123456" hashed 2 times by the front
     user_material = {
         "puek": (
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvKyqctNM2Ph7PPCkl7Na"
@@ -78,12 +78,46 @@ def seed():
             "zhoWJuv8vOB3lIZG5e4hnieeWuxBzrJt5/AzvoaWCJTYAhHM99PhNH/EsJ6nlCQQ"
             "Bq7G61QFKcHAj7SGobfUWp5tyMurQS9le/zpeAO/eGu9EQ=="
         ),
-        "salt": [45, 4, 34, 146, 140, 132, 49, 123, 96, 184, 69, 183, 225, 116, 125, 117],
+        "salt": [
+            45,
+            4,
+            34,
+            146,
+            140,
+            132,
+            49,
+            123,
+            96,
+            184,
+            69,
+            183,
+            225,
+            116,
+            125,
+            117,
+        ],
         "iv": [146, 8, 247, 69, 168, 237, 232, 7, 150, 23, 239, 152],
     }
     membership_material = {
         "scek": "eN75i4yo6yPFB1rzO9hWR794CkJkpnZLABoskckuojhzRJkE5gE4niWl89IZuFSd",
-        "salt": [61, 74, 165, 208, 134, 180, 0, 243, 102, 250, 56, 179, 178, 97, 15, 211],
+        "salt": [
+            61,
+            74,
+            165,
+            208,
+            134,
+            180,
+            0,
+            243,
+            102,
+            250,
+            56,
+            179,
+            178,
+            97,
+            15,
+            211,
+        ],
         "iv": [132, 116, 19, 79, 187, 146, 238, 58, 190, 111, 236, 169],
     }
 
@@ -98,9 +132,7 @@ def seed():
         )
 
     for _ in progress(range(n_channel), prefix="Channels:", suffix=f"/{n_channel}"):
-        channels.append(
-            Channel.create(name=faker.unique.company())
-        )
+        channels.append(Channel.create(name=faker.unique.company()))
 
     admin = User.create(
         name="Martin",
@@ -114,7 +146,10 @@ def seed():
         channels, prefix="Memberships:", suffix=f"/{len(channels)}"
     ):
         Membership.create(
-            user_id=admin.id, channel_id=channel.id, role=1, material=membership_material
+            user_id=admin.id,
+            channel_id=channel.id,
+            role=1,
+            material=membership_material,
         )
         for user in sample(users, 5):
             Membership.create(

@@ -10,7 +10,7 @@ class Channel(db.Model, Support):
     __tablename__ = "channel"
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = db.Column(db.String(255), unique=True, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     # material = db.Column(db.JSON, nullable=False)
     members = association_proxy("channel_memberships", "user")
 
@@ -18,7 +18,9 @@ class Channel(db.Model, Support):
         return "<channel: {}>".format(self.name)
 
     def summary(self, verbose=False):
-        channel_data = self.serialize("id", "name", "created_at", "members_count",  _material="material")
+        channel_data = self.serialize(
+            "id", "name", "created_at", "members_count", _material="material"
+        )
         if verbose:
             members = [
                 cm.summary("user") for cm in self.channel_memberships
@@ -35,4 +37,4 @@ class Channel(db.Model, Support):
         membership = next(
             m for m in self.channel_memberships if m.user_id == g.current_user.id
         )
-        return membership.material # scek, salt, iv
+        return membership.material  # scek, salt, iv

@@ -8,7 +8,7 @@ const WHOAMI_AUTH = 'auth:whoami';
 
 export const authWhoami = createEvent(
   WHOAMI_AUTH,
-  {},
+  null,
   async (socket: ExtSocket, payload: null, ack: () => void) => {
     const { token } = socket;
     const user = await whoami(token);

@@ -48,7 +48,7 @@ class Support(TimestampMixin):
             db.session.add(new)
             db.session.commit()
             return new
-        except sql_exc.IntegrityError:
+        except sql_exc.IntegrityError as e:
             db.session.rollback()
             raise apr.AlreadyExists(cls.__tablename__)
 

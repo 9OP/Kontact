@@ -75,11 +75,13 @@ const eventHandlerCreator = (socket: Socket) => {
 
 const eventEmitterCreator = (socket: Socket) => {
   return (event: string) => {
-    return (payload: any) => new Promise((resolve, reject) => {
+    return (payload?: any) => new Promise((resolve, reject) => {
       socket.emit(event, payload, (ans: any) => {
+        console.log('event', event, payload, ans);
         if (ans === `${event}:error`) {
           reject(new Error('Event error'));
         } else {
+          console.log('resolves');
           resolve(ans);
         }
       });

@@ -4,6 +4,26 @@ from app.api.middlewares import gate
 from app.api.helpers import validator, render
 
 
+# Define the structure of encryption material
+# scek: secret channel encryption key (stored encrypted with client puek password hash)
+# salt: salt used to wrap the scek
+# iv: initialization vector of the suek wrap
+_MATERIAL_SCHEMA = {
+    "scek": {"type": "string", "required": True, "empty": False},
+    "salt": {
+        "type": "list",
+        "required": True,
+        "empty": False,
+        "schema": {"type": "integer"},
+    },
+    "iv": {
+        "type": "list",
+        "required": True,
+        "empty": False,
+        "schema": {"type": "integer"},
+    },
+}
+
 CHANNEL_SCHEMA = {
     "name": {
         "type": "string",
@@ -11,6 +31,14 @@ CHANNEL_SCHEMA = {
         "empty": False,
         "coerce": str.strip,
     }
+}
+
+CREATE_CHANNEL_SCHEMA = {
+    **CHANNEL_SCHEMA,
+    "material": {
+        "type": "dict",
+        "schema": _MATERIAL_SCHEMA,
+    },
 }
 
 MEMBER_SCHEMA = {
@@ -24,12 +52,13 @@ MEMBER_SCHEMA = {
 
 @gate(access=Access.USER)
 def new():
-    params = validator(request.json, CHANNEL_SCHEMA)
+    params = validator(request.json, CREATE_CHANNEL_SCHEMA)
     new_channel = Channel.create(name=params["name"])
     Membership.create(  # not safe if fail
         user_id=g.current_user.id,
         channel_id=new_channel.id,
         role=Role.MASTER.value,
+        material=params["material"],
     )
     return render(new_channel.summary(), code=201)
 

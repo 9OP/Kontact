@@ -23,8 +23,18 @@ _NAME_SCHEMA = {"type": "string", "required": True, "empty": False}
 _MATERIAL_SCHEMA = {
     "puek": {"type": "string", "required": True, "empty": False},
     "suek": {"type": "string", "required": True, "empty": False},
-    "salt": {"type": "list", "required": True, "empty": False, "schema": {"type": "integer"}},
-    "iv": {"type": "list", "required": True, "empty": False, "schema": {"type": "integer"}},
+    "salt": {
+        "type": "list",
+        "required": True,
+        "empty": False,
+        "schema": {"type": "integer"},
+    },
+    "iv": {
+        "type": "list",
+        "required": True,
+        "empty": False,
+        "schema": {"type": "integer"},
+    },
 }
 
 AUTH_SIGNIN_SCHEMA = {
@@ -47,6 +57,16 @@ AUTH_SIGNUP_SCHEMA = {
 }
 
 
+def _signin(user):
+    # Ensure the current_user is shared in the global context (available in models)
+    g.current_user = user
+    user_data = user.summary()
+    user_data["token"] = UserToken.create(user_id=user.id).token
+    session["user_id"] = user.id
+    session["les_key"] = key_gen()
+    return user_data
+
+
 def signup():
     params = validator(request.json, AUTH_SIGNUP_SCHEMA)
     new_user = User.create(
@@ -55,8 +75,8 @@ def signup():
         password=params["password"],
         material=params["material"],
     )
-    g.current_user = new_user
-    user_data = new_user.summary()
+
+    user_data = _signin(new_user)
     return render(user_data, code=201)
 
 
@@ -67,13 +87,7 @@ def signin():
     if not user or not user.check_password(params["password"]):
         raise apr.LoginFailed()
 
-    g.current_user = user
-
-    token = UserToken.create(user_id=user.id).token
-    user_data = user.summary()
-    user_data["token"] = token
-    session["user_id"] = user.id
-    session["les_key"] = key_gen()
+    user_data = _signin(user)
     return render(user_data)
 
 

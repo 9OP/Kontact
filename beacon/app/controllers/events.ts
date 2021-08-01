@@ -9,12 +9,12 @@ type SocketBinder = (socket: ExtSocket) => void;
 interface Event {
   name: string,
   func: SocketEvent,
-  validation: Joi.ObjectSchema<any>,
+  validation: Joi.ObjectSchema<any> | null,
 }
 
 export const createEvent = (
   name: string,
-  rules: Joi.SchemaMap<any>,
+  rules: Joi.SchemaMap<any> | null,
   func: SocketEvent,
 ): Event => ({
   name,
@@ -28,7 +28,9 @@ export const bindEvent = (event: Event): SocketBinder => {
   return (socket: ExtSocket) => {
     socket.on(name, async (payload = {}, ack = () => null) => {
       try {
-        await validation.validateAsync(payload);
+        if (validation) {
+          await validation.validateAsync(payload);
+        }
         await func(socket, payload, ack);
       } catch (err) {
         ack(`${name}:error`);

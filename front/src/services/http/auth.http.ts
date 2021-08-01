@@ -43,6 +43,12 @@ const disconnect = () => {
   LES.clear();
 };
 
+const storeAccess = (key: string, token: string, passphrase: string): void => {
+  LES.key(key);
+  LES.setItem(TOKEN, token);
+  LES.setItem(PASSPHRASE, passphrase);
+};
+
 const key = async (): Promise<string> => {
   const res = await back.get({ route: 'auth/key' });
   return res.key;
@@ -55,33 +61,38 @@ export const signin = async (email: string, password: string): Promise<IAuth> =>
     route: 'auth/signin',
     payload: { email, password: prehash },
   });
+
   const k = await key();
   const { token } = res;
-
-  LES.key(k);
-  LES.setItem(TOKEN, token);
-  LES.setItem(PASSPHRASE, passphrase);
+  storeAccess(k, token, passphrase);
   connect(token);
 
   return JsonToUser(res);
 };
 
-export const signup = async (email: string, password: string, name: string): Promise<void> => {
+export const signup = async (email: string, password: string, name: string): Promise<IAuth> => {
   const passphrase = CryptoJS.SHA256(password).toString(); // use web api instead of crypto js
   const prehash = CryptoJS.SHA256(passphrase).toString();
   const keyPair = await generateUserEncryptionKeyPair(passphrase);
   const material = {
     puek: keyPair.public,
     suek: keyPair.private.key,
-    salt: keyPair.private.salt,
-    iv: keyPair.private.iv,
+    salt: Array.from(keyPair.private.salt),
+    iv: Array.from(keyPair.private.iv),
   };
-  await back.post({
+  const res = await back.post({
     route: 'auth/signup',
     payload: {
       email, password: prehash, name, material,
     },
   });
+
+  const k = await key();
+  const { token } = res;
+  storeAccess(k, token, passphrase);
+  connect(token);
+
+  return JsonToUser(res);
 };
 
 export const signout = async (): Promise<void> => {

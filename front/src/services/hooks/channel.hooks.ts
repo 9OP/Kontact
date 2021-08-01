@@ -40,7 +40,6 @@ export const useFetchChannels = (): [() => void, boolean, Error | null] => {
     if (auth?.material?.suek) {
       channelsHttpService.fetchChannels(auth.material.suek)
         .then((channels: IChannel[]) => {
-          console.log('channels', channels);
           setChannels(channels);
         }).catch((err: Error) => {
           setError(err);
@@ -57,10 +56,11 @@ export const useCreateChannel = (): [(name: string)=> void, boolean, Error | nul
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const setChannel = useAction(createChannelAction);
+  const auth = useAppSelector(selectUser);
 
   const createChannel = useCallback((name: string) => {
     setLoading(true);
-    channelsHttpService.createChannel(name)
+    channelsHttpService.createChannel(name, auth.material.suek)
       .then((channel: IChannel) => {
         emit(toast.channel_created(channel));
         setChannel(channel);

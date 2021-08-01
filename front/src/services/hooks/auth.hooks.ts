@@ -2,11 +2,12 @@ import { useState, useCallback } from 'react';
 
 import { resetUserAction, setUserAction } from '../../store/authentication/auth.actions';
 import { selectUser } from '../../store/authentication/auth.selectors';
-import { authHttpService } from '../http';
+import { authHttpService, channelsHttpService } from '../http';
 import { useAction, useAppSelector } from './hooks';
 
 import { emit, toast } from '../../components/toast';
 import { IAuth } from '../../common/models';
+import { createChannelAction } from '../../store/entities/channels/channels.actions';
 
 export const useAuth = (): { user: IAuth } => {
   const user = useAppSelector(selectUser);
@@ -22,7 +23,7 @@ export const useSignup = (): [
   const signin = useCallback((name: string, email: string, password: string) => {
     setLoading(true);
     if (!auth) {
-      authHttpService.signup(email, password, name).then((user) => {
+      authHttpService.signup(email, password, name).then(() => {
         setLoading(false);
         emit(toast.auth_signup(email));
       }).catch((err: Error) => {
@@ -99,4 +100,30 @@ export const useSignout = (): [() => void] => {
   }, [auth]);
 
   return [signout];
+};
+
+export const useCreateChannel = ():
+[(channelName: string, userName: string) => void, boolean, Error | null] => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const setChannel = useAction(createChannelAction);
+  const setUser = useAction(setUserAction);
+
+  const create = useCallback(async (channelName: string, userName: string) => {
+    setLoading(true);
+    const email = `user_${userName}@kontact.com`; // random uuid instead of usernName
+    const password = '123'; // gen random pwd
+    try {
+      const user = await authHttpService.signup(email, password, userName);
+      const channel = await channelsHttpService.createChannel(channelName, user.material.suek);
+      setUser(user);
+      setChannel(channel);
+    } catch (e) {
+      setError(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [setChannel, setUser]);
+
+  return [create, loading, error];
 };
