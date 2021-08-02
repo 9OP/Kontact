@@ -1,5 +1,5 @@
-@host = http://localhost:6000
-# @host = https://localhost/api/bearer
+# @host = http://localhost:6000
+@host = https://localhost/api/bearer
 @back = http://localhost:5000
 @contentType = application/json
 @bearerToken = bearer_token
@@ -34,7 +34,8 @@ Authorization: Bearer {{token}}
 {
     "authorId": "Martin",
     "content": "456",
-    "any": "junk"
+    "any": "junk",
+    "iv": [1,2,3]
 }
 
 ### Get message

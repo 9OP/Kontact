@@ -8,6 +8,7 @@ export const JsonToMessage = (data: any): IMessage => ({
   authorId: data.authorId,
   channelId: data.channelId,
   content: data.content,
+  iv: data.iv,
   date: new Date(data.date),
 });
 

@@ -31,8 +31,8 @@ export const useSendMessages = (): [(mess: string) => void, boolean, Error | nul
 
   const sendMessage = useCallback(async (mess: string) => {
     setLoading(true);
-    const encrypted = (await encryptMessage(mess, channel.material.scek)).text;
-    message.send({ channel: channel.id, message: encrypted })
+    const { text, iv } = await encryptMessage(mess, channel.material.scek);
+    message.send({ channel: channel.id, message: text, iv: Array.from(iv) })
       .catch((err) => {
         setError(err);
       }).finally(() => {

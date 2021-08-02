@@ -29,7 +29,8 @@ func CreateApp() {
 
 	http.Handle("/", router)
 
-	addr := fmt.Sprintf("0.0.0.0:%v", PORT)
+	// addr := fmt.Sprintf("0.0.0.0:%v", PORT)
+	addr := fmt.Sprintf("localhost:%v", PORT)
 	srv := &http.Server{
 		Addr:         addr,
 		Handler:      http.DefaultServeMux,

@@ -51,9 +51,10 @@ export const fetchMemberships = async (token: string): Promise<IMembership[]> =>
 export const saveMessage = async (
   channelId: string,
   content: string,
+  iv: number[],
   token: string,
 ): Promise<any> => {
-  const res = await bearer.post(`/message/${channelId}`, JSON.stringify({ content }), {
+  const res = await bearer.post(`/message/${channelId}`, JSON.stringify({ content, iv }), {
     headers: { Authorization: `Bearer ${token}` },
   });
 

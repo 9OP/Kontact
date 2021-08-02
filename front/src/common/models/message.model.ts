@@ -5,6 +5,7 @@ export interface IMessage {
   authorId: string;
   channelId: string;
   content: string;
+  iv: number[];
   date: Date;
 }
 
