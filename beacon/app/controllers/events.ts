@@ -33,6 +33,7 @@ export const bindEvent = (event: Event): SocketBinder => {
         }
         await func(socket, payload, ack);
       } catch (err) {
+        console.log(err);
         ack(`${name}:error`);
       }
 

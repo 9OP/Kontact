@@ -51,7 +51,6 @@ export const useSignin = (): [(email: string, password: string) => void, boolean
         emit(toast.auth_signin(user));
         setUser(user);
       }).catch((err: Error) => {
-        console.log('err', err);
         setLoading(false);
         setError(err);
         resetUser();

@@ -13,10 +13,13 @@ import { JsonToMessage } from '../http/message.http';
 import { encryptMessage } from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-message.receive((data: any) => {
-  store.dispatch(receiveMessagesAction([
-    JsonToMessage(data),
-  ]));
+message.receive(async (data: any) => {
+  const state = store.getState();
+  const channel = state?.entities?.channels?.byId?.[data.channelId];
+  if (channel) {
+    const message = await JsonToMessage(data, channel.material.scek);
+    store.dispatch(receiveMessagesAction([message]));
+  }
 });
 
 export const useMessages = (): {messages: IMemberMessage[]} => {
@@ -43,14 +46,14 @@ export const useSendMessages = (): [(mess: string) => void, boolean, Error | nul
   return [sendMessage, loading, error];
 };
 
-export const useFetchMessages = (): [(cid: string) => void, boolean, Error | null] => {
+export const useFetchMessages = (): [(cid: string, key: string) => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const setMessages = useAction(receiveMessagesAction);
 
-  const fetchMessages = useCallback((cid: string) => {
+  const fetchMessages = useCallback((cid: string, key: string) => {
     setLoading(true);
-    messageHttpService.fetchMessages(cid)
+    messageHttpService.fetchMessages(cid, key)
       .then((messages: IMessage[]) => {
         setMessages(messages);
       }).catch((err: Error) => {

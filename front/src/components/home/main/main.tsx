@@ -12,7 +12,7 @@ export default (): JSX.Element => {
 
   useEffect(() => {
     if (channel) {
-      fetchMessages(channel.id);
+      fetchMessages(channel.id, channel.material.scek);
     }
   }, [channel]);
 

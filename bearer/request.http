@@ -1,5 +1,5 @@
-# @host = http://localhost:6000
-@host = https://localhost/api/bearer
+@host = http://localhost:6000
+# @host = https://localhost/api/bearer
 @back = http://localhost:5000
 @contentType = application/json
 @bearerToken = bearer_token

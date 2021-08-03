@@ -46,10 +46,8 @@ export const createChannel = async (name: string, suek: string): Promise<IChanne
     payload: { name, material },
   });
 
-  console.log('before reload');
   // Force Beacon to refetch new memberships from Back
   await userSocket.reloadBeacon();
-  console.log('after reload');
 
   return JsonToChannel(res, suek);
 };

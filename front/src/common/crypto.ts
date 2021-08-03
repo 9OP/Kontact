@@ -181,7 +181,7 @@ export async function unwrapUserEncryptionKey(key: KeyBundle, password: string):
   return arrayBufferToBase64(userKey);
 }
 
-interface MessageBundle {
+export interface MessageBundle {
   text: string,
   iv: Uint8Array,
 }

@@ -11,6 +11,7 @@ const RECEIVE_MESSAGE = 'message:receive';
 const SEND_MESSAGE_VALIDATION = {
   message: Joi.string().required(), // message
   channel: Joi.string().required(), // channelId
+  iv: Joi.array().items(Joi.number()).required(), // init vector
 };
 
 interface Message {
@@ -27,16 +28,12 @@ export const sendMessage = createEvent(
       throw new Error('Unauthorized');
     }
 
-    console.log('payload', payload);
-
     const message = await saveMessage(
       payload.channel,
       payload.message,
       payload.iv,
       socket.token,
     );
-
-    console.log('message', message);
 
     socket.to(payload.channel).emit(RECEIVE_MESSAGE, message); // to room
     socket.emit(RECEIVE_MESSAGE, message); // to sender
