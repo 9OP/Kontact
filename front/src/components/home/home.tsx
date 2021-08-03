@@ -1,12 +1,18 @@
-import React from 'react';
-import { Flex } from '@chakra-ui/react';
-
+import React, { useEffect } from 'react';
+import { Box } from '@chakra-ui/react';
 import Main from './main';
-import SideBar from './sidebar';
+import { useFetchChannels } from '../../services/hooks/channel.hooks';
 
-export default (): JSX.Element => (
-  <Flex direction="row" padding="1rem" height="100vh">
-    <SideBar />
-    <Main />
-  </Flex>
-);
+export default (): JSX.Element => {
+  const [fetchChannels] = useFetchChannels();
+
+  useEffect(() => {
+    fetchChannels();
+  }, []);
+
+  return (
+    <Box padding="1rem">
+      <Main />
+    </Box>
+  );
+};

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Flex } from '@chakra-ui/react';
 import Header from './header';
 import Message from './message';
-import Members from './members/memberList';
+import Members from './members';
 import { useChannels } from '../../../services/hooks/channel.hooks';
 import { useFetchMessages } from '../../../services/hooks/message.hooks';
 
@@ -19,18 +19,17 @@ export default (): JSX.Element => {
   return (
     <Flex flex="1 0 auto">
       {channel ? (
-        <Flex flexDirection="column" width="100%">
-          <Header />
-          <Flex
-            flexDirection="row"
-            height="calc(100vh - 7rem)"
-            paddingTop="1rem"
-          >
-            <Flex flexDirection="column" width="100%">
-              <Message />
-            </Flex>
-            <Members />
+        <Flex
+          flexDirection="row"
+          height="calc(100vh - 2rem)"
+          width="100%"
+          paddingTop="1rem"
+        >
+          <Flex flexDirection="column" width="100%">
+            <Header />
+            <Message />
           </Flex>
+          <Members />
         </Flex>
       ) : null}
     </Flex>
