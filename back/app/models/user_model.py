@@ -22,7 +22,7 @@ class User(db.Model, Support):
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    access = db.Column(db.Integer, nullable=False, default=Access.USER.value)
+    access = db.Column(db.Enum(Access), nullable=False, default=Access.USER.value)
     material = db.Column(db.JSON, nullable=False)
     tokens = db.relationship("UserToken", backref="user", lazy=True)
     channels = association_proxy("user_memberships", "channel")
