@@ -8,19 +8,25 @@ from app.api.helpers import validator, render
 # scek: secret channel encryption key (stored encrypted with client puek password hash)
 # salt: salt used to wrap the scek
 # iv: initialization vector of the suek wrap
-_MATERIAL_SCHEMA = {
-    "scek": {"type": "string", "required": True, "empty": False},
-    "salt": {
-        "type": "list",
+MATERIAL_SCHEMA = {
+    "material": {
+        "type": "dict",
         "required": True,
-        "empty": False,
-        "schema": {"type": "integer"},
-    },
-    "iv": {
-        "type": "list",
-        "required": True,
-        "empty": False,
-        "schema": {"type": "integer"},
+        "schema": {
+            "scek": {"type": "string", "required": True, "empty": False},
+            "salt": {
+                "type": "list",
+                "required": True,
+                "empty": False,
+                "schema": {"type": "integer"},
+            },
+            "iv": {
+                "type": "list",
+                "required": True,
+                "empty": False,
+                "schema": {"type": "integer"},
+            },
+        },
     },
 }
 
@@ -33,14 +39,7 @@ CHANNEL_SCHEMA = {
     }
 }
 
-CREATE_CHANNEL_SCHEMA = {
-    **CHANNEL_SCHEMA,
-    "material": {
-        "type": "dict",
-        "required": True,
-        "schema": _MATERIAL_SCHEMA,
-    },
-}
+CREATE_CHANNEL_SCHEMA = {**CHANNEL_SCHEMA, **MATERIAL_SCHEMA}
 
 MEMBER_SCHEMA = {
     "role": {
@@ -110,9 +109,14 @@ def update(cid):
 
 @gate(role=Role.MASTER)
 def add_member(cid, uid):
+    params = validator(request.json, MATERIAL_SCHEMA)
     channel = Channel.find_one(id=cid)
     user = User.find_one(id=uid)
-    membership = Membership.create(user=user, channel=channel)
+    if not (membership := Membership.find(user_id=uid, channel_id=cid, pending=True)):
+        membership = Membership.create(
+            user=user, channel=channel, material=params["material"]
+        )
+    membership.update(pending=False, material=params["material"])
     return render(membership.summary(), code=201)
 
 
