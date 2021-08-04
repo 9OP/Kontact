@@ -5,6 +5,8 @@ import { generateChannelEncryptionKey, unwrapChannelEncryptionKey } from '../../
 import { userSocket } from '../socket';
 
 const JsonToChannel = async (json: any, passphrase: string): Promise<IChannel> => {
+  console.log('jsontochannel', json);
+
   const keyBundle = {
     key: json.material?.scek,
     salt: new Uint8Array(json.material?.salt),
@@ -54,4 +56,8 @@ export const createChannel = async (name: string, suek: string): Promise<IChanne
 
 export const deleteChannel = async (cid: string): Promise<void> => {
   await back.delete({ route: `channel/${cid}` });
+};
+
+export const joinChannel = async (cid: string): Promise<void> => {
+  await back.post({ route: `channel/${cid}/join` });
 };

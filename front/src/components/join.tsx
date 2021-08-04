@@ -10,12 +10,13 @@ import {
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { CREATE_PATH } from '../common/constants';
+import { useJoinChannel } from '../services/hooks/auth.hooks';
 
 const JoinChannel = (): JSX.Element => {
   const [channelId, setChannelId] = useState('');
   const [userName, setUserName] = useState('');
   const history = useHistory();
-  // const [Join, loading, error] = useJoinChannel();
+  const [join, loading, error] = useJoinChannel();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -28,8 +29,11 @@ const JoinChannel = (): JSX.Element => {
     }
   }, [window.location.search]);
 
-  const handleJoin = () => {
-    //
+  const handleJoin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    join(channelId, userName);
+    setChannelId('');
+    setUserName('');
   };
 
   return (
