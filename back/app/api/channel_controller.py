@@ -60,7 +60,7 @@ def new():
         role=Role.MASTER.value,
         material=params["material"],
     )
-    return render(new_channel.summary(), code=201)
+    return render(new_channel.summary(include_members=True), code=201)
 
 
 @gate(access=Access.ADMIN)
@@ -72,7 +72,7 @@ def index():
 @gate(role=Role.MEMBER)
 def show(cid):
     channel = Channel.find_one(id=cid)
-    return render(channel.summary())
+    return render(channel.summary(include_members=True))
 
 
 @gate(role=Role.MASTER)
@@ -85,8 +85,10 @@ def destroy(cid):
 
 @gate(access=Access.USER, delegation=True)
 def memberships():
-    channels = g.current_user.channels
-    return render([m.summary() for m in channels])
+    memberships = g.current_user.memberships
+    if request.args.get("include_pending") == 1:
+        memberships += g.current_user.pending_memberships
+    return render([m.summary() for m in memberships])
 
 
 @gate(access=Access.USER)

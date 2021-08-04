@@ -30,14 +30,11 @@ class Membership(db.Model, Support):
 
     channel = db.relationship(
         "Channel",
-        backref=backref(
-            "memberships",
-            primaryjoin="and_(Channel.id==Membership.channel_id, Membership.pending==False)",
-        ),
+        backref=backref("memberships"),
     )
 
     def __repr__(self):
         return "<membership: <uid: {}, cid: {}>>".format(self.user_id, self.channel_id)
 
     def summary(self):
-        return self.serialize("user_id", "channel_id", "role", "pending")
+        return self.serialize("user_id", "channel_id", "role", "pending", "material")

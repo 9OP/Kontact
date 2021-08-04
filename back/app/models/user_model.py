@@ -3,6 +3,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.dialects.postgresql import UUID
 from app.models.database import db, Support
+from app.models.membership_model import Membership
 from enum import IntEnum
 import uuid
 import hashlib
@@ -55,3 +56,7 @@ class User(db.Model, Support):
         # Return only public material if self not current user
         public = ["puek"]
         return {k: v for k, v in self.material.items() if k in public}
+
+    @hybrid_property
+    def pending_memberships(self):
+        return [m for m in Membership.find_all(user=self, pending=True)]
