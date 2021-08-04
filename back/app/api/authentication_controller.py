@@ -100,7 +100,8 @@ def signout():
 
 @gate(delegation=True)
 def whoami():
-    user_data = g.current_user.summary(verbose=True)
+    user_data = g.current_user.summary()
+    user_data["channels"] = [c.summary() for c in g.current_user.channels]
     return render(user_data)
 
 

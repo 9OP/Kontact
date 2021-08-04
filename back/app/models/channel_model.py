@@ -3,6 +3,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.dialects.postgresql import UUID
 from app.models.database import db, Support
+from app.models.membership_model import Membership
 import uuid
 
 
@@ -11,30 +12,21 @@ class Channel(db.Model, Support):
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(255), nullable=False)
-    # material = db.Column(db.JSON, nullable=False)
-    members = association_proxy("channel_memberships", "user")
+    members = association_proxy("memberships", "user")
 
     def __repr__(self):
         return "<channel: {}>".format(self.name)
 
-    def summary(self, verbose=False):
-        channel_data = self.serialize(
-            "id", "name", "created_at", "members_count", _material="material"
-        )
-        if verbose:
-            members = [
-                cm.summary("user") for cm in self.channel_memberships
-            ]  # channel_memberships => members ?
-            channel_data["members"] = members
+    def summary(self):
+        channel_data = self.serialize("id", "name", "created_at", _material="material")
+        channel_data["members"] = [
+            {**m.user.summary(), **m.serialize("role")} for m in self.memberships
+        ]
         return channel_data
 
     @hybrid_property
-    def members_count(self):
-        return len(self.members)
-
-    @hybrid_property
     def _material(self):
-        membership = next(
-            m for m in self.channel_memberships if m.user_id == g.current_user.id
-        )
-        return membership.material  # scek, salt, iv
+        # not optimized
+        membership = Membership.find(user_id=g.current_user.id, channel_id=self.id)
+        if membership:
+            return membership.material  # scek, salt, iv

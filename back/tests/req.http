@@ -22,11 +22,11 @@ Referer: {{origin}}
 # @name login
 POST {{host}}/auth/signin
 Content-Type: {{contentType}}
-Referer: {{origin}}
+# Referer: {{origin}}
 
 {
     "email": "admin@mail.com",
-    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+    "password": "49dc52e6bf2abe5ef6e2bb5b0f1ee2d765b922ae6cc8b95d39dc06c21c848f8c"
 }
 
 ### Signin - User
@@ -124,4 +124,9 @@ Authorization: Bearer {{token}}
 
 ### Search users
 GET {{host}}/user/search?id=
+Authorization: Bearer {{token}}
+
+### Join channel
+POST {{host}}/channel/76ec1b57-07da-40c2-96ef-95ec2abe2663/join
+Content-Type: {{contentType}}
 Authorization: Bearer {{token}}

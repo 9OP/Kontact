@@ -22,32 +22,22 @@ class Membership(db.Model, Support):
 
     user = db.relationship(
         "User",
-        lazy=False,
         backref=backref(
-            "user_memberships",
-            lazy=False,
-            cascade="all, delete-orphan",
+            "memberships",
+            primaryjoin="and_(User.id==Membership.user_id, Membership.pending==False)",
         ),
     )
 
     channel = db.relationship(
         "Channel",
-        lazy=False,
         backref=backref(
-            "channel_memberships",
-            lazy=False,
-            cascade="all, delete-orphan",
+            "memberships",
+            primaryjoin="and_(Channel.id==Membership.channel_id, Membership.pending==False)",
         ),
     )
 
     def __repr__(self):
         return "<membership: <uid: {}, cid: {}>>".format(self.user_id, self.channel_id)
 
-    def summary(self, source=None):
-        switcher = {
-            "user": self.user.summary(),
-            "channel": self.channel.summary(),
-        }
-        membership_data = self.serialize("role", created_at="joined_at")
-        membership_data.update(switcher.get(source, {}))
-        return membership_data
+    def summary(self):
+        return self.serialize("user_id", "channel_id", "role", "pending")

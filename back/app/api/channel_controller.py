@@ -37,6 +37,7 @@ CREATE_CHANNEL_SCHEMA = {
     **CHANNEL_SCHEMA,
     "material": {
         "type": "dict",
+        "required": True,
         "schema": _MATERIAL_SCHEMA,
     },
 }
@@ -72,7 +73,7 @@ def index():
 @gate(role=Role.MEMBER)
 def show(cid):
     channel = Channel.find_one(id=cid)
-    return render(channel.summary(verbose=True))
+    return render(channel.summary())
 
 
 @gate(role=Role.MASTER)
@@ -85,8 +86,18 @@ def destroy(cid):
 
 @gate(access=Access.USER, delegation=True)
 def memberships():
-    memberships = Membership.find_all(user_id=g.current_user.id)
-    return render([m.summary("channel") for m in memberships])
+    channels = g.current_user.channels
+    return render([m.summary() for m in channels])
+
+
+@gate(access=Access.USER)
+def join(cid):
+    membership = Membership.create(
+        user_id=g.current_user.id,
+        channel_id=cid,
+        pending=True,
+    )
+    return render(membership.summary(), 201)
 
 
 @gate(role=Role.MASTER)
@@ -102,7 +113,7 @@ def add_member(cid, uid):
     channel = Channel.find_one(id=cid)
     user = User.find_one(id=uid)
     membership = Membership.create(user=user, channel=channel)
-    return render(membership.summary("user"), code=201)
+    return render(membership.summary(), code=201)
 
 
 @gate(role=Role.MASTER)
@@ -118,4 +129,4 @@ def update_member(cid, uid):
     params = validator(request.json, MEMBER_SCHEMA)
     membership = Membership.find_one(user_id=uid, channel_id=cid)
     membership.update(role=params["role"])
-    return render(membership.summary("user"))
+    return render(membership.summary())

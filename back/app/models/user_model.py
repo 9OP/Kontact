@@ -25,7 +25,7 @@ class User(db.Model, Support):
     access = db.Column(db.Enum(Access), nullable=False, default=Access.USER.value)
     material = db.Column(db.JSON, nullable=False)
     tokens = db.relationship("UserToken", backref="user", lazy=True)
-    channels = association_proxy("user_memberships", "channel")
+    channels = association_proxy("memberships", "channel")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -45,20 +45,13 @@ class User(db.Model, Support):
         digest = hashlib.sha256(password.encode("utf-8")).hexdigest()
         return bcrypt.checkpw(digest.encode("utf-8"), hashed)
 
-    def summary(self, verbose=False):
-        user_data = self.serialize(
-            "id", "email", "name", "access", _material="material"
-        )
-        if verbose:
-            channels = [u.summary("channel") for u in self.user_memberships]
-            user_data["channels"] = channels
-        return user_data
+    def summary(self):
+        return self.serialize("id", "email", "name", "access", _material="material")
 
     @hybrid_property
     def _material(self):
         if self == g.current_user:
             return self.material
         # Return only public material if self not current user
-        return {
-            "puek": self.material.get("puek"),
-        }
+        public = ["puek"]
+        return {k: v for k, v in self.material.items() if k in public}
