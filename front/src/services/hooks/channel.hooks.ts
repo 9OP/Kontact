@@ -40,6 +40,7 @@ export const useFetchChannels = (): [() => void, boolean, Error | null] => {
     if (auth?.material?.suek) {
       channelsHttpService.fetchChannels(auth.material.suek)
         .then((channels: IChannel[]) => {
+          console.log('fetchChannels', channels);
           setChannels(channels);
         }).catch((err: Error) => {
           setError(err);

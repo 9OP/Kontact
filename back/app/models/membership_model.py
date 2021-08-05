@@ -37,4 +37,7 @@ class Membership(db.Model, Support):
         return "<membership: <uid: {}, cid: {}>>".format(self.user_id, self.channel_id)
 
     def summary(self):
-        return self.serialize("user_id", "channel_id", "role", "pending", "material")
+        membership_data = self.serialize("role", "pending", "material")
+        membership_data["user"] = self.user.serialize("id", "name", "email", "access")
+        membership_data["channel"] = self.channel.serialize("id", "name", "created_at")
+        return membership_data

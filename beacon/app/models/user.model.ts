@@ -1,3 +1,5 @@
+import { string } from 'joi';
+
 /* eslint-disable no-shadow */
 export enum Access {
   GUEST = 0,
@@ -10,12 +12,17 @@ export enum Role {
   MASTER = 1,
 }
 
-export interface IMembership {
-  id: string,
-  role: Role,
-}
-
 export interface IUser {
   id: string,
   access: Access,
+}
+
+export interface IChannel {
+  id: string,
+}
+
+export interface IMembership {
+  role: Role,
+  user: IUser,
+  channel: IChannel,
 }

@@ -15,7 +15,13 @@ const bearer = axios.create({
 
 const JSONtoIMemberships = (data: any): IMembership[] => {
   const memberships: IMembership[] = [];
-  data.forEach((channel: IMembership) => memberships.push({ id: channel.id, role: channel.role }));
+  data.forEach((membership: IMembership) => {
+    memberships.push({
+      role: membership.role,
+      user: membership.user,
+      channel: membership.channel,
+    });
+  });
   return memberships;
 };
 
@@ -23,14 +29,6 @@ const JSONtoIUser = (data: any): IUser => ({
   id: data.id,
   access: data.access,
 });
-
-// const JSONtoIMessage = (data: any): IMessage => ({
-//   id: data.id,
-//   channelId: data.channelId,
-//   authorId: data.authorId,
-//   content: data.content,
-//   date: new Date(data.date),
-// });
 
 export const whoami = async (token: string): Promise<IUser> => {
   const res = await back.get('/auth/whoami', {
@@ -60,15 +58,3 @@ export const saveMessage = async (
 
   return res.data;
 };
-
-// export const saveMessage = async (
-//   channelId: string,
-//   content: string,
-//   token: string,
-// ): Promise<IMessage> => {
-//   const res = await bearer.post(`/message/${channelId}`, JSON.stringify({ content }), {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-
-//   return JSONtoIMessage(res.data);
-// };

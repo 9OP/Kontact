@@ -12,7 +12,7 @@ export default async (socket: Socket, next: (any?: any) => void): Promise<void> 
     (socket as ExtSocket).user = user;
     (socket as ExtSocket).token = token;
     (socket as ExtSocket).memberships = memberships;
-    memberships.forEach((channel) => socket.join(channel.id));
+    memberships.forEach((membership) => socket.join(membership.channel.id));
     next();
   } catch (err) {
     next(err);

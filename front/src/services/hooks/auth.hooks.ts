@@ -114,13 +114,10 @@ export const useCreateChannel = ():
     const password = '123'; // gen random pwd
     try {
       const user = await authHttpService.signup(email, password, userName);
-      console.log(user);
       const channel = await channelsHttpService.createChannel(channelName, user.material.suek);
-      console.log(channel);
       setUser(user);
       setChannel(channel);
     } catch (e) {
-      console.log(e);
       setError(e);
     } finally {
       setLoading(false);

@@ -5,8 +5,6 @@ import { generateChannelEncryptionKey, unwrapChannelEncryptionKey } from '../../
 import { userSocket } from '../socket';
 
 const JsonToChannel = async (json: any, passphrase: string): Promise<IChannel> => {
-  console.log('jsontochannel', json);
-
   const keyBundle = {
     key: json.material?.scek,
     salt: new Uint8Array(json.material?.salt),
@@ -15,9 +13,9 @@ const JsonToChannel = async (json: any, passphrase: string): Promise<IChannel> =
   const scek = await unwrapChannelEncryptionKey(keyBundle, passphrase);
 
   return {
-    id: json.id,
-    name: json.name,
-    createdAt: new Date(json.created_at),
+    id: json.channel.id,
+    name: json.channel.name,
+    createdAt: new Date(json.channel.created_at),
     material: { scek },
   };
 };

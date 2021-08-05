@@ -53,16 +53,14 @@ MEMBER_SCHEMA = {
 @gate(access=Access.USER)
 def new():
     params = validator(request.json, CREATE_CHANNEL_SCHEMA)
-    new_channel = Channel.create(name=params["name"])
+    channel = Channel.create(name=params["name"])
     membership = Membership.create(  # not safe if fail
         user_id=g.current_user.id,
-        channel_id=new_channel.id,
+        channel_id=channel.id,
         role=Role.MASTER.value,
         material=params["material"],
     )
-    data = new_channel.summary()
-    data["material"] = membership.material
-    return render(data, code=201)
+    return render(membership.summary(), code=201)
 
 
 @gate(access=Access.ADMIN)

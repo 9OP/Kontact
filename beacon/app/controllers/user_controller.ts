@@ -15,7 +15,7 @@ export const authWhoami = createEvent(
     const memberships = await fetchMemberships(token);
     socket.user = user;
     socket.memberships = memberships;
-    memberships.forEach((channel) => socket.join(channel.id));
+    memberships.forEach((membership) => socket.join(membership.channel.id));
     ack();
   },
 );

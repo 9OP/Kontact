@@ -13,13 +13,6 @@ const JsonToMember = (json: any): IMember => ({
   },
 });
 
-const JsonToMemberPreviews = (json: any): IMemberPreview[] => json.map((member: IMemberPreview) => (
-  {
-    id: member.id,
-    name: member.name,
-  }
-));
-
 const JsonToMembers = (json: any[]): IMember[] => json.map((member: any) => JsonToMember(member));
 
 export const fetchMembers = async (cid: string): Promise<IMember[]> => {
@@ -43,6 +36,13 @@ export const updateMember = async (cid: string, uid: string, role: ERole): Promi
   });
   return JsonToMember(res);
 };
+
+const JsonToMemberPreviews = (json: any): IMemberPreview[] => json.map((member: IMemberPreview) => (
+  {
+    id: member.id,
+    name: member.name,
+  }
+));
 
 export const searchUser = async (value = ''): Promise<IMemberPreview[]> => {
   let query = `name=${value}`;
