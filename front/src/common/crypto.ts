@@ -2,8 +2,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 
-import { wrap } from 'module';
-
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
   const byteArray = new Uint8Array(arrayBuffer);
   let byteString = '';
