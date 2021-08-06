@@ -2,6 +2,8 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 
+import { wrap } from 'module';
+
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
   const byteArray = new Uint8Array(arrayBuffer);
   let byteString = '';
@@ -261,7 +263,6 @@ export async function publicKeyFingerprint(publicKey: string): Promise<string> {
   return fingerprint?.join('-') || '';
 }
 
-// Generates the default keys for back seed task
 // function addNewLines(str: string) {
 //   let finalString = '';
 //   while (str.length > 0) {
@@ -273,26 +274,30 @@ export async function publicKeyFingerprint(publicKey: string): Promise<string> {
 // }
 
 // const cryptoGenerateSeedKeys = async () => {
+//   console.group();
+
 //   // Pass: '123456' sha256 x2
 //   const pass = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
-//   const keyPair = await generateUserEncryptionKeyPair(pass);
 
-//   console.log('public', addNewLines(keyPair.public));
-//   console.log('private', addNewLines(keyPair.private.key));
-//   console.log('salt', Array.from(keyPair.private.salt));
-//   console.log('iv', Array.from(keyPair.private.iv));
+//   const uek = await generateUEK();
+//   const { puek, suek } = uek;
+//   const { key, salt, iv } = await wrapSUEK(suek, pass);
 
-//   const privateKey = await unwrapUserEncryptionKey(keyPair.private, pass);
-//   const aesKey = await generateChannelEncryptionKey(privateKey);
+//   console.log('PUEK', addNewLines(puek));
+//   console.log('SUEK', addNewLines(key));
+//   console.log('salt', Array.from(salt));
+//   console.log('iv', Array.from(iv));
 
-//   console.log('aes', addNewLines(aesKey.key));
-//   console.log('salt', Array.from(aesKey.salt));
-//   console.log('iv', Array.from(aesKey.iv));
+//   const cek = await generateCEK();
+//   const wrappedCek = await wrapCEK(cek, puek);
+
+//   console.log('SCEK', addNewLines(wrappedCek));
+
+//   console.groupEnd();
 // };
 
 // cryptoGenerateSeedKeys();
 
-// Demo function - verify the API is not broken
 // async function cryptoDemo() {
 //   const password = '123456';
 
@@ -323,3 +328,5 @@ export async function publicKeyFingerprint(publicKey: string): Promise<string> {
 //   console.log('plain', plain);
 //   console.log('message == plain', message === plain);
 // }
+
+// cryptoDemo();
