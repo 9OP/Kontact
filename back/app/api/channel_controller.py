@@ -12,21 +12,7 @@ MATERIAL_SCHEMA = {
     "material": {
         "type": "dict",
         "required": True,
-        "schema": {
-            "scek": {"type": "string", "required": True, "empty": False},
-            "salt": {
-                "type": "list",
-                "required": True,
-                "empty": False,
-                "schema": {"type": "integer"},
-            },
-            "iv": {
-                "type": "list",
-                "required": True,
-                "empty": False,
-                "schema": {"type": "integer"},
-            },
-        },
+        "schema": {"scek": {"type": "string", "required": True, "empty": False}},
     },
 }
 

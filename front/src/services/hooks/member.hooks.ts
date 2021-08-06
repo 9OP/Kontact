@@ -48,15 +48,15 @@ export const useFetchMembers = (): [() => void, boolean, Error | null] => {
   return [fetchMembers, loading, error];
 };
 
-export const useCreateMember = (): [(uid: string) => void, boolean, Error | null] => {
+export const useCreateMember = (): [(uid: string, puek: string) => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const setMember = useAction(createMemberAction);
   const channel = useAppSelector(selectOpenedChannel);
 
-  const createMember = useCallback((uid: string) => {
+  const createMember = useCallback((uid: string, puek: string) => {
     setLoading(true);
-    membersHttpService.createMember(channel.id, uid)
+    membersHttpService.createMember(channel.id, uid, channel.material.scek, puek)
       .then((member: IMember) => {
         emit(toast.member_created(member));
         setMember(member, channel);

@@ -6,14 +6,9 @@ import { PASSPHRASE, TOKEN } from '../../common/constants';
 import { IAuth } from '../../common/models';
 import {
   publicKeyFingerprint,
-  generateCEK,
   generateUEK,
-  unwrapCEK,
-  unwrapSUEK,
-  wrapCEK,
   wrapSUEK,
-  encryptMessage,
-  decryptMessage,
+  unwrapSUEK,
 } from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +21,7 @@ const JsonToUser = async (json: any): Promise<IAuth> => {
     iv: new Uint8Array(json.material?.iv),
   };
 
-  const suek = await unwrapUserEncryptionKey(keyBundle, passphrase);
+  const suek = await unwrapSUEK(keyBundle, passphrase);
   const pkf = await publicKeyFingerprint(json.material?.puek);
 
   return {
@@ -61,40 +56,8 @@ const storeAccess = (key: string, token: string, passphrase: string): void => {
   LES.setItem(PASSPHRASE, passphrase);
 };
 
-async function cryptoDemo() {
-  const password = '123456';
-
-  const { puek, suek } = await generateUEK();
-  console.log('suek', suek);
-  console.log('puek', puek);
-
-  const wrappedSUEK = await wrapSUEK(suek, password);
-  const unwrappedSUEK = await unwrapSUEK(wrappedSUEK, password);
-
-  console.log('wrappedSUEK', wrappedSUEK);
-  console.log('unwrappedSUEK', unwrappedSUEK);
-  console.log('suek == unwrappedSUEK', suek === unwrappedSUEK);
-
-  const cek = await generateCEK();
-  const wrappedCEK = await wrapCEK(cek, puek);
-  const unwrappedCEK = await unwrapCEK(wrappedCEK, suek);
-  console.log('cek:', cek);
-  console.log('wrappedCEK:', wrappedCEK);
-  console.log('unwrappedCEK:', unwrappedCEK);
-  console.log('CEK == unwrappedCEK', cek === unwrappedCEK);
-
-  const message = 'Hello world, here is a secret: 🌸';
-  const cipher = await encryptMessage(message, cek);
-  const plain = await decryptMessage(cipher, cek);
-
-  console.log('cipher', cipher);
-  console.log('plain', plain);
-  console.log('message == plain', message === plain);
-}
-
 const key = async (): Promise<string> => {
   const res = await back.get({ route: 'auth/key' });
-  await cryptoDemo();
   return res.key;
 };
 
@@ -117,12 +80,13 @@ export const signin = async (email: string, password: string): Promise<IAuth> =>
 export const signup = async (email: string, password: string, name: string): Promise<IAuth> => {
   const passphrase = CryptoJS.SHA256(password).toString(); // use web api instead of crypto js
   const prehash = CryptoJS.SHA256(passphrase).toString();
-  const keyPair = await generateUserEncryptionKeyPair(passphrase);
+  const { puek, suek } = await generateUEK();
+  const bundle = await wrapSUEK(suek, passphrase);
   const material = {
-    puek: keyPair.public,
-    suek: keyPair.private.key,
-    salt: Array.from(keyPair.private.salt),
-    iv: Array.from(keyPair.private.iv),
+    puek,
+    suek: bundle.key,
+    salt: Array.from(bundle.salt),
+    iv: Array.from(bundle.iv),
   };
   const res = await back.post({
     route: 'auth/signup',

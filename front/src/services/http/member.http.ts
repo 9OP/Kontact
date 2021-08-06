@@ -1,9 +1,10 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { back } from '../../common/network/api';
 import {
   ERole, IMember, IMemberPreview,
 } from '../../common/models';
-import { publicKeyFingerprint } from '../../common/crypto';
+import { publicKeyFingerprint, wrapCEK } from '../../common/crypto';
 
 const JsonToMember = async (json: any): Promise<IMember> => {
   const pkf = await publicKeyFingerprint(json.material?.puek);
@@ -42,10 +43,14 @@ export const fetchMembers = async (cid: string): Promise<IMember[]> => {
   return JsonToMembers(res.members);
 };
 
-export const createMember = async (cid: string, uid: string): Promise<IMember> => {
-  // generate scek and send material
+export const createMember = async (cid: string, uid: string, cek: string, puek: string): Promise<IMember> => {
+  const wrappedCek = await wrapCEK(cek, puek);
+  const material = { scek: wrappedCek };
 
-  const res = await back.post({ route: `channel/${cid}/membership/${uid}` });
+  const res = await back.post({
+    route: `channel/${cid}/membership/${uid}`,
+    payload: { material },
+  });
   return JsonToMember(res);
 };
 

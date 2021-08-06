@@ -50,7 +50,7 @@ const MemberItem = (props: Props): JSX.Element => {
 interface ModalProps {
   isOpen: boolean,
   onClose: () => void,
-  addMember: (uid: string) => void,
+  addMember: (uid: string, puek: string) => void,
   pendingMember: IMember,
 }
 
@@ -60,7 +60,7 @@ const AddMemberModal = (props: ModalProps):JSX.Element => {
   } = props;
 
   const onSubmit = () => {
-    addMember(pendingMember.id);
+    addMember(pendingMember.id, pendingMember.material.puek);
     onClose();
   };
 

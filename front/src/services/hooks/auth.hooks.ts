@@ -74,7 +74,6 @@ export const useWhoami = (): [() => void, boolean, Error | null] => {
       authHttpService.whoami().then((user) => {
         setUser(user);
       }).catch((err: Error) => {
-        console.log(err);
         setError(err);
         resetUser();
       }).finally(() => {
@@ -115,10 +114,12 @@ export const useCreateChannel = ():
     const password = '123'; // gen random pwd
     try {
       const user = await authHttpService.signup(email, password, userName);
-      const channel = await channelsHttpService.createChannel(channelName, user.material.suek);
+      const { puek, suek } = user.material;
+      const channel = await channelsHttpService.createChannel(channelName, puek, suek);
       setUser(user);
       setChannel(channel);
     } catch (e) {
+      console.log(e);
       setError(e);
     } finally {
       setLoading(false);
