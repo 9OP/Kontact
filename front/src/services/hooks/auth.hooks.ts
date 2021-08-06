@@ -74,6 +74,7 @@ export const useWhoami = (): [() => void, boolean, Error | null] => {
       authHttpService.whoami().then((user) => {
         setUser(user);
       }).catch((err: Error) => {
+        console.log(err);
         setError(err);
         resetUser();
       }).finally(() => {

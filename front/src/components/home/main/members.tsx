@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   ListItem,
@@ -9,9 +9,10 @@ import {
   IconButton,
   Icon,
   Flex,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { FiLogOut, FiUserPlus } from 'react-icons/fi';
-import { useFetchMembers, useMembers } from '../../../services/hooks/member.hooks';
+import { useCreateMember, useFetchMembers, useMembers } from '../../../services/hooks/member.hooks';
 import { useChannels } from '../../../services/hooks/channel.hooks';
 import { ERole, IMember } from '../../../common/models';
 import { useSignout } from '../../../services/hooks/auth.hooks';
@@ -19,10 +20,11 @@ import ModalCreator from '../../modal';
 
 interface Props {
   member: IMember;
+  onConfirmMember: () => void;
 }
 
 const MemberItem = (props: Props): JSX.Element => {
-  const { member } = props;
+  const { member, onConfirmMember } = props;
 
   return (
     <ListItem key={member.id} color={member.pending ? 'gray.400' : 'gray.600'}>
@@ -37,7 +39,7 @@ const MemberItem = (props: Props): JSX.Element => {
             size="sm"
             aria-label="AddUser"
             icon={<Icon as={FiUserPlus} />}
-            // onClick={() => signout()}
+            onClick={onConfirmMember}
           />
         ) : null}
       </HStack>
@@ -48,47 +50,63 @@ const MemberItem = (props: Props): JSX.Element => {
 interface ModalProps {
   isOpen: boolean,
   onClose: () => void,
-  createChannel: (name: string) => void
+  addMember: (uid: string) => void,
+  pendingMember: IMember,
 }
 
 const AddMemberModal = (props: ModalProps):JSX.Element => {
-  const { isOpen, onClose, createChannel } = props;
+  const {
+    isOpen, onClose, addMember, pendingMember,
+  } = props;
 
   const onSubmit = () => {
-    createChannel(name);
+    addMember(pendingMember.id);
     onClose();
-    setName('');
   };
 
   return (
     <ModalCreator
       isOpen={isOpen}
       onClose={onClose}
-      header="Create channel"
-      action="Create"
+      header={`Add member ${pendingMember.name}`}
+      action="Confirm"
       onSubmit={onSubmit}
       body={(
-        <Input
-          value={name}
-          onChange={handleChange}
-          placeholder="Channel name"
-          size="sm"
-        />
+        <>
+          Confirm user public key fingerprint
+          <Text
+            marginTop="1rem"
+            fontWeight="bold"
+            fontSize="md"
+            color="gray.400"
+          >
+            { pendingMember.material.pkf.replaceAll('-', '  ')}
+          </Text>
+        </>
       )}
     />
   );
 };
 
 export default (): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { channel, role } = useChannels();
   const { members } = useMembers(channel.id);
   const [signout] = useSignout();
   const [fetchMembers] = useFetchMembers();
+  const [addMember] = useCreateMember();
+
+  const [confirmMember, setConfirmMember] = useState<IMember>();
 
   useEffect(() => {
     // refetch members when opened channel changes
     fetchMembers();
   }, [channel]);
+
+  const onConfirmMember = (member: IMember) => {
+    setConfirmMember(member);
+    onOpen();
+  };
 
   // should sort first active members then pending members
   const renderMembers = () => members
@@ -97,6 +115,7 @@ export default (): JSX.Element => {
       <MemberItem
         key={member.id}
         member={member}
+        onConfirmMember={() => onConfirmMember(member)}
       />
     ));
 
@@ -150,6 +169,19 @@ export default (): JSX.Element => {
           onClick={() => signout()}
         />
       </Box>
+
+      {/* modal */}
+      { confirmMember
+        ? (
+          <AddMemberModal
+            isOpen={isOpen}
+            onClose={onClose}
+            addMember={addMember}
+            pendingMember={confirmMember}
+          />
+        )
+        : null}
+
     </Flex>
   );
 };

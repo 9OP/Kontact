@@ -44,6 +44,7 @@ export const fetchMembers = async (cid: string): Promise<IMember[]> => {
 
 export const createMember = async (cid: string, uid: string): Promise<IMember> => {
   // generate scek and send material
+
   const res = await back.post({ route: `channel/${cid}/membership/${uid}` });
   return JsonToMember(res);
 };

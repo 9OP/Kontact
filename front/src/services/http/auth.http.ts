@@ -4,7 +4,17 @@ import { beacon } from '../../common/network/socket';
 import LES from '../../common/localStorage';
 import { PASSPHRASE, TOKEN } from '../../common/constants';
 import { IAuth } from '../../common/models';
-import { generateUserEncryptionKeyPair, publicKeyFingerprint, unwrapUserEncryptionKey } from '../../common/crypto';
+import {
+  publicKeyFingerprint,
+  generateCEK,
+  generateUEK,
+  unwrapCEK,
+  unwrapSUEK,
+  wrapCEK,
+  wrapSUEK,
+  encryptMessage,
+  decryptMessage,
+} from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToUser = async (json: any): Promise<IAuth> => {
@@ -51,8 +61,40 @@ const storeAccess = (key: string, token: string, passphrase: string): void => {
   LES.setItem(PASSPHRASE, passphrase);
 };
 
+async function cryptoDemo() {
+  const password = '123456';
+
+  const { puek, suek } = await generateUEK();
+  console.log('suek', suek);
+  console.log('puek', puek);
+
+  const wrappedSUEK = await wrapSUEK(suek, password);
+  const unwrappedSUEK = await unwrapSUEK(wrappedSUEK, password);
+
+  console.log('wrappedSUEK', wrappedSUEK);
+  console.log('unwrappedSUEK', unwrappedSUEK);
+  console.log('suek == unwrappedSUEK', suek === unwrappedSUEK);
+
+  const cek = await generateCEK();
+  const wrappedCEK = await wrapCEK(cek, puek);
+  const unwrappedCEK = await unwrapCEK(wrappedCEK, suek);
+  console.log('cek:', cek);
+  console.log('wrappedCEK:', wrappedCEK);
+  console.log('unwrappedCEK:', unwrappedCEK);
+  console.log('CEK == unwrappedCEK', cek === unwrappedCEK);
+
+  const message = 'Hello world, here is a secret: 🌸';
+  const cipher = await encryptMessage(message, cek);
+  const plain = await decryptMessage(cipher, cek);
+
+  console.log('cipher', cipher);
+  console.log('plain', plain);
+  console.log('message == plain', message === plain);
+}
+
 const key = async (): Promise<string> => {
   const res = await back.get({ route: 'auth/key' });
+  await cryptoDemo();
   return res.key;
 };
 
