@@ -244,6 +244,16 @@ export async function decryptMessage(cipher: MessageBundle, key: string): Promis
   return decoded;
 }
 
+export async function publicKeyFingerprint(publicKey: string): Promise<string> {
+  const msgUint8 = new TextEncoder().encode(publicKey); // encode comme (utf-8) Uint8Array
+  const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8); // fait le condensé
+  const hashArray = Array.from(new Uint8Array(hashBuffer)); // convertit le buffer en tableau d'octet
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join(''); // convertit le tableau en chaîne hexadélimale
+
+  const fingerprint = hashHex.toUpperCase().match(/.{1,4}/g); // split in packets of 2 bytes (4 hexas)
+  return fingerprint?.join('-') || '';
+}
+
 // //
 // //
 // // Generates the default keys for back seed task

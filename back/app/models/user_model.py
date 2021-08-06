@@ -59,4 +59,4 @@ class User(db.Model, Support):
 
     @hybrid_property
     def pending_memberships(self):
-        return [m for m in Membership.find_all(user=self, pending=True)]
+        return Membership.find_all(user_id=self.id, pending=True)

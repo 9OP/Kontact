@@ -86,7 +86,7 @@ def destroy(cid):
 @gate(access=Access.USER, delegation=True)
 def memberships():
     memberships = g.current_user.memberships
-    if request.args.get("include_pending") == 1:
+    if request.args.get("include_pending") == "1":
         memberships += g.current_user.pending_memberships
     return render([m.summary() for m in memberships])
 

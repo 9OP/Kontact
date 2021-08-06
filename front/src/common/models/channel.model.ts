@@ -3,6 +3,7 @@ export interface IChannel {
   name: string;
   createdAt: Date;
   material: IChannelMaterial;
+  active: boolean;
 }
 
 export interface IChannelMaterial {

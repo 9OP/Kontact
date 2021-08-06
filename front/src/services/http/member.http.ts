@@ -1,19 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { back } from '../../common/network/api';
-import { ERole, IMember, IMemberPreview } from '../../common/models';
+import {
+  ERole, IMember, IMemberPreview,
+} from '../../common/models';
+import { publicKeyFingerprint } from '../../common/crypto';
 
-const JsonToMember = (json: any): IMember => ({
-  id: json.id,
-  name: json.name,
-  email: json.email,
-  role: json.role,
-  joinedAt: new Date(json.joined_at),
-  material: {
-    puek: json.material?.puek,
-  },
-});
+const JsonToMember = async (json: any): Promise<IMember> => {
+  const pkf = await publicKeyFingerprint(json.material?.puek);
 
-const JsonToMembers = (json: any[]): IMember[] => json.map((member: any) => JsonToMember(member));
+  return {
+    id: json.id,
+    name: json.name,
+    email: json.email,
+    material: {
+      puek: json.material?.puek,
+      pkf,
+    },
+    pending: json.pending,
+    role: json.role,
+  };
+};
+
+// const JsonToMembership = (json: any): IMembership => ({
+//   userId: json.user.id,
+//   channelId: json.channel.id,
+//   pending: json.pending,
+//   role: json.role,
+//   joinedAt: new Date(json.joined_at),
+// });
+
+const JsonToMembers = async (json: any[]): Promise<IMember[]> => {
+  const members = json.map(
+    async (member: any) => JsonToMember(member),
+  );
+
+  return Promise.all(members);
+};
 
 export const fetchMembers = async (cid: string): Promise<IMember[]> => {
   const res = await back.get({ route: `channel/${cid}` });
@@ -21,6 +43,7 @@ export const fetchMembers = async (cid: string): Promise<IMember[]> => {
 };
 
 export const createMember = async (cid: string, uid: string): Promise<IMember> => {
+  // generate scek and send material
   const res = await back.post({ route: `channel/${cid}/membership/${uid}` });
   return JsonToMember(res);
 };

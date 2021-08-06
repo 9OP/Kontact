@@ -4,7 +4,7 @@ import { beacon } from '../../common/network/socket';
 import LES from '../../common/localStorage';
 import { PASSPHRASE, TOKEN } from '../../common/constants';
 import { IAuth } from '../../common/models';
-import { generateUserEncryptionKeyPair, unwrapUserEncryptionKey } from '../../common/crypto';
+import { generateUserEncryptionKeyPair, publicKeyFingerprint, unwrapUserEncryptionKey } from '../../common/crypto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JsonToUser = async (json: any): Promise<IAuth> => {
@@ -17,6 +17,7 @@ const JsonToUser = async (json: any): Promise<IAuth> => {
   };
 
   const suek = await unwrapUserEncryptionKey(keyBundle, passphrase);
+  const pkf = await publicKeyFingerprint(json.material?.puek);
 
   return {
     id: json.id,
@@ -25,6 +26,7 @@ const JsonToUser = async (json: any): Promise<IAuth> => {
     access: json.access,
     material: {
       puek: json.material?.puek,
+      pkf,
       suek,
     },
   };

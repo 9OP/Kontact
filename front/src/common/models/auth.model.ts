@@ -9,6 +9,7 @@ export interface IAuth {
 export interface IMaterial {
   puek: string; // public user encryption key
   suek: string; // secret user encryption key
+  pkf: string // public key fingerprint
 }
 
 export enum EAccess {

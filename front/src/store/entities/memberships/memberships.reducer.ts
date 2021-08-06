@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-case-declarations */
-import { IMember } from '../../../common/models';
+import { IMember, IMembership } from '../../../common/models';
 import { RESET_USER } from '../../authentication/auth.action-types';
 import {
   membersActionTypes,
@@ -10,7 +10,7 @@ import {
 } from '../members/members.action-types';
 
 interface State {
-  // channelId: [memberIds]
+  // [channelId: string]: IMembership[];
   [channelId: string]: string[];
 }
 
