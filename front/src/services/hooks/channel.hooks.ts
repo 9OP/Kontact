@@ -35,17 +35,20 @@ export const useFetchChannels = (): [() => void, boolean, Error | null] => {
   const setChannels = useAction(fetchChannelsAction);
   const auth = useAppSelector(selectUser);
 
-  const fetchChannels = useCallback(() => {
+  const fetchChannels = useCallback(async () => {
     setLoading(true);
-    if (auth?.material?.suek) {
-      channelsHttpService.fetchChannels(auth.material.suek)
-        .then((channels: IChannel[]) => {
-          setChannels(channels);
-        }).catch((err: Error) => {
-          setError(err);
-        }).finally(() => {
-          setLoading(false);
-        });
+    try {
+      if (auth?.material?.suek) {
+        const channels = await channelsHttpService.fetchChannels(auth.material.suek);
+        const channelIds = channels.map(({ id }) => id);
+        const presence = await channelsHttpService.fetchPresence(channelIds);
+        // setPresence(presence);
+        setChannels(channels);
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   }, [setChannels, auth]);
 

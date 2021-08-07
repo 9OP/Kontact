@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { stringify } from 'querystring';
 import { back, beacon } from '../../common/network/api';
 import { IChannel } from '../../common/models';
 import { generateCEK, wrapCEK, unwrapCEK } from '../../common/crypto';
@@ -29,16 +30,8 @@ const JsonToChannels = async (json: any, suek: string): Promise<IChannel[]> => {
   return Promise.all(channels);
 };
 
-export const fetchPresence = async (cid: string): Promise<void> => {
-  const res = await beacon.get({
-    route: `presence?channel=${cid}`,
-  });
-  console.log('fetchBeacon presence', res);
-};
-
 export const fetchChannels = async (suek: string): Promise<IChannel[]> => {
   const res = await back.get({ route: 'channel/memberships?include_pending=1' });
-  await fetchPresence(res[0].channel.id);
   return JsonToChannels(res, suek);
 };
 
@@ -64,4 +57,14 @@ export const deleteChannel = async (cid: string): Promise<void> => {
 
 export const joinChannel = async (cid: string): Promise<void> => {
   await back.post({ route: `channel/${cid}/join` });
+};
+
+// Fetch ids of users connected to beacon
+export const fetchPresence = async (cids: string[]): Promise<string[]> => {
+  const query = `?channel=${cids.join('&channel=')}&channel=blublu`;
+  console.log(query);
+  const res = await beacon.get({
+    route: `presence${query}`,
+  });
+  return res;
 };

@@ -13,22 +13,32 @@ const createApp = (): http.Server => {
   // Express
   const app = express();
   app.get('/presence', (req, res) => {
-    const cid = req.query.channel;
+    let cids = req.query.channel as string[];
+    if (!Array.isArray(cids)) { // equivalent to flat
+      cids = [cids];
+    }
 
     const { rooms } = io.sockets.adapter as any;
     const { sockets } = io.sockets;
-    const clients: Set<string> = rooms.get(cid);
 
     const userIds: string[] = [];
 
-    if (clients) {
-      clients.forEach((client) => {
-        const sock = sockets.get(client);
-        if (sock) { userIds.push((sock as any)?.user?.id); }
-      });
+    cids.forEach((cid) => {
+      const clients: Set<string> = rooms.get(cid);
+
+      if (clients) {
+        clients.forEach((client) => {
+          const sock = sockets.get(client);
+          if (sock) { userIds.push((sock as any)?.user?.id); }
+        });
+      }
+    });
+
+    function onlyUnique(value: string, index: number, self: string[]) {
+      return self.indexOf(value) === index;
     }
 
-    userIds.filter((uid) => uid); // remove null
+    userIds.filter((uid) => uid).filter(onlyUnique);
     res.json(userIds);
   });
 
