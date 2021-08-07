@@ -6,8 +6,8 @@ export const FETCH_MEMBERS = '[members] fetch_members';
 export const CREATE_MEMBER = '[members] create_member';
 export const UPDATE_MEMBER = '[members] update_member';
 export const DELETE_MEMBER = '[members] delete_member';
-export const PRESENCE_JOIN = '[members] presence_join';
-export const PRESENCE_LEAVE = '[members] presence_leave';
+export const PRESENCE_CONNECT = '[members] presence_connect';
+export const PRESENCE_DISCONNECT = '[members] presence_disconnect';
 
 interface fetchMembers extends Action {
   type: typeof FETCH_MEMBERS;
@@ -29,13 +29,13 @@ interface deleteMember extends Action {
   payload: { cid: string, uid: string };
 }
 
-interface presenceJoin extends Action {
-  type: typeof PRESENCE_JOIN;
+interface presenceConnect extends Action {
+  type: typeof PRESENCE_CONNECT;
   payload: { uid: string };
 }
 
-interface presenceLeave extends Action {
-  type: typeof PRESENCE_LEAVE;
+interface presenceDisconnect extends Action {
+  type: typeof PRESENCE_DISCONNECT;
   payload: { uid: string };
 }
 
@@ -45,5 +45,5 @@ export type membersActionTypes =
   | createMember
   | updateMember
   | deleteMember
-  | presenceJoin
-  | presenceLeave;
+  | presenceConnect
+  | presenceDisconnect;

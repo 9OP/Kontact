@@ -1,9 +1,11 @@
+import { store } from '../../store';
+import { presenceConnectAction, presenceDisconnectAction } from '../../store/entities/members/members.actions';
 import * as presence from '../socket/presence.socket';
 
-presence.join(async (userId: string) => {
-  // dispatch member join
+presence.connect(async (userId: string) => {
+  store.dispatch(presenceConnectAction(userId));
 });
 
-presence.leave(async (userId: string) => {
-  // dispatch member leave
+presence.disconnect(async (userId: string) => {
+  store.dispatch(presenceDisconnectAction(userId));
 });

@@ -3,7 +3,7 @@
 import { Socket } from 'socket.io';
 import { ExtSocket } from '../types';
 import { whoami, fetchMemberships } from '../api';
-import { presenceJoin } from '../controllers/user_controller';
+import { presenceConnect } from '../controllers/user_controller';
 
 export default async (socket: Socket, next: (any?: any) => void): Promise<void> => {
   const { token } = socket.handshake.auth as {token: string};
@@ -13,7 +13,7 @@ export default async (socket: Socket, next: (any?: any) => void): Promise<void> 
     (socket as ExtSocket).user = user;
     (socket as ExtSocket).token = token;
     (socket as ExtSocket).memberships = memberships;
-    presenceJoin(socket as ExtSocket);
+    presenceConnect(socket as ExtSocket);
     next();
   } catch (err) {
     next(err);

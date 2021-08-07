@@ -10,6 +10,7 @@ import {
   Icon,
   Flex,
   useDisclosure,
+  Badge,
 } from '@chakra-ui/react';
 import { FiLogOut, FiUserPlus } from 'react-icons/fi';
 import { useCreateMember, useFetchMembers, useMembers } from '../../../services/hooks/member.hooks';
@@ -29,6 +30,9 @@ const MemberItem = (props: Props): JSX.Element => {
   return (
     <ListItem key={member.id} color={member.pending ? 'gray.400' : 'gray.600'}>
       <HStack>
+        <Badge ml="1" size="sm" colorScheme={member.connected ? 'green' : 'red'}>
+          { member.connected ? 'conn' : 'dis'}
+        </Badge>
         <Text fontWeight="bold" fontSize="sm">
           {member.name}
         </Text>

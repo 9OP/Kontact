@@ -5,23 +5,25 @@ import { ExtSocket } from '../types';
 import { whoami, fetchMemberships } from '../api';
 
 const WHOAMI_AUTH = 'auth:whoami';
-const PRESENCE_JOIN = 'presence:join';
-const PRESENCE_LEAVE = 'presence:leave';
+const PRESENCE_CONNECT = 'presence:connect';
+const PRESENCE_DISCONNECT = 'presence:disconnect';
 
-export function presenceJoin(socket: ExtSocket): void {
+export function presenceConnect(socket: ExtSocket): void {
   socket.memberships.forEach((membership) => {
-    const channeId = membership.channel.id;
-    socket.join(channeId);
-    socket.to(channeId).emit(PRESENCE_JOIN, socket.user.id);
+    const channelId = membership.channel.id;
+    if (channelId) { socket.join(channelId); }
   });
+  socket.join('presence');
+  socket.to('presence').emit(PRESENCE_CONNECT, socket.user.id);
 }
 
-export function presenceLeave(socket: ExtSocket): void {
+export function presenceDisconnect(socket: ExtSocket): void {
   socket.memberships.forEach((membership) => {
-    const channeId = membership.channel.id;
-    socket.to(channeId).emit(PRESENCE_LEAVE, socket.user.id);
-    socket.leave(channeId);
+    const channelId = membership.channel.id;
+    if (channelId) { socket.leave(channelId); }
   });
+  socket.to('presence').emit(PRESENCE_DISCONNECT, socket.user.id);
+  socket.leave('presence');
 }
 
 export const authWhoami = createEvent(
@@ -33,7 +35,7 @@ export const authWhoami = createEvent(
     const memberships = await fetchMemberships(token);
     socket.user = user;
     socket.memberships = memberships;
-    presenceJoin(socket);
+    presenceConnect(socket);
     ack();
   },
 );

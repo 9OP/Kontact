@@ -5,8 +5,8 @@ import {
   CREATE_MEMBER,
   UPDATE_MEMBER,
   DELETE_MEMBER,
-  PRESENCE_JOIN,
-  PRESENCE_LEAVE,
+  PRESENCE_CONNECT,
+  PRESENCE_DISCONNECT,
 } from './members.action-types';
 
 export function fetchMembersAction(members: IMember[], channel: IChannel): membersActionTypes {
@@ -37,16 +37,16 @@ export function deleteMemberAction(uid: string, cid: string): membersActionTypes
   };
 }
 
-export function presenceJoinAction(uid: string): membersActionTypes {
+export function presenceConnectAction(uid: string): membersActionTypes {
   return {
-    type: PRESENCE_JOIN,
+    type: PRESENCE_CONNECT,
     payload: { uid },
   };
 }
 
-export function presenceLeaveAction(uid: string): membersActionTypes {
+export function presenceDisconnectAction(uid: string): membersActionTypes {
   return {
-    type: PRESENCE_LEAVE,
+    type: PRESENCE_DISCONNECT,
     payload: { uid },
   };
 }

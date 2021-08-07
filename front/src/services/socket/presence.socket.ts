@@ -1,4 +1,4 @@
 import { beaconHandler } from '../../common/network/socket';
 
-export const join = beaconHandler('presence:join');
-export const leave = beaconHandler('presence:leave');
+export const connect = beaconHandler('presence:connect');
+export const disconnect = beaconHandler('presence:disconnect');
