@@ -8,6 +8,8 @@ import {
   CREATE_MEMBER,
   UPDATE_MEMBER,
   DELETE_MEMBER,
+  PRESENCE_JOIN,
+  PRESENCE_LEAVE,
 } from './members.action-types';
 
 interface State {
@@ -40,6 +42,24 @@ export default function membersReducer(
     case CREATE_MEMBER:
       const { member } = action.payload;
       return { byId: { ...state.byId, [member.id]: member } };
+
+    case PRESENCE_JOIN: {
+      const { uid } = action.payload;
+      const member = state.byId?.[uid];
+
+      if (!member) { return state; }
+
+      return { byId: { ...state.byId, [member.id]: { ...member, connected: true } } };
+    }
+
+    case PRESENCE_LEAVE: {
+      const { uid } = action.payload;
+      const member = state.byId?.[uid];
+
+      if (!member) { return state; }
+
+      return { byId: { ...state.byId, [member.id]: { ...member, connected: false } } };
+    }
 
     case RESET_USER:
       return INITIAL_STATE;

@@ -29,12 +29,12 @@ docker-compose run back python manage.py test
 ```
 
 
-## ToDo
-- [x] Flattened front architecture (less nested and and regroup components) (almost)
-- [x] Support for #id user search
-- [x] Add loading spinner for members and message loading (almost)
-- [ ] Remove channel header / rework something more pretty
-- [ ] Find a tool/service for mongo db management
-- [ ] Create guest mode
-- [ ] Implement e2e encryption
+## ToDo (sorted by priority)
+- [ ] presence in members sidebar (dynamic status: red/green badge, plus join)
+- [ ] name generators
+- [ ] kick / refuse access to channel
 - [ ] create chakra ui theme
+- [ ] reload channel and membership when channel master accept user
+- [ ] join + channel token
+- [ ] encryption signature message
+- [ ] error handling if bad encryption, errors etc...

@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import { ExtSocket } from './types';
 import { authentication } from './middlewares';
 import binders from './controllers';
+import { presenceLeave } from './controllers/user_controller';
 
 // App factory
 const createApp = (listener: http.Server): void => {
@@ -22,6 +23,10 @@ const createApp = (listener: http.Server): void => {
 
   io.on('connection', (socket: ExtSocket) => {
     console.log(`Socket ${socket.id} connected.`);
+
+    socket.on('disconnecting', () => {
+      presenceLeave(socket);
+    });
 
     socket.on('disconnect', () => {
       console.log(`Socket ${socket.id} disconnected.`);

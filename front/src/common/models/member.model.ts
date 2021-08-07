@@ -5,6 +5,7 @@ export interface IMember { // similar to IAuth
   material: IMemberMaterial;
   role: ERole,
   pending: boolean,
+  connected: boolean,
 }
 
 export interface IMemberMaterial {

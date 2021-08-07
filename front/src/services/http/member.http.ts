@@ -19,6 +19,7 @@ const JsonToMember = async (json: any): Promise<IMember> => {
     },
     pending: json.pending,
     role: json.role,
+    connected: false,
   };
 };
 
