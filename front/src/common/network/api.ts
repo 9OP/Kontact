@@ -130,3 +130,21 @@ export const bearer = new Api({
   host: BEARER,
   handler: bearerHandler,
 });
+
+/**
+ * Beacon  API
+ */
+const BEACON = `${window.location.origin}/api/beacon`;
+
+async function beaconHandler(this: Api, response: Response): Promise<any> {
+  const json = await response.json();
+  if (!response.ok) {
+    throw Error(json.description || response.statusText);
+  }
+  return json;
+}
+
+export const beacon = new Api({
+  host: BEACON,
+  handler: beaconHandler,
+});

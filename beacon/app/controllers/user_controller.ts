@@ -13,8 +13,10 @@ export function presenceConnect(socket: ExtSocket): void {
     const channelId = membership.channel.id;
     if (channelId) { socket.join(channelId); }
   });
+  // should send on channel rooms instead ?
   socket.join('presence');
   socket.to('presence').emit(PRESENCE_CONNECT, socket.user.id);
+  socket.emit(PRESENCE_CONNECT, socket.user.id);
 }
 
 export function presenceDisconnect(socket: ExtSocket): void {
@@ -23,6 +25,7 @@ export function presenceDisconnect(socket: ExtSocket): void {
     if (channelId) { socket.leave(channelId); }
   });
   socket.to('presence').emit(PRESENCE_DISCONNECT, socket.user.id);
+  socket.emit(PRESENCE_DISCONNECT, socket.user.id);
   socket.leave('presence');
 }
 

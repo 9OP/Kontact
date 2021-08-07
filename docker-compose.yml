@@ -59,6 +59,8 @@ services:
     environment:
       CHOKIDAR_USEPOLLING: "true" # necessary ??
       NODE_ENV: "development"
+    ports:
+        - "4000:4000"
     volumes:
       - ./beacon:/app
     depends_on:
@@ -81,7 +83,8 @@ services:
       context: ./back/database
       dockerfile: database.dockerfile
     restart: always
-    command: ["postgres", "-c", "log_statement=all"]
+    command: postgres
+    # command: ["postgres", "-c", "log_statement=all"]
     environment:
       POSTGRES_DB: kontact_dev
       POSTGRES_USER: developer

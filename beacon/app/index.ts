@@ -1,4 +1,6 @@
+/* eslint-disable no-use-before-define */
 import * as http from 'http';
+import express from 'express';
 import { Server } from 'socket.io';
 
 import { ExtSocket } from './types';
@@ -7,7 +9,32 @@ import binders from './controllers';
 import { presenceDisconnect } from './controllers/user_controller';
 
 // App factory
-const createApp = (listener: http.Server): void => {
+const createApp = (): http.Server => {
+  // Express
+  const app = express();
+  app.get('/presence', (req, res) => {
+    const cid = req.query.channel;
+
+    const { rooms } = io.sockets.adapter as any;
+    const { sockets } = io.sockets;
+    const clients: Set<string> = rooms.get(cid);
+
+    const userIds: string[] = [];
+
+    if (clients) {
+      clients.forEach((client) => {
+        const sock = sockets.get(client);
+        if (sock) { userIds.push((sock as any)?.user?.id); }
+      });
+    }
+
+    userIds.filter((uid) => uid); // remove null
+    res.json(userIds);
+  });
+
+  const httpServer = http.createServer(app);
+
+  // SocketIo
   const io = new Server({
     cors: {
       origin: '*',
@@ -15,28 +42,24 @@ const createApp = (listener: http.Server): void => {
     path: '/beacon',
   });
 
-  io.listen(listener);
-
-  console.log('socket io started');
-
+  io.listen(httpServer);
   io.use(authentication);
 
   io.on('connection', (socket: ExtSocket) => {
-    console.log(`Socket ${socket.id} connected.`);
-
+    // console.log(`Socket ${socket.id} connected.`);
+    // socket.on('disconnect', () => {
+    //   console.log(`Socket ${socket.id} disconnected.`);
+    // });
     socket.on('disconnecting', () => {
       presenceDisconnect(socket);
     });
 
-    socket.on('disconnect', () => {
-      console.log(`Socket ${socket.id} disconnected.`);
-    });
-
     binders.forEach((binder) => binder(socket));
   });
+
+  return httpServer;
 };
 
 // Create app
-const httpServer = http.createServer();
-createApp(httpServer);
-httpServer.listen(4000, '0.0.0.0');
+const bearer = createApp();
+bearer.listen(4000, '0.0.0.0');
