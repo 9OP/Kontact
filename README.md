@@ -31,7 +31,8 @@ docker-compose run back python manage.py test
 
 ## ToDo (sorted by priority)
 - [X] presence in members sidebar (dynamic status: red/green badge, plus join)
-- [ ] reload channel and membership when channel master accept user
+- [X] reload channel and membership when channel master accept user
+- [ ] validate cid, uid as uuid in back
 - [ ] name generators
 - [ ] create chakra ui theme
 

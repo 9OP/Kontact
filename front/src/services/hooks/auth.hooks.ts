@@ -150,6 +150,7 @@ export const useJoinChannel = ():
       await channelsHttpService.joinChannel(cid);
       setUser({ user });
     } catch (e) {
+      authHttpService.signout();
       setError(e);
     } finally {
       setLoading(false);

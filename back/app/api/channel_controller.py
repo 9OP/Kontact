@@ -79,9 +79,10 @@ def memberships():
 
 @gate(access=Access.USER)
 def join(cid):
+    channel = Channel.find_one(id=cid)
     membership = Membership.create(
-        user_id=g.current_user.id,
-        channel_id=cid,
+        user=g.current_user,
+        channel=channel,
         pending=True,
     )
     return render(membership.summary(), 201)

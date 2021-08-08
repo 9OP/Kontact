@@ -80,8 +80,8 @@ class Support(TimestampMixin):
             return switcher[switch]()
         except sql_orm.NoResultFound:
             raise apr.NotFound(cls.__tablename__)
-        except:
-            raise apr.ApiError()
+        except Exception as e:
+            raise apr.ApiError(description=str(e))
 
     @classmethod
     def find(cls, **kwargs):
