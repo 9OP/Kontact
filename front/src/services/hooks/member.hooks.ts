@@ -9,7 +9,7 @@ import {
   updateMemberAction,
 } from '../../store/entities/members/members.actions';
 import { selectMembers } from '../../store/entities/members/members.selectors';
-import { membersHttpService } from '../http';
+import { channelsHttpService, membersHttpService } from '../http';
 import { useAction, useAppSelector } from './hooks';
 
 import { emit, toast } from '../../components/toast';
@@ -33,16 +33,25 @@ export const useFetchMembers = (): [() => void, boolean, Error | null] => {
   const setMembers = useAction(fetchMembersAction);
   const channel = useAppSelector(selectOpenedChannel);
 
-  const fetchMembers = useCallback(() => {
+  const fetchMembers = useCallback(async () => {
     setLoading(true);
-    membersHttpService.fetchMembers(channel.id)
-      .then((members: IMember[]) => {
-        setMembers(members, channel);
-      }).catch((err: Error) => {
-        setError(err);
-      }).finally(() => {
-        setLoading(false);
+    try {
+      let members = await membersHttpService.fetchMembers(channel.id);
+      const presences = await channelsHttpService.fetchPresence([channel.id]);
+
+      members = members.map((member) => {
+        if (presences.includes(member.id)) {
+          return { ...member, connected: true };
+        }
+        return member;
       });
+
+      setMembers(members, channel);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
   }, [setMembers, channel]);
 
   return [fetchMembers, loading, error];

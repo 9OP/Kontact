@@ -40,9 +40,6 @@ export const useFetchChannels = (): [() => void, boolean, Error | null] => {
     try {
       if (auth?.material?.suek) {
         const channels = await channelsHttpService.fetchChannels(auth.material.suek);
-        const channelIds = channels.map(({ id }) => id);
-        const presence = await channelsHttpService.fetchPresence(channelIds);
-        // setPresence(presence);
         setChannels(channels);
       }
     } catch (err) {

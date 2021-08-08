@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { stringify } from 'querystring';
 import { back, beacon } from '../../common/network/api';
 import { IChannel } from '../../common/models';
 import { generateCEK, wrapCEK, unwrapCEK } from '../../common/crypto';
@@ -61,8 +60,7 @@ export const joinChannel = async (cid: string): Promise<void> => {
 
 // Fetch ids of users connected to beacon
 export const fetchPresence = async (cids: string[]): Promise<string[]> => {
-  const query = `?channel=${cids.join('&channel=')}&channel=blublu`;
-  console.log(query);
+  const query = `?channel=${cids.join('&channel=')}`;
   const res = await beacon.get({
     route: `presence${query}`,
   });
