@@ -36,17 +36,6 @@ export const bindEvent = (event: Event): SocketBinder => {
         console.log(err);
         ack(`${name}:error`);
       }
-
-      // validation.validateAsync(payload)
-      //   .then(
-      //     async () => {
-      //       await func(socket, payload, ack);
-      //     },
-      //   )
-      //   .catch(
-      //     // (err: any) => socket.emit(`${name}:error`, { error: err }),
-      //     () => { ack(`${name}:error`); },
-      //   );
     });
   };
 };

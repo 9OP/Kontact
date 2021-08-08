@@ -30,11 +30,12 @@ docker-compose run back python manage.py test
 
 
 ## ToDo (sorted by priority)
-- [ ] presence in members sidebar (dynamic status: red/green badge, plus join)
-- [ ] name generators
-- [ ] kick / refuse access to channel
-- [ ] create chakra ui theme
+- [X] presence in members sidebar (dynamic status: red/green badge, plus join)
 - [ ] reload channel and membership when channel master accept user
+- [ ] name generators
+- [ ] create chakra ui theme
+
+- [ ] kick / refuse access to channel
 - [ ] join + channel token
 - [ ] encryption signature message
 - [ ] error handling if bad encryption, errors etc...

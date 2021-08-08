@@ -1,17 +1,52 @@
 /* eslint-disable max-len */
 import { useState, useEffect, useCallback } from 'react';
+import { store } from '../../store';
 import {
   createMemberAction,
   deleteMemberAction,
   fetchMembersAction,
   updateMemberAction,
+  presenceConnectAction,
+  presenceDisconnectAction,
 } from '../../store/entities/members/members.actions';
 import { selectMembers } from '../../store/entities/members/members.selectors';
+import { selectOpenedChannel, selectChannel } from '../../store/entities/channels/channels.selectors';
 import { channelsHttpService, membersHttpService } from '../http';
 import { useAction, useAppSelector } from './hooks';
 import { emit, toast } from '../../components/toast';
-import { ERole, IMember, IMemberPreview } from '../../common/models';
-import { selectOpenedChannel } from '../../store/entities/channels/channels.selectors';
+import {
+  ERole, IChannel, IMember, IMemberPreview,
+} from '../../common/models';
+import * as presence from '../socket/presence.socket';
+
+async function fetchMembersAndPresence(channel: IChannel): Promise<IMember[]> {
+  const members = await membersHttpService.fetchMembers(channel.id);
+  const presences = await channelsHttpService.fetchPresence([channel.id]);
+
+  return members.map((member) => (
+    { ...member, connected: presences.includes(member.id) }
+  ));
+}
+
+presence.connect(async (data) => {
+  const { userId } = data;
+  const { channelId } = data;
+
+  // if userId not in channelId then refetch channelId memberships
+  const state = store.getState();
+  const members = selectMembers(channelId)(state);
+  const channel = selectChannel(channelId)(state);
+  if (!members.map(({ id }) => id).includes(userId)) {
+    const newMembers = await fetchMembersAndPresence(channel);
+    store.dispatch(fetchMembersAction({ members: newMembers, channel }));
+  }
+  store.dispatch(presenceConnectAction({ uid: userId }));
+});
+
+presence.disconnect(async (data) => {
+  const { userId } = data;
+  store.dispatch(presenceDisconnectAction({ uid: userId }));
+});
 
 export const useMembers = (cid: string): {
   members: IMember[], byId: (uid: string) => IMember | null} => {
@@ -33,13 +68,7 @@ export const useFetchMembers = (): [() => void, boolean, Error | null] => {
   const fetchMembers = useCallback(async () => {
     setLoading(true);
     try {
-      let members = await membersHttpService.fetchMembers(channel.id);
-      const presences = await channelsHttpService.fetchPresence([channel.id]);
-
-      members = members.map((member) => (
-        { ...member, connected: presences.includes(member.id) }
-      ));
-
+      const members = await fetchMembersAndPresence(channel);
       setMembers({ members, channel });
     } catch (err) {
       setError(err);
