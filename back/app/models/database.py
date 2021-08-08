@@ -48,7 +48,7 @@ class Support(TimestampMixin):
             db.session.add(new)
             db.session.commit()
             return new
-        except sql_exc.IntegrityError as e:
+        except sql_exc.IntegrityError:
             db.session.rollback()
             raise apr.AlreadyExists(cls.__tablename__)
 
@@ -80,8 +80,8 @@ class Support(TimestampMixin):
             return switcher[switch]()
         except sql_orm.NoResultFound:
             raise apr.NotFound(cls.__tablename__)
-        except Exception as e:
-            raise apr.ApiError(description=str(e))
+        except:
+            raise apr.ApiError()
 
     @classmethod
     def find(cls, **kwargs):
