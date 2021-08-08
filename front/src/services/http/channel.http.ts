@@ -69,3 +69,10 @@ export const fetchPresence = async (cids: string[]): Promise<string[]> => {
   });
   return res;
 };
+
+export const confirmJoin = async (cid: string, uid: string): Promise<void> => {
+  await beacon.post({
+    route: 'join',
+    payload: { userId: uid, channelId: cid },
+  });
+};

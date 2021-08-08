@@ -18,6 +18,7 @@ import {
   ERole, IChannel, IMember, IMemberPreview,
 } from '../../common/models';
 import * as presence from '../socket/presence.socket';
+import { confirmJoin } from '../http/channel.http';
 
 async function fetchMembersAndPresence(channel: IChannel): Promise<IMember[]> {
   const members = await membersHttpService.fetchMembers(channel.id);
@@ -93,6 +94,8 @@ export const useCreateMember = (): [(uid: string, puek: string) => void, boolean
       const presences = await channelsHttpService.fetchPresence([channel.id]);
       if (presences.includes(member.id)) { member.connected = true; }
       setMember({ member, channel });
+      // trigger member reload via beacon
+      await confirmJoin(channel.id, member.id);
     } catch (err) {
       setError(err);
     } finally {

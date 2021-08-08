@@ -8,6 +8,13 @@ import { useAction, useAppSelector } from './hooks';
 import { emit, toast } from '../../components/toast';
 import { IAuth } from '../../common/models';
 import { createChannelAction } from '../../store/entities/channels/channels.actions';
+import * as userSocket from '../socket/user.socket';
+
+userSocket.userJoin((data) => {
+  const { channelId } = data;
+  // should check channelId status for conditionnal reloading
+  window.location.reload();
+});
 
 export const useAuth = (): { user: IAuth } => {
   const user = useAppSelector(selectUser);
