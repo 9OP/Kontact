@@ -1,7 +1,4 @@
-import {
-  useState, useEffect, useCallback,
-} from 'react';
-
+import { useState, useEffect, useCallback } from 'react';
 import {
   createMemberAction,
   deleteMemberAction,
@@ -11,7 +8,6 @@ import {
 import { selectMembers } from '../../store/entities/members/members.selectors';
 import { channelsHttpService, membersHttpService } from '../http';
 import { useAction, useAppSelector } from './hooks';
-
 import { emit, toast } from '../../components/toast';
 import { ERole, IMember, IMemberPreview } from '../../common/models';
 import { selectOpenedChannel } from '../../store/entities/channels/channels.selectors';
@@ -39,14 +35,11 @@ export const useFetchMembers = (): [() => void, boolean, Error | null] => {
       let members = await membersHttpService.fetchMembers(channel.id);
       const presences = await channelsHttpService.fetchPresence([channel.id]);
 
-      members = members.map((member) => {
-        if (presences.includes(member.id)) {
-          return { ...member, connected: true };
-        }
-        return member;
-      });
+      members = members.map((member) => (
+        { ...member, connected: presences.includes(member.id) }
+      ));
 
-      setMembers(members, channel);
+      setMembers({ members, channel });
     } catch (err) {
       setError(err);
     } finally {
@@ -68,7 +61,7 @@ export const useCreateMember = (): [(uid: string, puek: string) => void, boolean
     membersHttpService.createMember(channel.id, uid, channel.material.scek, puek)
       .then((member: IMember) => {
         emit(toast.member_created(member));
-        setMember(member, channel);
+        setMember({ member, channel });
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {
@@ -92,7 +85,7 @@ export const useDeleteMember = (): [(uid: string) => void, boolean, Error | null
     membersHttpService.deleteMember(channel.id, uid)
       .then(() => {
         emit(toast.member_deleted(member));
-        removeMember(uid, channel.id);
+        removeMember({ uid, cid: channel.id });
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {
@@ -113,7 +106,7 @@ export const useUpdateMember = (): [(uid: string, role: ERole) => void, boolean,
     setLoading(true);
     membersHttpService.updateMember(channel.id, uid, role)
       .then((member: IMember) => {
-        setMember(member);
+        setMember({ member });
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {

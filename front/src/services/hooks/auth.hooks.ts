@@ -49,11 +49,11 @@ export const useSignin = (): [(email: string, password: string) => void, boolean
       authHttpService.signin(email, password).then((user) => {
         setLoading(false);
         emit(toast.auth_signin(user));
-        setUser(user);
+        setUser({ user });
       }).catch((err: Error) => {
         setLoading(false);
         setError(err);
-        resetUser();
+        resetUser(null);
       });
     }
   }, [auth]);
@@ -72,10 +72,10 @@ export const useWhoami = (): [() => void, boolean, Error | null] => {
     setLoading(true);
     if (!auth) {
       authHttpService.whoami().then((user) => {
-        setUser(user);
+        setUser({ user });
       }).catch((err: Error) => {
         setError(err);
-        resetUser();
+        resetUser(null);
       }).finally(() => {
         setLoading(false);
       });
@@ -93,7 +93,7 @@ export const useSignout = (): [() => void] => {
     if (auth) {
       authHttpService.signout().finally(() => {
         emit(toast.auth_signout());
-        resetUser();
+        resetUser(null);
       });
     }
   }, [auth]);
@@ -116,10 +116,9 @@ export const useCreateChannel = ():
       const user = await authHttpService.signup(email, password, userName);
       const { puek, suek } = user.material;
       const channel = await channelsHttpService.createChannel(channelName, puek, suek);
-      setUser(user);
-      setChannel(channel);
+      setUser({ user });
+      setChannel({ channel });
     } catch (e) {
-      console.log(e);
       setError(e);
     } finally {
       setLoading(false);
@@ -133,7 +132,6 @@ export const useJoinChannel = ():
 [(cid: string, userName: string) => void, boolean, Error | null] => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const setChannel = useAction(createChannelAction);
   const setUser = useAction(setUserAction);
 
   const join = useCallback(async (cid: string, userName: string) => {
@@ -142,15 +140,14 @@ export const useJoinChannel = ():
     const password = '123'; // gen random pwd
     try {
       const user = await authHttpService.signup(email, password, userName);
-      const channel = await channelsHttpService.joinChannel(cid);
-      setUser(user);
-      setChannel(channel);
+      await channelsHttpService.joinChannel(cid);
+      setUser({ user });
     } catch (e) {
       setError(e);
     } finally {
       setLoading(false);
     }
-  }, [setChannel, setUser]);
+  }, [setUser]);
 
   return [join, loading, error];
 };

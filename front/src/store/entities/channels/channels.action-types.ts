@@ -10,27 +10,27 @@ export const OPEN_CHANNEL = '[channels] open_channel';
 
 interface fetchChannels extends Action {
   type: typeof FETCH_CHANNELS;
-  payload: IChannel[];
+  payload: { channels: IChannel[] };
 }
 
 interface createChannel extends Action {
   type: typeof CREATE_CHANNEL;
-  payload: IChannel;
+  payload: { channel: IChannel };
 }
 
 interface updateChannel extends Action {
   type: typeof UPDATE_CHANNEL;
-  payload: IChannel;
+  payload: { channel: IChannel };
 }
 
 interface deleteChannel extends Action {
   type: typeof DELETE_CHANNEL;
-  payload: string;
+  payload: {cid: string};
 }
 
 interface openChannel extends Action {
   type: typeof OPEN_CHANNEL;
-  payload: string;
+  payload: {cid: string};
 }
 
 export type channelsActionTypes =

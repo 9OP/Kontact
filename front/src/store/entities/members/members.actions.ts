@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { IChannel, IMember } from '../../../common/models';
 import {
   membersActionTypes,
@@ -9,44 +10,44 @@ import {
   PRESENCE_DISCONNECT,
 } from './members.action-types';
 
-export function fetchMembersAction(members: IMember[], channel: IChannel): membersActionTypes {
+export function fetchMembersAction(payload: { members: IMember[], channel: IChannel}): membersActionTypes {
   return {
     type: FETCH_MEMBERS,
-    payload: { members, channel },
+    payload,
   };
 }
 
-export function createMemberAction(member: IMember, channel: IChannel): membersActionTypes {
+export function createMemberAction(payload: { member: IMember, channel: IChannel }): membersActionTypes {
   return {
     type: CREATE_MEMBER,
-    payload: { member, channel },
+    payload,
   };
 }
 
-export function updateMemberAction(member: IMember): membersActionTypes {
+export function updateMemberAction(payload: { member: IMember}): membersActionTypes {
   return {
     type: UPDATE_MEMBER,
-    payload: { member },
+    payload,
   };
 }
 
-export function deleteMemberAction(uid: string, cid: string): membersActionTypes {
+export function deleteMemberAction(payload: { uid: string, cid: string }): membersActionTypes {
   return {
     type: DELETE_MEMBER,
-    payload: { uid, cid },
+    payload,
   };
 }
 
-export function presenceConnectAction(uid: string): membersActionTypes {
+export function presenceConnectAction(payload: { uid: string }): membersActionTypes {
   return {
     type: PRESENCE_CONNECT,
-    payload: { uid },
+    payload,
   };
 }
 
-export function presenceDisconnectAction(uid: string): membersActionTypes {
+export function presenceDisconnectAction(payload: { uid: string}): membersActionTypes {
   return {
     type: PRESENCE_DISCONNECT,
-    payload: { uid },
+    payload,
   };
 }

@@ -5,10 +5,10 @@ import {
   RESET_USER,
 } from './auth.action-types';
 
-export function setUserAction(user: IAuth): authActionTypes {
+export function setUserAction(payload: { user: IAuth }): authActionTypes {
   return {
     type: SET_USER,
-    payload: user,
+    payload,
   };
 }
 

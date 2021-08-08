@@ -12,7 +12,7 @@ export default function userReducer(state: IAuth = INITIAL_STATE, action: authAc
     case SET_USER:
       return {
         ...state,
-        ...action.payload,
+        ...action.payload.user,
       };
 
     case RESET_USER:

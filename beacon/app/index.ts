@@ -24,7 +24,7 @@ const createApp = (): http.Server => {
     const userIds: string[] = [];
 
     cids.forEach((cid) => {
-      const clients: Set<string> = rooms.get(cid);
+      const clients: Set<string> = rooms.get(`${cid}:presence`);
 
       if (clients) {
         clients.forEach((client) => {

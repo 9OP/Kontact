@@ -20,6 +20,7 @@ const JSONtoIMemberships = (data: any): IMembership[] => {
       role: membership.role,
       user: membership.user,
       channel: membership.channel,
+      pending: membership.pending,
     });
   });
   return memberships;
@@ -38,7 +39,7 @@ export const whoami = async (token: string): Promise<IUser> => {
 };
 
 export const fetchMemberships = async (token: string): Promise<IMembership[]> => {
-  const res = await back.get('/channel/memberships', {
+  const res = await back.get('/channel/memberships?include_pending=1', {
     headers: { Authorization: `Bearer ${token}` },
   });
   return JSONtoIMemberships(res.data);

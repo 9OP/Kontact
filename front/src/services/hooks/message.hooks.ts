@@ -18,7 +18,9 @@ message.receive(async (data: any) => {
   const channel = state?.entities?.channels?.byId?.[data.channelId];
   if (channel) {
     const message = await JsonToMessage(data, channel.material.scek);
-    store.dispatch(receiveMessagesAction([message]));
+    store.dispatch(receiveMessagesAction({
+      messages: [message],
+    }));
   }
 });
 
@@ -55,7 +57,7 @@ export const useFetchMessages = (): [(cid: string, key: string) => void, boolean
     setLoading(true);
     messageHttpService.fetchMessages(cid, key)
       .then((messages: IMessage[]) => {
-        setMessages(messages);
+        setMessages({ messages });
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {

@@ -6,7 +6,7 @@ export const RESET_USER = '[auth] reset_user';
 
 interface authSetUser extends Action {
   type: typeof SET_USER;
-  payload: IAuth;
+  payload:{ user: IAuth };
 }
 
 interface authResetUser extends Action {

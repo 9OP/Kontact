@@ -6,7 +6,7 @@ export const RECEIVE_MESSAGES = '[messages] receive_messages';
 
 interface receiveMessages extends Action {
   type: typeof RECEIVE_MESSAGES;
-  payload: IMessage[];
+  payload: {messages: IMessage[]};
 }
 
 export type messagesActionTypes = authActionTypes | receiveMessages;

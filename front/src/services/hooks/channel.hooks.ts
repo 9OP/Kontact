@@ -40,7 +40,7 @@ export const useFetchChannels = (): [() => void, boolean, Error | null] => {
     try {
       if (auth?.material?.suek) {
         const channels = await channelsHttpService.fetchChannels(auth.material.suek);
-        setChannels(channels);
+        setChannels({ channels });
       }
     } catch (err) {
       setError(err);
@@ -64,7 +64,7 @@ export const useCreateChannel = (): [(name: string)=> void, boolean, Error | nul
     channelsHttpService.createChannel(name, puek, suek)
       .then((channel: IChannel) => {
         emit(toast.channel_created(channel));
-        setChannel(channel);
+        setChannel({ channel });
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {
@@ -86,7 +86,7 @@ export const useDeleteChannel = (): [() => void, boolean, Error | null] => {
     channelsHttpService.deleteChannel(channel.id)
       .then(() => {
         emit(toast.channel_deleted(channel));
-        removeChannel(channel.id);
+        removeChannel({ cid: channel.id });
       }).catch((err: Error) => {
         setError(err);
       }).finally(() => {

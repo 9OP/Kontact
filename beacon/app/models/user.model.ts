@@ -25,4 +25,5 @@ export interface IMembership {
   role: Role,
   user: IUser,
   channel: IChannel,
+  pending: boolean,
 }

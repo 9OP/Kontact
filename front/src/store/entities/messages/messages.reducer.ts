@@ -17,7 +17,7 @@ export default function membershipsReducer(
 ): State {
   switch (action.type) {
     case RECEIVE_MESSAGES:
-      const messages = action.payload.reduce((acc, message) => {
+      const messages = action.payload.messages.reduce((acc, message) => {
         acc[message.id] = message;
         return acc;
       }, {} as { [id: string]: IMessage });

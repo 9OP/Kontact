@@ -10,23 +10,38 @@ const PRESENCE_DISCONNECT = 'presence:disconnect';
 
 export function presenceConnect(socket: ExtSocket): void {
   socket.memberships.forEach((membership) => {
-    const channelId = membership.channel.id;
-    if (channelId) { socket.join(channelId); }
+    const channelId = membership?.channel?.id;
+    const pending = membership?.pending;
+    if (channelId) {
+      if (pending === false) { socket.join(channelId); }
+      socket.join(`${channelId}:presence`);
+      socket.to(`${channelId}:presence`).emit(PRESENCE_CONNECT, {
+        userId: socket.user.id,
+        channelId,
+      });
+    }
   });
-  // should send on channel rooms instead ?
-  socket.join('presence');
-  socket.to('presence').emit(PRESENCE_CONNECT, socket.user.id);
-  socket.emit(PRESENCE_CONNECT, socket.user.id);
+  // // should send on channel rooms instead ?
+  // socket.join('presence');
+  // socket.to('presence').emit(PRESENCE_CONNECT, socket.user.id);
+  // socket.emit(PRESENCE_CONNECT, socket.user.id);
 }
 
 export function presenceDisconnect(socket: ExtSocket): void {
   socket.memberships.forEach((membership) => {
     const channelId = membership.channel.id;
-    if (channelId) { socket.leave(channelId); }
+    if (channelId) {
+      socket.to(`${channelId}:presence`).emit(PRESENCE_DISCONNECT, {
+        userId: socket.user.id,
+        channelId,
+      });
+      socket.leave(`${channelId}:presence`);
+      socket.leave(channelId);
+    }
   });
-  socket.to('presence').emit(PRESENCE_DISCONNECT, socket.user.id);
-  socket.emit(PRESENCE_DISCONNECT, socket.user.id);
-  socket.leave('presence');
+  // socket.to('presence').emit(PRESENCE_DISCONNECT, socket.user.id);
+  // socket.emit(PRESENCE_DISCONNECT, socket.user.id);
+  // socket.leave('presence');
 }
 
 export const authWhoami = createEvent(

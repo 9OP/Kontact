@@ -8,37 +8,37 @@ import {
   OPEN_CHANNEL,
 } from './channels.action-types';
 
-export function fetchChannelsAction(channels: IChannel[]): channelsActionTypes {
+export function fetchChannelsAction(payload: { channels: IChannel[] }): channelsActionTypes {
   return {
     type: FETCH_CHANNELS,
-    payload: channels,
+    payload,
   };
 }
 
-export function createChannelAction(channel: IChannel): channelsActionTypes {
+export function createChannelAction(payload: { channel: IChannel }): channelsActionTypes {
   return {
     type: CREATE_CHANNEL,
-    payload: channel,
+    payload,
   };
 }
 
-export function updateChannelAction(channel: IChannel): channelsActionTypes {
+export function updateChannelAction(payload: { channel: IChannel }): channelsActionTypes {
   return {
     type: UPDATE_CHANNEL,
-    payload: channel,
+    payload,
   };
 }
 
-export function deleteChannelAction(cid: string): channelsActionTypes {
+export function deleteChannelAction(payload: { cid: string }): channelsActionTypes {
   return {
     type: DELETE_CHANNEL,
-    payload: cid,
+    payload,
   };
 }
 
-export function openChannelAction(cid: string): channelsActionTypes {
+export function openChannelAction(payload: { cid: string }): channelsActionTypes {
   return {
     type: OPEN_CHANNEL,
-    payload: cid,
+    payload,
   };
 }
