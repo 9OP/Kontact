@@ -7,14 +7,14 @@ import {
 import { publicKeyFingerprint, wrapCEK } from '../../common/crypto';
 
 const JsonToMember = async (json: any): Promise<IMember> => {
-  const pkf = await publicKeyFingerprint(json.material?.puek);
+  const pkf = await publicKeyFingerprint(json.user.material?.puek);
 
   return {
-    id: json.id,
-    name: json.name,
-    email: json.email,
+    id: json.user.id,
+    name: json.user.name,
+    email: json.user.email,
     material: {
-      puek: json.material?.puek,
+      puek: json.user.material?.puek,
       pkf,
     },
     pending: json.pending,
@@ -32,9 +32,22 @@ const JsonToMember = async (json: any): Promise<IMember> => {
 // });
 
 const JsonToMembers = async (json: any[]): Promise<IMember[]> => {
-  const members = json.map(
-    async (member: any) => JsonToMember(member),
-  );
+  const members = json.map(async (member: any) => {
+    const pkf = await publicKeyFingerprint(member.material?.puek);
+
+    return {
+      id: member.id,
+      name: member.name,
+      email: member.email,
+      material: {
+        puek: member.material?.puek,
+        pkf,
+      },
+      pending: member.pending,
+      role: member.role,
+      connected: false,
+    };
+  });
 
   return Promise.all(members);
 };

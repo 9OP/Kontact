@@ -32,6 +32,9 @@ export default function membershipsReducer(
     case CREATE_MEMBER: {
       const { member, channel } = action.payload;
       const memberIds = state?.[channel.id] || [];
+
+      if (memberIds.includes(member.id)) { return state; }
+
       return {
         ...state,
         [channel.id]: [

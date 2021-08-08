@@ -56,6 +56,9 @@ export const deleteChannel = async (cid: string): Promise<void> => {
 
 export const joinChannel = async (cid: string): Promise<void> => {
   await back.post({ route: `channel/${cid}/join` });
+
+  // Force Beacon to refetch new memberships from Back
+  await userSocket.reloadBeacon();
 };
 
 // Fetch ids of users connected to beacon

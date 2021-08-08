@@ -9,6 +9,7 @@ const PRESENCE_CONNECT = 'presence:connect';
 const PRESENCE_DISCONNECT = 'presence:disconnect';
 
 export function presenceConnect(socket: ExtSocket): void {
+  console.log(socket.memberships);
   socket.memberships.forEach((membership) => {
     const channelId = membership?.channel?.id;
     const pending = membership?.pending;

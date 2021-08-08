@@ -1,17 +1,39 @@
 // import { store } from '../../store';
-// import { presenceConnectAction,
-// presenceDisconnectAction } from '../../store/entities/members/members.actions';
+// import { selectChannel } from '../../store/entities/channels/channels.selectors';
+// import {
+//   fetchMembersAction,
+//   presenceConnectAction,
+//   presenceDisconnectAction,
+// } from '../../store/entities/members/members.actions';
+// import { selectMembers } from '../../store/entities/members/members.selectors';
+// import { channelsHttpService, membersHttpService } from '../http';
 // import * as presence from '../socket/presence.socket';
 
-// console.log('presence hooks');
+// presence.connect(async (data) => {
+//   const { userId } = data;
+//   const { channelId } = data;
 
-// presence.connect(async (data: any) => {
-//   console.log('connect presence', data);
-//   // store.dispatch(presenceConnectAction(userId));
+//   // if userId not in channelId then refetch channelId memberships
+//   const state = store.getState();
+//   const members = selectMembers(channelId)(state);
+//   const channel = selectChannel(channelId)(state);
+//   if (!members.map(({ id }) => id).includes(userId)) {
+//     // bad pattern = duplicate from member.hooks.ts
+//     let newMembers = await membersHttpService.fetchMembers(channelId);
+//     const presences = await channelsHttpService.fetchPresence([channelId]);
+
+//     newMembers = newMembers.map((member) => (
+//       { ...member, connected: presences.includes(member.id) }
+//     ));
+
+//     store.dispatch(fetchMembersAction({ members: newMembers, channel }));
+//   }
+//   store.dispatch(presenceConnectAction({ uid: userId }));
 // });
 
-// presence.disconnect(async (userId: string) => {
-//   store.dispatch(presenceDisconnectAction(userId));
+// presence.disconnect(async (data) => {
+//   const { userId } = data;
+//   store.dispatch(presenceDisconnectAction({ uid: userId }));
 // });
 
 export default {};

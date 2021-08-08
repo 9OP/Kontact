@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { useState, useEffect, useCallback } from 'react';
 import {
   createMemberAction,
@@ -56,17 +57,18 @@ export const useCreateMember = (): [(uid: string, puek: string) => void, boolean
   const setMember = useAction(createMemberAction);
   const channel = useAppSelector(selectOpenedChannel);
 
-  const createMember = useCallback((uid: string, puek: string) => {
+  const createMember = useCallback(async (uid: string, puek: string) => {
     setLoading(true);
-    membersHttpService.createMember(channel.id, uid, channel.material.scek, puek)
-      .then((member: IMember) => {
-        emit(toast.member_created(member));
-        setMember({ member, channel });
-      }).catch((err: Error) => {
-        setError(err);
-      }).finally(() => {
-        setLoading(false);
-      });
+    try {
+      const member = await membersHttpService.createMember(channel.id, uid, channel.material.scek, puek);
+      const presences = await channelsHttpService.fetchPresence([channel.id]);
+      if (presences.includes(member.id)) { member.connected = true; }
+      setMember({ member, channel });
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
   }, [setMember, channel]);
 
   return [createMember, loading, error];
