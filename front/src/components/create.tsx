@@ -9,10 +9,11 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useCreateChannel } from '../services/hooks/auth.hooks';
+import { generateChannelName, generateUserName } from '../common/nameGenerator';
 
 const CreateChannel = (): JSX.Element => {
-  const [channelName, setChannelName] = useState('');
-  const [userName, setUserName] = useState('');
+  const [channelName, setChannelName] = useState(generateChannelName());
+  const [userName, setUserName] = useState(generateUserName());
   const [create, loading, error] = useCreateChannel();
 
   const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,6 +33,7 @@ const CreateChannel = (): JSX.Element => {
               <Input
                 type="text"
                 size="md"
+                value={channelName}
                 onChange={(event) => setChannelName(event.currentTarget.value)}
               />
             </FormControl>
@@ -41,6 +43,7 @@ const CreateChannel = (): JSX.Element => {
               <Input
                 type="text"
                 size="md"
+                value={userName}
                 onChange={(event) => setUserName(event.currentTarget.value)}
               />
             </FormControl>

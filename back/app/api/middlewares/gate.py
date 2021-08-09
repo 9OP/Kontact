@@ -11,9 +11,10 @@ def validate_url_params(**kwargs):
 
     def validate_uuid(uuid_to_test):
         try:
-            str(UUID(uuid_to_test, version=4)) == uuid_to_test
+            uuid_obj = UUID(uuid_to_test, version=4)
         except ValueError:
             return False
+        return str(uuid_obj) == uuid_to_test
 
     if cid and not validate_uuid(cid):
         raise apr.InvalidParameter("cid is not a UUID-4")

@@ -33,7 +33,7 @@ docker-compose run back python manage.py test
 - [X] presence in members sidebar (dynamic status: red/green badge, plus join)
 - [X] reload channel and membership when channel master accept user
 - [X] validate cid, uid as uuid in back
-- [ ] name generators
+- [X] name generators
 - [ ] create chakra ui theme
 
 - [ ] kick / refuse access to channel

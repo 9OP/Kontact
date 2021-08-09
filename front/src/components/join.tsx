@@ -11,10 +11,11 @@ import {
 import { useHistory } from 'react-router-dom';
 import { CREATE_PATH } from '../common/constants';
 import { useJoinChannel } from '../services/hooks/auth.hooks';
+import { generateUserName } from '../common/nameGenerator';
 
 const JoinChannel = (): JSX.Element => {
   const [channelId, setChannelId] = useState('');
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(generateUserName());
   const history = useHistory();
   const [join, loading, error] = useJoinChannel();
 
@@ -49,6 +50,7 @@ const JoinChannel = (): JSX.Element => {
               <Input
                 type="text"
                 size="md"
+                value={userName}
                 onChange={(event) => setUserName(event.currentTarget.value)}
               />
             </FormControl>
